@@ -9,75 +9,64 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Middleware
         private readonly RequestDelegate _next;
         private readonly ILogger<ValidateUserExistsMiddleware> _logger;
 
-        private static readonly string[] RutasPublicas =
-        {
-            "/login",
-            "/logout",
-            "/accessdenied",
-            "/error",
-            "/privacy"
-        };
-
-        public ValidateUserExistsMiddleware(
-            RequestDelegate next,
-            ILogger<ValidateUserExistsMiddleware> logger)
+        public ValidateUserExistsMiddleware(RequestDelegate next, ILogger<ValidateUserExistsMiddleware> logger)
         {
             _next = next;
             _logger = logger;
         }
 
-        public async Task InvokeAsync(
-            HttpContext context,
-            UsuarioApiClient usuarioApi)
+        public async Task InvokeAsync(HttpContext context, UsuarioApiClient usuarioApi)
         {
-            if (context.User?.Identity?.IsAuthenticated == true)
-            {
-                string path = context.Request.Path.Value?.ToLower() ?? "";
+            var path = context.Request.Path.Value?.ToLower() ?? "";
 
-                // ✔ Excluir rutas públicas
-                if (RutasPublicas.Any(r => path.StartsWith(r)))
+            // 🛑 NO validar en rutas públicas para evitar loops infinitos
+            if (path.StartsWith("/login") ||
+                path.StartsWith("/logout") ||
+                path.StartsWith("/accessdenied") ||
+                path.StartsWith("/error") ||
+                path.StartsWith("/privacy") ||
+                path.Contains(".css") ||
+                path.Contains(".js") ||
+                path.Contains(".png") ||
+                path.Contains(".jpg") ||
+                path.Contains("/lib/"))
+            {
+                await _next(context);
+                return;
+            }
+
+            // Usuario no autenticado → no validar
+            if (!context.User.Identity?.IsAuthenticated ?? true)
+            {
+                await _next(context);
+                return;
+            }
+
+            var userIdClaim = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (!int.TryParse(userIdClaim, out var userId))
+            {
+                await _next(context);
+                return;
+            }
+
+            try
+            {
+                // 🟢 Validación real usando la API
+                var usuario = await usuarioApi.GetByIdAsync(userId);
+
+                if (usuario == null)
                 {
-                    await _next(context);
+                    _logger.LogWarning($"Usuario con ID {userId} no existe en el microservicio. Cerrando sesión.");
+
+                    await context.SignOutAsync("MyCookieAuth");
+                    context.Response.Redirect("/Login/Login");
                     return;
                 }
-
-                var userIdClaim = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-                if (int.TryParse(userIdClaim, out int userId))
-                {
-                    try
-                    {
-                        var usuario = await usuarioApi.GetByIdAsync(userId);
-
-                        // ✔ Usuario eliminado en la API
-                        if (usuario == null)
-                        {
-                            _logger.LogWarning(
-                                $"Usuario con ID {userId} no existe en la API. Cerrando sesión.");
-
-                            await context.SignOutAsync("MyCookieAuth");
-
-                            context.Response.Cookies.Append(
-                                "SessionExpiredMessage",
-                                "Tu cuenta ya no existe. Contacta al administrador.",
-                                new CookieOptions
-                                {
-                                    HttpOnly = false,
-                                    Secure = true,
-                                    SameSite = SameSiteMode.Strict,
-                                    Expires = DateTimeOffset.UtcNow.AddMinutes(1)
-                                });
-
-                            context.Response.Redirect("/Login/Login");
-                            return;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex,
-                            $"Error al consultar usuario en API (ID {userId}).");
-                    }
-                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error verificando existencia del usuario.");
             }
 
             await _next(context);

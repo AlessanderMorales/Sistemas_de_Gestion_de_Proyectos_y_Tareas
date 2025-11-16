@@ -1,57 +1,84 @@
 ﻿using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Usuarios;
+using System.Net.Http.Json;
 
 namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.ApiClients
 {
     public class UsuarioApiClient
     {
-         readonly HttpClient _http;
+        private readonly HttpClient _http;
+        private const string BasePath = "api/usuario";
 
-        public UsuarioApiClient(IHttpClientFactory f)
+        // 🔹 Constructor correcto para Typed HttpClient
+        public UsuarioApiClient(HttpClient http)
         {
-            _http = f.CreateClient("usuarioApi");
+            _http = http;
         }
 
-        public async Task<List<UsuarioDTO>> GetAll()
-        {
-            return await _http.GetFromJsonAsync<List<UsuarioDTO>>("/api/Usuario");
-        }
-
-        public async Task<bool> CrearUsuario(UsuarioDTO dto)
-        {
-            var response = await _http.PostAsJsonAsync("/api/Usuario", dto);
-            return response.IsSuccessStatusCode;
-        }
-
-        public async Task<UsuarioDTO?> GetById(int id)
-        {
-            return await _http.GetFromJsonAsync<UsuarioDTO>($"/api/Usuario/{id}");
-        }
-
-        public async Task<bool> Update(UsuarioDTO dto)
-        {
-            var response = await _http.PutAsJsonAsync("/api/Usuario", dto);
-            return response.IsSuccessStatusCode;
-        }
-
-        public async Task<bool> Delete(int id)
-        {
-            var response = await _http.DeleteAsync($"/api/Usuario/{id}");
-            return response.IsSuccessStatusCode;
-        }
-
-        public async Task<UsuarioDTO?> GetAsync(int id)
-        {
-            return await _http.GetFromJsonAsync<UsuarioDTO>($"/api/usuario/{id}");
-        }
+        // =========================================================
+        //  MÉTODOS PRINCIPALES ASYNC
+        // =========================================================
 
         public async Task<List<UsuarioDTO>> GetAllAsync()
         {
-            var result = await _http.GetFromJsonAsync<List<UsuarioDTO>>("api/usuario");
+            var result = await _http.GetFromJsonAsync<List<UsuarioDTO>>(BasePath);
             return result ?? new List<UsuarioDTO>();
         }
+
         public async Task<UsuarioDTO?> GetByIdAsync(int id)
         {
-            return await _http.GetFromJsonAsync<UsuarioDTO>($"api/usuarios/{id}");
+            return await _http.GetFromJsonAsync<UsuarioDTO>($"{BasePath}/{id}");
         }
+
+        public async Task<bool> CrearUsuarioAsync(UsuarioDTO dto)
+        {
+            var response = await _http.PostAsJsonAsync(BasePath, dto);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> UpdateAsync(UsuarioDTO dto)
+        {
+            // Ajusta esta ruta si tu microservicio espera otro formato
+            var response = await _http.PutAsJsonAsync(BasePath, dto);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var response = await _http.DeleteAsync($"{BasePath}/{id}");
+            return response.IsSuccessStatusCode;
+        }
+
+        // =========================================================
+        //  WRAPPERS COMPATIBLES CON TU CÓDIGO EXISTENTE
+        //  (para que no den error tus Pages)
+        // =========================================================
+
+        // Index.cshtml.cs -> _usuarioApi.GetAll()
+        public Task<List<UsuarioDTO>> GetAll() => GetAllAsync();
+
+        // Edit.cshtml.cs -> _usuarioApi.GetById(id)
+        public Task<UsuarioDTO?> GetById(int id) => GetByIdAsync(id);
+
+        // Create.cshtml.cs -> _usuarioApi.CrearUsuario(dto)
+        public Task<bool> CrearUsuario(UsuarioDTO dto) => CrearUsuarioAsync(dto);
+
+        // Edit.cshtml.cs -> _usuarioApi.Update(dto)
+        public Task<bool> Update(UsuarioDTO dto) => UpdateAsync(dto);
+
+        // Index.cshtml.cs -> _usuarioApi.Delete(id)
+        public Task<bool> Delete(int id) => DeleteAsync(id);
+
+        // Comentarios/Create.cshtml.cs -> _usuarioApi.GetAsync(id)
+        public Task<UsuarioDTO?> GetAsync(int id) => GetByIdAsync(id);
+        public async Task<UsuarioDTO?> LoginAsync(UsuarioLoginDTO dto)
+        {
+            var response = await _http.PostAsJsonAsync("/api/usuario/login", dto);
+
+            if (!response.IsSuccessStatusCode)
+                return null;
+
+            return await response.Content.ReadFromJsonAsync<UsuarioDTO>();
+        }
+
     }
 }
