@@ -1,0 +1,138 @@
+@page
+@model Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Usuarios.EditModel
+@{
+    ViewData["Title"] = "Editar Usuario";
+}
+
+<style>
+    :root {
+        --accent-red: #D32F2F;
+        --accent-orange: #FF5722;
+        --accent-gold: #FFD700;
+        --text-primary: #f5f5f7;
+    }
+
+    .title-volcanic {
+        background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 700;
+        border-bottom: 2px solid rgba(255,255,255,0.1);
+        padding-bottom: 0.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .form-control, .form-select {
+        background-color: #3a3a40;
+        color: var(--text-primary);
+        border: 1px solid #555;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+    }
+    .form-control:focus, .form-select:focus {
+        background-color: #4a4a50;
+        color: var(--text-primary);
+        border-color: var(--accent-orange);
+        box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
+    }
+    
+    .form-label {
+        color: var(--text-primary);
+        font-weight: 500;
+    }
+    
+    .form-text {
+        font-size: 0.875em;
+        color: #a0a0a5;
+    }
+
+    .text-danger {
+        color: #ff5252 !important;
+        font-weight: 500;
+    }
+    
+    .form-container {
+        max-width: 700px;
+    }
+    
+    .btn-volcanic-primary {
+        background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
+        border: none;
+        color: white;
+        font-weight: bold;
+        padding: 12px 25px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    .btn-volcanic-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
+    }
+
+    .btn-volcanic-secondary {
+        background-color: transparent;
+        border: 2px solid #6c757d;
+        color: #ced4da;
+        font-weight: bold;
+        padding: 10px 25px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    .btn-volcanic-secondary:hover {
+        background-color: #6c757d;
+        color: white;
+        border-color: #6c757d;
+    }
+</style>
+
+<h1 class="title-volcanic">@ViewData["Title"]</h1>
+
+<div class="row">
+    <div class="col-md-8 form-container">
+        <form method="post">
+
+            <input type="hidden" asp-for="Usuario.Id" />
+
+            <div class="mb-3">
+                <label asp-for="Usuario.Nombres" class="form-label"></label>
+                <input asp-for="Usuario.Nombres" class="form-control" />
+                <span asp-validation-for="Usuario.Nombres" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Usuario.PrimerApellido" class="form-label"></label>
+                <input asp-for="Usuario.PrimerApellido" class="form-control" />
+                <span asp-validation-for="Usuario.PrimerApellido" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Usuario.SegundoApellido" class="form-label"></label>
+                <input asp-for="Usuario.SegundoApellido" class="form-control" />
+                <span asp-validation-for="Usuario.SegundoApellido" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Usuario.Email" class="form-label"></label>
+                <input asp-for="Usuario.Email" class="form-control" />
+                <span asp-validation-for="Usuario.Email" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Usuario.Rol" class="form-label"></label>
+                <select asp-for="Usuario.Rol" class="form-select">
+                    <option value="SuperAdmin">Super Administrador</option>
+                    <option value="JefeDeProyecto">Jefe de Proyecto</option>
+                    <option value="Empleado">Empleado</option>
+                </select>
+            </div>
+
+            <button class="btn btn-volcanic-primary">Guardar Cambios</button>
+            <a asp-page="Index" class="btn btn-volcanic-secondary ms-2">Cancelar</a>
+
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

@@ -1,0 +1,11 @@
+﻿@page
+@model Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.AccessDeniedModel
+@{
+    ViewData["Title"] = "Acceso Denegado";
+}
+
+<header class="text-center">
+    <h1 class="text-danger">@ViewData["Title"]</h1>
+    <p class="lead text-danger">No tienes los permisos necesarios para ver esta página.</p>
+    <a asp-page="/Index" class="btn btn-primary mt-3">Volver a la Página Principal</a>
+</header>
