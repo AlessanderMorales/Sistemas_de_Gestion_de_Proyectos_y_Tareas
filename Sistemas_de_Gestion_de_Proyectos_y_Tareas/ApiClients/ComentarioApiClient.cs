@@ -15,56 +15,66 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.ApiClients
         // ✔ Listar todos
         public async Task<IEnumerable<ComentarioDTO>> GetAllAsync()
         {
-            return await _http.GetFromJsonAsync<IEnumerable<ComentarioDTO>>("/api/comentarios")
+            return await _http.GetFromJsonAsync<IEnumerable<ComentarioDTO>>("api/comentario")
                    ?? new List<ComentarioDTO>();
         }
 
-        // ✔ Obtener por id
-        public async Task<ComentarioDTO?> GetAsync(int id)
+        // ✔ Obtener por ID (alias corregido)
+        public async Task<ComentarioDTO?> GetByIdAsync(int id)
         {
-            return await _http.GetFromJsonAsync<ComentarioDTO>($"/api/comentarios/{id}");
+            var response = await _http.GetAsync($"api/comentario/{id}");
+
+            if (!response.IsSuccessStatusCode)
+                return null;
+
+            return await response.Content.ReadFromJsonAsync<ComentarioDTO>();
         }
 
-        // ✔ Comentarios por tarea
+        // ✔ Obtener por tarea
         public async Task<IEnumerable<ComentarioDTO>> GetByTareaAsync(int idTarea)
         {
             return await _http.GetFromJsonAsync<IEnumerable<ComentarioDTO>>(
-                $"/api/comentarios/tarea/{idTarea}"
+                $"api/comentario/tarea/{idTarea}"
             ) ?? new List<ComentarioDTO>();
         }
 
-        // ✔ Comentarios destinados a un usuario
+        // ✔ Obtener por destinatario
         public async Task<IEnumerable<ComentarioDTO>> GetByDestinatarioAsync(int idUsuario)
         {
             return await _http.GetFromJsonAsync<IEnumerable<ComentarioDTO>>(
-                $"/api/comentarios/destinatario/{idUsuario}"
+                $"api/comentario/destinatario/{idUsuario}"
             ) ?? new List<ComentarioDTO>();
         }
 
-        // ✔ Crear comentario
+        // ✔ Crear
         public async Task<bool> CreateAsync(ComentarioDTO dto)
         {
-            var res = await _http.PostAsJsonAsync("/api/comentarios", dto);
+            var res = await _http.PostAsJsonAsync("api/comentario", dto);
             return res.IsSuccessStatusCode;
         }
 
-        // ✔ Editar comentario
+        // ✔ Actualizar
         public async Task<bool> UpdateAsync(int id, ComentarioDTO dto)
         {
-            var res = await _http.PutAsJsonAsync($"/api/comentarios/{id}", dto);
+            var res = await _http.PutAsJsonAsync($"api/comentario/{id}", dto);
+
+            Console.WriteLine($"PUT → api/comentario/{id}");
+            Console.WriteLine($"STATUS → {res.StatusCode}");
+
+            if (!res.IsSuccessStatusCode)
+            {
+                var error = await res.Content.ReadAsStringAsync();
+                Console.WriteLine($"ERROR BODY → {error}");
+            }
+
             return res.IsSuccessStatusCode;
         }
 
-        // ✔ Eliminar comentario
+        // ✔ Eliminar
         public async Task<bool> DeleteAsync(int id)
         {
-            var res = await _http.DeleteAsync($"/api/comentarios/{id}");
+            var res = await _http.DeleteAsync($"api/comentario/{id}");
             return res.IsSuccessStatusCode;
-        }
-
-        public async Task<ComentarioDTO?> GetByIdAsync(int id)
-        {
-            return await _http.GetFromJsonAsync<ComentarioDTO>($"api/comentarios/{id}");
         }
     }
 }

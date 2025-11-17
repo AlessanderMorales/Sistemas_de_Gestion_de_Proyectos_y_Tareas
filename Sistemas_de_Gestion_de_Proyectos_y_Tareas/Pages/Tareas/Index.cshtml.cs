@@ -89,10 +89,10 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
 
                 // nombre del proyecto
                 tarea.ProyectoNombre =
-                    proyectos.FirstOrDefault(p => p.Id == t.IdProyecto)?.Nombre;
+                    proyectos.FirstOrDefault(p => p.IdProyecto == t.IdProyecto)?.Nombre;
 
                 // usuario asignado
-                var asignados = await _tareaApi.GetUsuariosAsignados(t.Id);
+                var asignados = await _tareaApi.GetUsuariosAsignadosAsync(t.Id);
 
                 if (asignados.Any())
                 {

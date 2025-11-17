@@ -80,15 +80,24 @@
 <div class="row">
     <div class="col-md-8 form-container">
         <form method="post">
+            @Html.AntiForgeryToken()
+
             <input type="hidden" asp-for="Comentario.IdComentario" />
+            <input type="hidden" asp-for="Comentario.IdUsuario" />
+            <input type="hidden" asp-for="Comentario.IdDestinatario" />
+            <input type="hidden" asp-for="Comentario.IdTarea" />
+            <input type="hidden" asp-for="Comentario.Estado" />
+            <input type="hidden" asp-for="Comentario.Fecha" />
+            <input type="hidden" asp-for="Comentario.Usuario" />
+            <input type="hidden" asp-for="Comentario.Tarea" />
+
             <div class="form-group">
-                <label asp-for="Comentario.Contenido" class="form-label">Contenido</label>
-                <textarea asp-for="Comentario.Contenido" class="form-control" rows="4"></textarea>
+                <label asp-for="Comentario.Contenido"></label>
+                <textarea asp-for="Comentario.Contenido" class="form-control"></textarea>
             </div>
-            <div class="mt-4">
-                <button type="submit" class="btn btn-volcanic-primary">Actualizar</button>
-                <a asp-page="Index" class="btn btn-volcanic-secondary ms-2">Cancelar</a>
-            </div>
+
+            <button type="submit" class="btn btn-volcanic-primary">Actualizar</button>
+            <a asp-page="Index" class="btn btn-volcanic-secondary ms-2">Cancelar</a>
         </form>
     </div>
 </div>

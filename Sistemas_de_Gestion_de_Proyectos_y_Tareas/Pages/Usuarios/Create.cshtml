@@ -104,7 +104,11 @@
         </div>
         
         <form method="post" id="createUserForm">
+            @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input type="hidden" asp-for="Usuario.NombreUsuario" />
+            <input type="hidden" asp-for="Usuario.Contraseña" />
 
           <div class="mb-3">
       <label asp-for="Usuario.Nombres" class="form-label"></label>
@@ -143,7 +147,7 @@
         <span asp-validation-for="Usuario.Rol" class="text-danger"></span>
        </div>
 
- <button type="submit" class="btn btn-volcanic-primary" id="submitBtn">Crear Usuario</button>
+            <button type="submit" class="btn btn-volcanic-primary">Crear Usuario</button>
       <a asp-page="Index" class="btn btn-volcanic-secondary">Cancelar</a>
         </form>
     </div>

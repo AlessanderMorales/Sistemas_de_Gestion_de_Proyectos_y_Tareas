@@ -1,51 +1,573 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+@{
+    var tokens = Antiforgery.GetAndStoreTokens(ViewContext.HttpContext);
+    var successMessage = TempData["SuccessMessage"] as string;
+    var errorMessage = TempData["ErrorMessage"] as string;
+}
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Sistemas_de_Gestion_de_Proyectos_y_Tareas</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <title>@ViewData["Title"] - Sistema de Gestión</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Sistemas_de_Gestion_de_Proyectos_y_Tareas.styles.css" asp-append-version="true" />
+
+    <!-- ✅ Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+
+    <meta name="request-verification-token" content="@tokens.RequestToken" />
+    <style>
+              :root {
+                    --bg-dark-primary: #1a1a1d;
+                --bg-dark-secondary: #2c2c31;
+                    --bg-content-area: #212124;
+          --text-primary: #f5f5f7;
+           --text-secondary: #a0a0a5;
+                    --accent-red: #D32F2F;
+               --accent-orange: #FF5722;
+                    --accent-gold: #FFD700;
+                }
+
+                @@keyframes moltenGradient {
+           0% {
+                   background-position: 0% 50%;
+               }
+
+             50% {
+            background-position: 100% 50%;
+              }
+
+                    100% {
+                   background-position: 0% 50%;
+                    }
+                }
+
+                body {
+                color: var(--text-primary);
+                    background: linear-gradient(270deg, #1D2B3C, var(--bg-dark-primary), #432020);
+                    background-size: 200% 200%;
+                    animation: moltenGradient 20s ease infinite;
+            overflow-x: hidden;
+              }
+
+              #wrapper {
+                    display: flex;
+                    transition: all 0.4s ease;
+                }
+
+           #sidebar-wrapper {
+                    min-width: 280px;
+                    max-width: 280px;
+           background-color: var(--bg-dark-secondary);
+                    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+              transition: all 0.4s ease;
+                    position: fixed;
+         height: 100vh;
+         overflow-y: auto;
+            z-index: 1000;
+                }
+
+                /* ✅ NUEVO: Sidebar oculto en móviles */
+              #wrapper.toggled #sidebar-wrapper {
+                    margin-left: -280px;
+                }
+
+           #page-content-wrapper {
+              flex-grow: 1;
+                    width: 100%;
+          display: flex;
+               flex-direction: column;
+          min-height: 100vh;
+                    margin-left: 280px;
+                    transition: all 0.4s ease;
+                }
+
+                #wrapper.toggled #page-content-wrapper {
+                 margin-left: 0;
+                }
+
+                .sidebar-heading {
+                    padding: 1.5rem 1rem;
+             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                }
+
+                .sidebar-heading .fs-4 {
+               background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
+                    -webkit-background-clip: text;
+               -webkit-text-fill-color: transparent;
+                    font-weight: 800;
+                }
+
+                /* ✅ NUEVO: Botones del sidebar siempre verticales */
+           .list-group-item {
+                  background-color: transparent;
+            border: none;
+           color: var(--text-secondary);
+            font-weight: 500;
+                    padding: 1rem 1.5rem;
+                    transition: all 0.3s ease;
+                 display: block;
+                    width: 100%;
+                    text-align: left;
+           margin-bottom: 0.25rem;
+             }
+
+              .list-group-item-action:hover, .list-group-item-action:focus {
+           color: var(--text-primary);
+             background-color: rgba(255, 87, 34, 0.1);
+            }
+
+              .list-group-item.active {
+                    color: var(--accent-orange);
+          font-weight: bold;
+           background-color: transparent;
+                    border-left: 4px solid var(--accent-orange);
+         }
+
+                #page-content-wrapper .navbar {
+                background-color: rgba(26, 26, 29, 0.7);
+         backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+              }
+
+            .navbar-text {
+            color: var(--text-primary);
+         }
+
+                #sidebarToggle {
+              background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
+        border: none;
+             font-size: 1.2rem;
+                    padding: 0.5rem 1rem;
+                    transition: all 0.3s ease;
+                }
+
+                #sidebarToggle:hover {
+               transform: scale(1.05);
+               box-shadow: 0 0 15px rgba(255, 87, 34, 0.5);
+                }
+
+        .btn-outline-secondary {
+          color: var(--accent-orange);
+                    border-color: var(--accent-orange);
+             font-weight: bold;
+           transition: all 0.3s ease;
+                }
+
+                .btn-outline-secondary:hover {
+         color: white;
+              background-color: var(--accent-orange);
+                    border-color: var(--accent-orange);
+              box-shadow: 0 0 15px rgba(255, 87, 34, 0.5);
+             }
+
+                .content-container {
+           flex-grow: 1;
+                    padding: 1.5rem;
+                }
+
+            .main-content-card {
+                background-color: var(--bg-content-area);
+                    padding: 2rem;
+                  border-radius: 15px;
+                  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+         }
+
+                footer.border-top {
+                    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+                    background-color: transparent;
+                    color: var(--text-primary);
+                    padding: 1rem 0;
+                    margin-top: auto;
+                }
+
+                footer a {
+        color: var(--accent-orange);
+             text-decoration: none;
+                }
+
+                /* Estilos mínimos para modales volcánicos usados en otras páginas */
+                .modal-content.volcanic-modal {
+             background-color: #2c2c31;
+            color: #f5f5f7;
+                    border: 1px solid rgba(255,255,255,0.2);
+                    border-radius: 12px;
+                }
+
+                .volcanic-modal .modal-header {
+             border-bottom: 1px solid var(--accent-orange);
+              }
+
+          .volcanic-modal .modal-footer {
+                border-top: 1px solid rgba(255,255,255,0.1);
+                }
+
+                .btn-volcanic-delete {
+              background-color: var(--accent-red);
+             border: none;
+                    color: white;
+                font-weight: bold;
+             padding: 8px 14px;
+                    border-radius: 8px;
+        }
+
+                .btn-volcanic-secondary-modal {
+              background-color: #4a4a50;
+              border: none;
+                    color: white;
+             font-weight: bold;
+                    padding: 8px 14px;
+             border-radius: 8px;
+                }
+
+                /* ✅ Estilos personalizados para Flatpickr */
+                .flatpickr-calendar {
+                    background: #2c2c31 !important;
+           border: 1px solid rgba(255, 255, 255, 0.2) !important;
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5) !important;
+                }
+
+                .flatpickr-day {
+           color: #f5f5f7 !important;
+                }
+
+                .flatpickr-day:hover {
+           background: rgba(255, 87, 34, 0.3) !important;
+             }
+
+              .flatpickr-day.selected {
+              background: linear-gradient(45deg, #D32F2F, #FF5722) !important;
+              border-color: #FF5722 !important;
+                }
+
+         .flatpickr-months {
+               background: #1a1a1d !important;
+                }
+
+             .flatpickr-current-month .flatpickr-monthDropdown-months {
+          background: #3a3a40 !important;
+            color: #f5f5f7 !important;
+         }
+
+                .flatpickr-weekday {
+              color: #FFD700 !important;
+                }
+
+                /* ✅ NUEVO: Responsive Design */
+          /* Tablets y pantallas medianas */
+            @@media (max-width: 992px) {
+            #sidebar-wrapper {
+                        min-width: 250px;
+               max-width: 250px;
+            }
+
+                    #page-content-wrapper {
+                  margin-left: 250px;
+                    }
+
+                    .content-container {
+        padding: 1rem;
+               }
+
+             .main-content-card {
+          padding: 1.5rem;
+                    }
+                }
+
+             /* Móviles y pantallas pequeñas */
+                @@media (max-width: 768px) {
+         #sidebar-wrapper {
+           margin-left: -280px;
+                    }
+
+                    #wrapper.toggled #sidebar-wrapper {
+               margin-left: 0;
+             }
+
+            #page-content-wrapper {
+            margin-left: 0;
+             width: 100%;
+             }
+
+           #wrapper.toggled #page-content-wrapper {
+          margin-left: 0;
+                    }
+
+             .content-container {
+              padding: 0.75rem;
+                    }
+
+           .main-content-card {
+                     padding: 1rem;
+            border-radius: 10px;
+           }
+
+                 .navbar-text {
+                        font-size: 0.9rem;
+               }
+
+         /* ✅ Overlay oscuro cuando el sidebar está abierto en móvil */
+            #wrapper.toggled::after {
+                     content: '';
+                   position: fixed;
+                  top: 0;
+                  left: 0;
+          right: 0;
+            bottom: 0;
+                        background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+                 }
+                }
+
+                /* Pantallas muy pequeñas */
+             @@media (max-width: 576px) {
+         .sidebar-heading {
+             padding: 1rem 0.75rem;
+             }
+
+                 .list-group-item {
+                   padding: 0.75rem 1rem;
+             font-size: 0.9rem;
+           }
+
+                .navbar-text {
+              display: none;
+                    }
+
+                    #sidebarToggle {
+                   font-size: 1rem;
+                 padding: 0.4rem 0.8rem;
+                    }
+           }
+
+                /* ✅ NUEVO: Scrollbar personalizado para el sidebar */
+                #sidebar-wrapper::-webkit-scrollbar {
+                    width: 6px;
+            }
+
+                #sidebar-wrapper::-webkit-scrollbar-track {
+             background: var(--bg-dark-secondary);
+                }
+
+                #sidebar-wrapper::-webkit-scrollbar-thumb {
+                    background: var(--accent-orange);
+            border-radius: 3px;
+                }
+
+          #sidebar-wrapper::-webkit-scrollbar-thumb:hover {
+                 background: var(--accent-gold);
+             }
+    </style>
+    <style>
+        /* Fuerza que el navbar JAMÁS se convierta en form */
+        nav, .navbar, .nav-item, .nav-link {
+            display: block !important;
+        }
+    </style>
 </head>
+
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Sistemas_de_Gestion_de_Proyectos_y_Tareas</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
+    <div class="d-flex" id="wrapper">
+        <div class="border-end" id="sidebar-wrapper">
+            <div class="sidebar-heading text-center">
+                <img src="~/Image/Logo.png" alt="Logo de Gestión" style="height:40px; margin-bottom:10px;" />
+                <div class="fs-4">Gestión Pro</div>
+            </div>
+            <div class="list-group list-group-flush">
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <a asp-page="/Login/Login" class="list-group-item list-group-item-action">Iniciar Sesión</a>
+                }
+                else if (User.IsInRole("SuperAdmin"))
+                {
+                    <a asp-page="/Usuarios/Index" class="list-group-item list-group-item-action">Usuarios</a>
+                    <a asp-page="/Usuarios/Create" class="list-group-item list-group-item-action">Crear Usuario</a>
+                    <a asp-page="/Configuracion/CambiarContraseña" class="list-group-item list-group-item-action">Configuración</a>
+                }
+                else if (User.IsInRole("JefeDeProyecto"))
+                {
+                    <a asp-page="/Index" class="list-group-item list-group-item-action">Home</a>
+                    <a asp-page="/Empleados/Index" class="list-group-item list-group-item-action">Ver Empleados</a>
+                    <a asp-page="/proyectos/Create" class="list-group-item list-group-item-action">Crear Proyectos</a>
+                    <a asp-page="/proyectos/Index" class="list-group-item list-group-item-action">Mostrar Proyectos</a>
+                    <a asp-page="/Tareas/Index" class="list-group-item list-group-item-action">Tareas</a>
+                    <a asp-page="/Comentarios/Index" class="list-group-item list-group-item-action">Comentarios</a>
+                    <a asp-page="/Configuracion/CambiarContraseña" class="list-group-item list-group-item-action">Configuración</a>
+                }
+                else if (User.IsInRole("Empleado"))
+                {
+                    <a asp-page="/Index" class="list-group-item list-group-item-action">Home</a>
+                    <a asp-page="/Tareas/Index" class="list-group-item list-group-item-action">Mis Tareas</a>
+                    <a asp-page="/Proyectos/Index" class="list-group-item list-group-item-action">Mis Proyectos</a>
+                    <a asp-page="/Comentarios/Index" class="list-group-item list-group-item-action">Comentarios</a>
+                    <a asp-page="/Configuracion/CambiarContraseña" class="list-group-item list-group-item-action">Configuración</a>
+                }
+            </div>
+        </div>
+
+        <div id="page-content-wrapper">
+            <nav class="navbar navbar-expand-lg border-bottom">
+                <div class="container-fluid">
+                    <button class="btn" id="sidebarToggle">☰</button>
+                    <div class="ms-auto">
+                        <ul class="navbar-nav align-items-center">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <li class="nav-item">
+                                    <span class="navbar-text me-3">Hola, @User.Identity.Name!</span>
+                                </li>
+                                <li class="nav-item">
+                                    <form id="logoutForm" method="post" asp-page="/Logout" class="d-none">
+                                        @Html.AntiForgeryToken()
+                                    </form>
+                                    <button type="button" id="openLogoutModal" class="btn btn-outline-secondary">
+                                        Cerrar Sesión
+                                    </button>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="btn btn-primary" asp-page="/Login/Login">Iniciar Sesión</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            @if (!string.IsNullOrEmpty(successMessage))
+            {
+                <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header bg-success text-white">
+                                <h5 class="modal-title" id="successModalLabel">Operación Completada</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                            </div>
+                            <div class="modal-body">
+                                @successMessage
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header bg-danger text-white">
+                                <h5 class="modal-title" id="errorModalLabel">Error</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                            </div>
+                            <div class="modal-body">
+                                @errorMessage
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content volcanic-modal">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-white" id="logoutModalLabel">Confirmar Cierre de Sesión</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body text-white">
+                            ¿Estás seguro de que deseas cerrar sesión?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn-volcanic-secondary-modal" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" id="confirmLogoutButton" class="btn-volcanic-delete">Sí, Salir</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+
+            <div class="content-container">
+                <main role="main" class="main-content-card">
+                    @RenderBody()
+                </main>
+            </div>
+
+            <footer class="border-top text-muted text-center">
+                &copy; 2025 - Sistema de Gestión - <a asp-page="/Privacy">Privacy</a>
+            </footer>
+        </div>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - Sistemas_de_Gestion_de_Proyectos_y_Tareas - <a asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
-    </footer>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- ✅ Flatpickr JS y localización español -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+                document.addEventListener("DOMContentLoaded", function(event) {
+         const sidebarToggle = document.body.querySelector('#sidebarToggle');
+        document.getElementById("openLogoutModal")
+        .addEventListener("click", () => {
+            new bootstrap.Modal(document.getElementById("logoutModal")).show();
+        });
+         const wrapper = document.body.querySelector('#wrapper');
+
+        if (sidebarToggle) {
+         sidebarToggle.addEventListener('click', event => {
+                  event.preventDefault();
+           wrapper.classList.toggle('toggled');
+                  });
+                    }
+
+                    // ✅ NUEVO: Cerrar sidebar al hacer clic fuera en móvil
+                    if (window.innerWidth <= 768) {
+             document.addEventListener('click', function(event) {
+               const sidebar = document.getElementById('sidebar-wrapper');
+                const isClickInsideSidebar = sidebar.contains(event.target);
+          const isToggleButton = event.target.closest('#sidebarToggle');
+
+                 if (!isClickInsideSidebar && !isToggleButton && !wrapper.classList.contains('toggled')) {
+                 wrapper.classList.add('toggled');
+                }
+              });
+                    }
+
+          const successModalEl = document.getElementById('successModal');
+                    if (successModalEl) {
+                        var modal = new bootstrap.Modal(successModalEl);
+                 modal.show();
+            }
+
+              const errorModalEl = document.getElementById('errorModal');
+          if (errorModalEl) {
+            var modalErr = new bootstrap.Modal(errorModalEl);
+                        modalErr.show();
+            }
+
+                    const confirmLogoutButton = document.getElementById('confirmLogoutButton');
+          if (confirmLogoutButton) {
+             confirmLogoutButton.addEventListener('click', function () {
+             const form = document.getElementById('logoutForm');
+             if (form) form.submit();
+                   });
+           }
+                });
+    </script>
 </body>
 </html>

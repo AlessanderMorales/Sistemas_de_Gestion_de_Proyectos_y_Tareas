@@ -39,9 +39,9 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
             ProyectosDisponibles = proyectos
                 .Select(p => new SelectListItem
                 {
-                    Value = p.Id.ToString(),
+                    Value = p.IdProyecto.ToString(),
                     Text = p.Nombre,
-                    Selected = (p.Id == Tarea.IdProyecto)
+                    Selected = (p.IdProyecto == Tarea.IdProyecto)
                 })
                 .ToList();
 
@@ -56,9 +56,9 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
                 ProyectosDisponibles = proyectos
                     .Select(p => new SelectListItem
                     {
-                        Value = p.Id.ToString(),
+                        Value = p.IdProyecto.ToString(),
                         Text = p.Nombre,
-                        Selected = (p.Id == Tarea.IdProyecto)
+                        Selected = (p.IdProyecto == Tarea.IdProyecto)
                     })
                     .ToList();
 

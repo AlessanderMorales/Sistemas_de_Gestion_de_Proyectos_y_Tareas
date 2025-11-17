@@ -64,25 +64,29 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
             Tareas = await EnriquecerTareas(todas);
         }
 
-        public async Task<IActionResult> OnPostAsync(int id)
+        public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
+            Console.WriteLine("=== ELIMINAR COMENTARIO ID = " + id);
+
+            // Solo jefe o admin pueden eliminar
             if (User.IsInRole("Empleado"))
             {
-                TempData["ErrorMessage"] = "No estás autorizado para eliminar tareas.";
+                TempData["ErrorMessage"] = "No estás autorizado para eliminar comentarios.";
                 return RedirectToPage();
             }
 
-            var ok = await _tareaApiClient.DeleteAsync(id);
+            var ok = await _comentarioService.DeleteAsync(id);
 
             if (!ok)
             {
-                TempData["ErrorMessage"] = "Error al eliminar la tarea.";
+                TempData["ErrorMessage"] = "Error al eliminar el comentario.";
                 return RedirectToPage();
             }
 
-            TempData["SuccessMessage"] = "Tarea eliminada correctamente.";
+            TempData["SuccessMessage"] = "Comentario eliminado correctamente.";
             return RedirectToPage();
         }
+
 
         private async Task<List<TareaExtendidaDTO>> EnriquecerTareas(List<TareaDTO> tareas)
         {
@@ -105,10 +109,10 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
 
                 // nombre del proyecto
                 tarea.ProyectoNombre =
-                    proyectos.FirstOrDefault(p => p.Id == t.IdProyecto)?.Nombre;
+                    proyectos.FirstOrDefault(p => p.IdProyecto == t.IdProyecto)?.Nombre;
 
                 // usuario asignado
-                var asignados = await _tareaApiClient.GetUsuariosAsignados(t.Id);
+                var asignados = await _tareaApiClient.GetUsuariosAsignadosAsync(t.Id);
 
                 if (asignados.Any())
                 {

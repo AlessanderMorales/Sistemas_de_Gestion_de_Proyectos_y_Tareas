@@ -1,4 +1,5 @@
 ﻿using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Usuarios;
+using System.Net;
 using System.Net.Http.Json;
 
 namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.ApiClients
@@ -26,26 +27,29 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.ApiClients
 
         public async Task<UsuarioDTO?> GetByIdAsync(int id)
         {
-            return await _http.GetFromJsonAsync<UsuarioDTO>($"{BasePath}/{id}");
-        }
+            var response = await _http.GetAsync($"{BasePath}/{id}");
 
-        public async Task<bool> CrearUsuarioAsync(UsuarioDTO dto)
-        {
-            var response = await _http.PostAsJsonAsync(BasePath, dto);
-            return response.IsSuccessStatusCode;
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"[WARN] Usuario {id} no encontrado. Status: {response.StatusCode}");
+                return null;
+            }
+
+            return await response.Content.ReadFromJsonAsync<UsuarioDTO>();
         }
 
         public async Task<bool> UpdateAsync(UsuarioDTO dto)
         {
-            // Ajusta esta ruta si tu microservicio espera otro formato
-            var response = await _http.PutAsJsonAsync(BasePath, dto);
+            var response = await _http.PutAsJsonAsync($"{BasePath}/{dto.Id}", dto);
             return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
             var response = await _http.DeleteAsync($"{BasePath}/{id}");
-            return response.IsSuccessStatusCode;
+            var raw = await response.Content.ReadAsStringAsync();
+            return response.StatusCode == HttpStatusCode.OK
+                || response.StatusCode == HttpStatusCode.NoContent;
         }
 
         // =========================================================
@@ -60,7 +64,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.ApiClients
         public Task<UsuarioDTO?> GetById(int id) => GetByIdAsync(id);
 
         // Create.cshtml.cs -> _usuarioApi.CrearUsuario(dto)
-        public Task<bool> CrearUsuario(UsuarioDTO dto) => CrearUsuarioAsync(dto);
+        public Task<bool> CrearUsuario(UsuarioCrearDTO dto) => CrearUsuarioAsync(dto);
 
         // Edit.cshtml.cs -> _usuarioApi.Update(dto)
         public Task<bool> Update(UsuarioDTO dto) => UpdateAsync(dto);
@@ -78,6 +82,13 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.ApiClients
                 return null;
 
             return await response.Content.ReadFromJsonAsync<UsuarioDTO>();
+        }
+        public async Task<bool> CrearUsuarioAsync(UsuarioCrearDTO dto)
+        {
+            var response = await _http.PostAsJsonAsync("api/usuario", dto);
+
+            string log = await response.Content.ReadAsStringAsync();
+            return response.IsSuccessStatusCode;
         }
 
     }

@@ -1,18 +1,37 @@
-﻿namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Tareas
-{
-    public class TareaDTO
-    {
-        public int Id { get; set; }
-        public string Titulo { get; set; } = "";
-        public string? Descripcion { get; set; }
-        public int Estado { get; set; }
-        public DateTime FechaCreacion { get; set; }
-        public int IdProyecto { get; set; }
-        public string? ProyectoNombre { get; set; }
-        public string Prioridad { get; set; }
-        public string Status { get; set; }
-        public string UsuarioAsignadoNombre { get; set; }
-        public int? IdUsuarioAsignado { get; set; }
+﻿using System.Text.Json.Serialization;
 
-    }
+public class TareaDTO
+{
+    [JsonPropertyName("idTarea")]
+    public int Id { get; set; }
+
+    [JsonPropertyName("titulo")]
+    public string Titulo { get; set; } = "";
+
+    [JsonPropertyName("descripcion")]
+    public string? Descripcion { get; set; }
+
+    [JsonPropertyName("estado")]
+    public int Estado { get; set; }
+
+    [JsonPropertyName("fechaCreacion")]
+    public DateTime FechaCreacion { get; set; }
+
+    [JsonPropertyName("idProyecto")]
+    public int IdProyecto { get; set; }
+
+    [JsonPropertyName("proyectoNombre")]
+    public string? ProyectoNombre { get; set; }
+
+    [JsonPropertyName("prioridad")]
+    public string Prioridad { get; set; } = "";
+
+    [JsonPropertyName("status")]
+    public string Status { get; set; } = "";
+
+    [JsonPropertyName("usuarioAsignadoNombre")]
+    public string? UsuarioAsignadoNombre { get; set; }
+
+    [JsonPropertyName("idUsuarioAsignado")]
+    public int? IdUsuarioAsignado { get; set; }
 }

@@ -46,7 +46,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Proyectos
             if (!string.IsNullOrEmpty(Proyecto.Descripcion))
                 Proyecto.Descripcion = TrimExtraSpaces(Proyecto.Descripcion);
 
-            var ok = await _proyectoApi.UpdateAsync(Proyecto.Id, Proyecto);
+            var ok = await _proyectoApi.UpdateAsync(Proyecto.IdProyecto, Proyecto);
 
             if (!ok)
             {

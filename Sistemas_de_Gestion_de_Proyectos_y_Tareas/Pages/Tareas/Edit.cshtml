@@ -84,42 +84,48 @@
 
 <div class="row">
     <div class="col-md-8 form-container">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form method="post" asp-route-id="@Model.Tarea.Id">
+
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <!-- Campos ocultos necesarios -->
             <input type="hidden" asp-for="Tarea.Id" />
+            <input type="hidden" asp-for="Tarea.UsuarioAsignadoNombre" />
+            <input type="hidden" asp-for="Tarea.IdUsuarioAsignado" />
+            <input type="hidden" asp-for="Tarea.Estado" />
+            <input type="hidden" asp-for="Tarea.Status" />
+            <input type="hidden" asp-for="Tarea.FechaCreacion" />
 
             <div class="mb-3">
-                <label asp-for="Tarea.Titulo" class="form-label"></label>
+                <label asp-for="Tarea.Titulo"></label>
                 <input asp-for="Tarea.Titulo" class="form-control" />
-                <span asp-validation-for="Tarea.Titulo" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="Tarea.Descripcion" class="form-label"></label>
-                <textarea asp-for="Tarea.Descripcion" class="form-control" rows="3"></textarea>
-                <span asp-validation-for="Tarea.Descripcion" class="text-danger"></span>
+                <label asp-for="Tarea.Descripcion"></label>
+                <textarea asp-for="Tarea.Descripcion" class="form-control"></textarea>
             </div>
 
             <div class="mb-3">
-                <label asp-for="Tarea.Prioridad" class="form-label"></label>
+                <label asp-for="Tarea.Prioridad"></label>
                 <select asp-for="Tarea.Prioridad" class="form-select">
                     <option value="Alta">Alta</option>
                     <option value="Media">Media</option>
                     <option value="Baja">Baja</option>
                 </select>
-                <span asp-validation-for="Tarea.Prioridad" class="text-danger"></span>
             </div>
+
             <div class="mb-3">
-                <label asp-for="Tarea.IdProyecto" class="form-label">Proyecto</label>
-                <select asp-for="Tarea.IdProyecto" class="form-select" asp-items="Model.ProyectosDisponibles">
-                </select>
-                <span asp-validation-for="Tarea.IdProyecto" class="text-danger"></span>
+                <label asp-for="Tarea.IdProyecto">Proyecto</label>
+                <select asp-for="Tarea.IdProyecto"
+                        class="form-select"
+                        asp-items="Model.ProyectosDisponibles"></select>
             </div>
-            <div class="mt-4">
-                <button type="submit" class="btn btn-volcanic-primary">Actualizar Tarea</button>
-                <a asp-page="Index" class="btn btn-volcanic-secondary ms-2">Cancelar</a>
-            </div>
+
+            <button type="submit" class="btn btn-volcanic-primary">Actualizar Tarea</button>
+            <a asp-page="Index" class="btn btn-volcanic-secondary ms-2">Cancelar</a>
         </form>
+
     </div>
 </div>
 

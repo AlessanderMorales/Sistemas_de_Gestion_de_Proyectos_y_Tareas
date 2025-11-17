@@ -313,11 +313,11 @@ color: white;
   }
   
   <td class="text-center">
-   <a asp-page="Mostrar" asp-route-id="@c.IdComentario" class="btn btn-sm btn-view">Ver</a>
+                    <a asp-page="/Comentarios/Mostrar" asp-route-id="@c.IdComentario" class="btn btn-sm btn-view">Ver</a>
 
   @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
   {
-      <a asp-page="Edit" asp-route-id="@c.IdComentario" class="btn btn-sm btn-edit">Editar</a>
+                        <a asp-page="/Comentarios/Edit" asp-route-id="@c.IdComentario" class="btn btn-sm btn-edit">Editar</a>
     <button type="button" class="btn btn-sm btn-delete"
       data-bs-toggle="modal"
    data-bs-target="#confirmDeleteModal"

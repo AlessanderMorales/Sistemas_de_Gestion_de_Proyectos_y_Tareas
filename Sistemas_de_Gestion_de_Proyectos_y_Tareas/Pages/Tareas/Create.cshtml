@@ -179,9 +179,9 @@
                     @foreach (var proyecto in Model.ProyectosDisponibles)
                     {
                         <div class="proyecto-option"
-                             data-id="@proyecto.Id"
+                             data-id="@proyecto.IdProyecto"
                              data-nombre="@proyecto.Nombre.ToLower()"
-                             onclick="selectProyecto(@proyecto.Id, @Html.Raw(System.Text.Json.JsonSerializer.Serialize(proyecto.Nombre)))">
+                             onclick="selectProyecto(@proyecto.IdProyecto, @Html.Raw(System.Text.Json.JsonSerializer.Serialize(proyecto.Nombre)))">
                             @proyecto.Nombre
                         </div>
                     }

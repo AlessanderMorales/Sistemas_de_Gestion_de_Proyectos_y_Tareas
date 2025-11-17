@@ -122,7 +122,7 @@
     <div class="mt-4">
         @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
         {
-             <a asp-page="/Tareas/Create" asp-route-idProyecto="@Model.Proyecto.Id" class="btn btn-volcanic-primary">Añadir Nueva Tarea</a>
+             <a asp-page="/Tareas/Create" asp-route-idProyecto="@Model.Proyecto.IdProyecto" class="btn btn-volcanic-primary">Añadir Nueva Tarea</a>
         }
         <a asp-page="./Index" class="btn btn-volcanic-secondary ms-2">Volver a la Lista</a>
     </div>

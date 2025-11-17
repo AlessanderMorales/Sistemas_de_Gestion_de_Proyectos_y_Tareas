@@ -39,7 +39,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
             }
 
             // Valores por defecto
-            Tarea.IdProyecto = ProyectosDisponibles.First().Id;
+            Tarea.IdProyecto = ProyectosDisponibles.First().IdProyecto;
             Tarea.Prioridad = "Media";
             Tarea.Status = "SinIniciar";
 

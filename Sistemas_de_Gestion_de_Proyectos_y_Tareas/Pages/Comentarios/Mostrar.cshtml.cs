@@ -37,26 +37,21 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
             // Si el comentario tiene tarea asociada
             if (Comentario.IdTarea > 0)
             {
-                // Cambiar GetByUsuarioAsync para obtener una sola tarea
-                var tareas = await _tareaApi.GetByUsuarioAsync(Comentario.IdTarea);
+                var tarea = await _tareaApi.GetByIdAsync(Comentario.IdTarea);
 
-                if (tareas != null && tareas.Count > 0)
+                if (tarea != null)
                 {
-                    // Asignar la primera tarea de la lista
-                    Comentario.Tarea = tareas[0];
+                    Comentario.Tarea = tarea;
 
-                    // Obtener proyecto
-                    if (Comentario.Tarea.IdProyecto > 0)
+                    if (tarea.IdProyecto > 0)
                     {
-                        var proyecto = await _proyectoApi.GetByIdAsync(Comentario.Tarea.IdProyecto);
+                        var proyecto = await _proyectoApi.GetByIdAsync(tarea.IdProyecto);
+
                         if (proyecto != null)
-                        {
                             Comentario.Tarea.ProyectoNombre = proyecto.Nombre;
-                        }
                     }
                 }
             }
-
             return Page();
         }
     }

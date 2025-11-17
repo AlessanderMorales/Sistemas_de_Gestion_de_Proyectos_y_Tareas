@@ -201,7 +201,7 @@ font-weight: 600;
            data-bs-target="#confirmDesasignarModal"
    data-usuario-id="@usuario.Id"
       data-usuario-nombre="@usuario.Nombres @usuario.PrimerApellido"
-            data-proyecto-id="@Model.Proyecto.Id">
+            data-proyecto-id="@Model.Proyecto.IdProyecto">
  ? Desasignar
         </button>
     </div>
@@ -237,7 +237,7 @@ font-weight: 600;
  <small>@usuario.Email</small>
                   </div>
          <form method="post" asp-page-handler="Asignar" style="margin: 0;">
-         <input type="hidden" name="idProyecto" value="@Model.Proyecto.Id" />
+         <input type="hidden" name="idProyecto" value="@Model.Proyecto.IdProyecto" />
      <input type="hidden" name="idUsuario" value="@usuario.Id" />
          <button type="submit" class="btn btn-sm btn-volcanic-primary">
     ? Asignar

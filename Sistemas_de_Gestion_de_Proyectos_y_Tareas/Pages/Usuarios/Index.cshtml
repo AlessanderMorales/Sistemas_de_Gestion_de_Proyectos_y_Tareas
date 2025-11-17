@@ -1,4 +1,4 @@
-@page
+ï»¿@page
 @model Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Usuarios.IndexModel
 @{
     ViewData["Title"] = "Lista de Usuarios";
@@ -88,24 +88,25 @@
     }
 </style>
 
-@if (!string.IsNullOrEmpty(TempData["MensajeExito"] as string))
-{
-    <div class="alert-custom-success">
-        <strong>? Éxito:</strong> @TempData["MensajeExito"]
-    </div>
-}
-
-@if (!string.IsNullOrEmpty(TempData["MensajeError"] as string))
-{
-  <div class="alert-custom-error">
-        <strong>? Advertencia:</strong> @TempData["MensajeError"]
-    </div>
-}
-
 <div class="header-actions">
     <h1 class="title-volcanic m-0">@ViewData["Title"]</h1>
     <a asp-page="Create" class="btn btn-volcanic-primary">Crear Nuevo Usuario</a>
 </div>
+
+<!-- ðŸ”¥ MENSAJES DE Ã‰XITO O ERROR -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
 
 <table class="table table-volcanic">
     <thead>
@@ -129,10 +130,10 @@
                 <td>@item.Rol</td>
                 <td class="text-center">
                     <a class="btn btn-sm btn-action btn-edit" asp-page="Edit" asp-route-id="@item.Id">Editar</a>
-                    <form method="post" asp-page-handler="Delete" asp-route-id="@item.Id" style="display:inline" id="deleteForm-@item.Id">
-                        <button type="button" class="btn btn-sm btn-action btn-delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-item-id="@item.Id">
-                            Eliminar
-                        </button>
+
+                    <form id="deleteForm-@item.Id" method="post" asp-page-handler="Delete" style="display:inline;">
+                        <input type="hidden" name="DeleteId" value="@item.Id" />
+                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
                     </form>
                 </td>
             </tr>
@@ -144,15 +145,15 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content volcanic-modal">
   <div class="modal-header">
-        <h5 class="modal-title" id="modalLabel">Confirmar Eliminación</h5>
+        <h5 class="modal-title" id="modalLabel">Confirmar EliminaciÃ³n</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>¿Estás seguro de que deseas eliminar a este usuario?</p>
+        <p>Â¿EstÃ¡s seguro de que deseas eliminar a este usuario?</p>
       </div>
       <div class="modal-footer">
     <button type="button" class="btn btn-volcanic-secondary-modal" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-volcanic-delete" id="confirmDeleteButton">Sí, Eliminar</button>
+        <button type="button" class="btn btn-volcanic-delete" id="confirmDeleteButton">SÃ­, Eliminar</button>
  </div>
     </div>
   </div>

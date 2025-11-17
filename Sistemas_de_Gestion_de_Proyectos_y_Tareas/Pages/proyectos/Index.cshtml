@@ -244,17 +244,17 @@ box-shadow: 0 10px 20px rgba(0,0,0,0.4);
         <td>@(item.FechaInicio.HasValue ? item.FechaInicio.Value.ToShortDateString() : "")</td>
         <td>@(item.FechaFin.HasValue ? item.FechaFin.Value.ToShortDateString() : "")</td>
         <td class="text-center">
-            <a class="btn btn-sm btn-action btn-view" asp-page="./Mostrar" asp-route-id="@item.Id">Ver</a>
+            <a class="btn btn-sm btn-action btn-view" asp-page="./Mostrar" asp-route-id="@item.IdProyecto">Ver</a>
 
             @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
             {
-                <a class="btn btn-sm btn-action btn-edit" asp-page="./Edit" asp-route-id="@item.Id">Editar</a>
+                <a class="btn btn-sm btn-action btn-edit" asp-page="./Edit" asp-route-id="@item.IdProyecto">Editar</a>
 
-                <form method="post" asp-route-id="@item.Id" style="display:inline" id="deleteForm-@item.Id">
+                <form method="post" asp-route-id="@item.IdProyecto" style="display:inline" id="deleteForm-@item.IdProyecto">
                     <button type="button" class="btn btn-sm btn-action btn-delete"
                             data-bs-toggle="modal"
                             data-bs-target="#confirmDeleteModal"
-                            data-project-id="@item.Id">
+                            data-project-id="@item.IdProyecto">
                         Eliminar
                     </button>
                 </form>

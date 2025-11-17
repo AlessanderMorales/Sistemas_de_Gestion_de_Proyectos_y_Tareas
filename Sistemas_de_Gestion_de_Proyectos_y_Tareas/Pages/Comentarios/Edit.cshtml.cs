@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+ï»¿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Comentarios;   // Usa tu namespace real
@@ -22,7 +22,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            var comentario = await _comentarioApi.GetAsync(id);
+            var comentario = await _comentarioApi.GetByIdAsync(id);
 
             if (comentario == null)
                 return NotFound();
@@ -34,13 +34,23 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
+            {
                 return Page();
+            }
+            int id = Comentario.IdComentario;
 
-            // Limpieza automática del texto
-            if (!string.IsNullOrWhiteSpace(Comentario.Contenido))
-                Comentario.Contenido = TrimExtraSpaces(Comentario.Contenido);
+            // Obtener datos actuales
+            var original = await _comentarioApi.GetByIdAsync(id);
 
-            var ok = await _comentarioApi.UpdateAsync(Comentario.IdComentario, Comentario);
+            Comentario.IdUsuario = original.IdUsuario;
+            Comentario.IdTarea = original.IdTarea;
+            Comentario.IdDestinatario = original.IdDestinatario;
+            Comentario.Estado = original.Estado;
+            Comentario.Fecha = original.Fecha;
+
+            var ok = await _comentarioApi.UpdateAsync(id, Comentario);
+
+            Console.WriteLine(">>> PUT ejecutado? " + ok);
 
             if (!ok)
             {
@@ -50,14 +60,6 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
 
             TempData["SuccessMessage"] = "Comentario actualizado exitosamente.";
             return RedirectToPage("Index");
-        }
-
-        private string TrimExtraSpaces(string input)
-        {
-            if (string.IsNullOrEmpty(input)) return input;
-
-            input = input.Trim();
-            return Regex.Replace(input, @"\s+", " ");
         }
     }
 }

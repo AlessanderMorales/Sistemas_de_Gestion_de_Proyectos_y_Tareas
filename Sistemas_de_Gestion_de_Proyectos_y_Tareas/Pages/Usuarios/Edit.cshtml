@@ -90,8 +90,15 @@
 <div class="row">
     <div class="col-md-8 form-container">
         <form method="post">
+            <p style="color:yellow; font-weight:bold;">
+                DEBUG ID: @Model.Usuario.Id
+            </p>
+            <input type="hidden" asp-for="Usuario.Id" />
 
             <input type="hidden" asp-for="Usuario.Id" />
+            <input type="hidden" asp-for="Usuario.NombreUsuario" />
+            <input type="hidden" asp-for="Usuario.RequiereCambioContraseña" />
+            <input type="hidden" asp-for="Usuario.Estado" />
 
             <div class="mb-3">
                 <label asp-for="Usuario.Nombres" class="form-label"></label>
