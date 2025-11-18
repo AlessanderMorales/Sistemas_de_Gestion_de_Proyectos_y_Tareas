@@ -91,5 +91,19 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.ApiClients
             return response.IsSuccessStatusCode;
         }
 
+        public async Task<bool> CambiarContraseñaAsync(int id, string actual, string nueva)
+        {
+            var payload = new
+            {
+                ContraseñaActual = actual,
+                NuevaContraseña = nueva
+            };
+
+            var response = await _http.PutAsJsonAsync($"api/usuario/cambiar-contraseña/{id}", payload);
+
+            return response.IsSuccessStatusCode;
+        }
+
+
     }
 }
