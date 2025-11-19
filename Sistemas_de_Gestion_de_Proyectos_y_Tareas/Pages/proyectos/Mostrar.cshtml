@@ -7,122 +7,167 @@
 
 <style>
     :root {
-  --accent-red: #D32F2F;
-   --accent-orange: #FF5722;
-   --accent-gold: #FFD700;
+        --accent-red: #D32F2F;
+        --accent-orange: #FF5722;
+        --accent-gold: #FFD700;
     }
 
     .title-volcanic {
-  background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
+        background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
         -webkit-background-clip: text;
-   -webkit-text-fill-color: transparent;
+        -webkit-text-fill-color: transparent;
         font-weight: 700;
         border-bottom: 2px solid rgba(255,255,255,0.1);
-   padding-bottom: 1rem;
+        padding-bottom: 1rem;
         margin-bottom: 2rem;
     }
 
     .details-list dt {
         color: var(--accent-gold);
-   font-weight: 600;
+        font-weight: 600;
     }
+
     .details-list dd {
         color: #e0e0e0;
-   margin-left: 0;
+        margin-left: 0;
     }
 
     .section-divider {
         border-color: rgba(255,255,255,0.15) !important;
-   margin: 2rem 0;
+        margin: 2rem 0;
     }
-    
+
     h4 {
         color: var(--accent-orange);
-  font-weight: 600;
+        font-weight: 600;
         margin-bottom: 1.5rem;
     }
-    
-    .table-volcanic { background-color: transparent; color: #e0e0e0; border-collapse: separate; border-spacing: 0 10px; }
-    .table-volcanic > :not(caption) > * > * { background-color: #3a3a40; padding: 1.25rem; border-width: 0; }
-  .table-volcanic thead th { background-color: transparent; color: var(--accent-gold); text-transform: uppercase; border-bottom: 2px solid var(--accent-orange); }
-    .table-volcanic tbody tr:hover { background-color: #4a4a50; }
-    
-    .btn-volcanic-primary { background: linear-gradient(45deg, #4CAF50, #8BC34A); border: none; color: white; font-weight: bold; padding: 10px 20px; border-radius: 8px; transition: all 0.3s ease; }
-    .btn-volcanic-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4); }
-    .btn-volcanic-secondary { background-color: transparent; border: 2px solid #6c757d; color: #ced4da; font-weight: bold; padding: 8px 20px; border-radius: 8px; transition: all 0.3s ease; }
-    .btn-volcanic-secondary:hover { background-color: #6c757d; color: white; }
+
+    .table-volcanic {
+        background-color: transparent;
+        color: #e0e0e0;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+    }
+
+        .table-volcanic > :not(caption) > * > * {
+            background-color: #3a3a40;
+            padding: 1.25rem;
+            border-width: 0;
+        }
+
+        .table-volcanic thead th {
+            background-color: transparent;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--accent-orange);
+        }
+
+        .table-volcanic tbody tr:hover {
+            background-color: #4a4a50;
+        }
+
+    .btn-volcanic-primary {
+        background: linear-gradient(45deg, #4CAF50, #8BC34A);
+        border: none;
+        color: white;
+        font-weight: bold;
+        padding: 10px 20px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-volcanic-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+    .btn-volcanic-secondary {
+        background-color: transparent;
+        border: 2px solid #6c757d;
+        color: #ced4da;
+        font-weight: bold;
+        padding: 8px 20px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-volcanic-secondary:hover {
+            background-color: #6c757d;
+            color: white;
+        }
 </style>
 
 @if (Model.Proyecto != null)
 {
     <h1 class="title-volcanic">@Model.Proyecto.Nombre</h1>
 
-<div>
-     <h4>Información del Proyecto</h4>
-  <dl class="row details-list">
- <dt class="col-sm-3 col-md-2">Descripción</dt>
-       <dd class="col-sm-9 col-md-10">@Model.Proyecto.Descripcion</dd>
+    <div>
+        <h4>Información del Proyecto</h4>
+        <dl class="row details-list">
+            <dt class="col-sm-3 col-md-2">Descripción</dt>
+            <dd class="col-sm-9 col-md-10">@Model.Proyecto.Descripcion</dd>
 
-   <dt class="col-sm-3 col-md-2">Fecha de Inicio</dt>
-   <dd class="col-sm-9 col-md-10">
-    @(Model.Proyecto.FechaInicio.HasValue ? Model.Proyecto.FechaInicio.Value.ToShortDateString() : "Sin fecha")
-</dd>
+            <dt class="col-sm-3 col-md-2">Fecha de Inicio</dt>
+            <dd class="col-sm-9 col-md-10">
+                @(Model.Proyecto.FechaInicio.HasValue? Model.Proyecto.FechaInicio.Value.ToShortDateString() : "Sin fecha")
+            </dd>
 
-    <dt class="col-sm-3 col-md-2">Fecha de Fin</dt>
-   <dd class="col-sm-9 col-md-10">
-    @(Model.Proyecto.FechaFin.HasValue ? Model.Proyecto.FechaFin.Value.ToShortDateString() : "Sin fecha")
-</dd>
+            <dt class="col-sm-3 col-md-2">Fecha de Fin</dt>
+            <dd class="col-sm-9 col-md-10">
+                @(Model.Proyecto.FechaFin.HasValue? Model.Proyecto.FechaFin.Value.ToShortDateString() : "Sin fecha")
+            </dd>
         </dl>
-  </div>
+    </div>
 
     <hr class="section-divider" />
 
     <div>
-   <h4>Tareas Asociadas</h4>
-   @if (Model.Proyecto.Tareas != null && Model.Proyecto.Tareas.Any())
+        <h4>Tareas Asociadas</h4>
+        @if (Model.Proyecto.Tareas != null && Model.Proyecto.Tareas.Any()) // <-- ¡Ahora se refiere a Model.Proyecto.Tareas!
         {
-      <table class="table table-volcanic">
-   <thead>
-<tr>
-       <th>Título</th>
-   <th>Descripción</th>
-            <th>Prioridad</th>
-       @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
-         {
- <th>Acciones</th>
-         }
- </tr>
-</thead>
-<tbody>
-  @foreach (var tarea in Model.Proyecto.Tareas)
-       {
-      <tr>
-   <td>@tarea.Titulo</td>
-       <td>@tarea.Descripcion</td>
-   <td>@tarea.Prioridad</td>
-          @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
-      {
-        <td>
-        <a asp-page="/Tareas/Edit" asp-route-id="@tarea.Id" class="btn btn-sm btn-outline-warning">Editar Tarea</a>
-        </td>
+            <table class="table table-volcanic">
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Descripción</th>
+                        <th>Prioridad</th>
+                        @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
+                        {
+                            <th>Acciones</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var tarea in Model.Proyecto.Tareas) // <-- ¡Ahora se refiere a Model.Proyecto.Tareas!
+                    {
+                        <tr>
+                            <td>@tarea.Titulo</td>
+                            <td>@tarea.Descripcion</td>
+                            <td>@tarea.Prioridad</td>
+                            @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
+                            {
+                                <td>
+                                    <a asp-page="/Tareas/Edit" asp-route-id="@tarea.Id" class="btn btn-sm btn-outline-warning">Editar Tarea</a>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
         }
-              </tr>
-  }
-    </tbody>
-      </table>
-        }
-      else
-    {
-     <div class="alert alert-secondary bg-dark text-white" role="alert">
-        Este proyecto no tiene tareas asignadas todavía.
-    </div>
+        else
+        {
+            <div class="alert alert-secondary bg-dark text-white" role="alert">
+                Este proyecto no tiene tareas asignadas todavía.
+            </div>
         }
     </div>
 
     <div class="mt-4">
         @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
         {
-             <a asp-page="/Tareas/Create" asp-route-idProyecto="@Model.Proyecto.IdProyecto" class="btn btn-volcanic-primary">Añadir Nueva Tarea</a>
+            <a asp-page="/Tareas/Create" asp-route-idProyecto="@Model.Proyecto.IdProyecto" class="btn btn-volcanic-primary">Añadir Nueva Tarea</a>
         }
         <a asp-page="./Index" class="btn btn-volcanic-secondary ms-2">Volver a la Lista</a>
     </div>
