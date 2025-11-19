@@ -79,7 +79,7 @@
      border-color: #6c757d;
     }
 
-    /* ✅ NUEVO: Estilos para buscadores */
+    /* Estilos para buscadores */
     .search-input {
         background-color: #3a3a40;
         color: var(--text-primary);
@@ -101,7 +101,7 @@
     .option-item {
         padding: 0.75rem 1rem;
         cursor: pointer;
- transition: background-color 0.2s;
+        transition: background-color 0.2s;
         border-bottom: 1px solid #4a4a50;
         background-color: #3a3a40;
     }
@@ -116,7 +116,7 @@
 
     .option-item.selected {
         background-color: #4a4a50;
-  border-left: 4px solid var(--accent-orange);
+        border-left: 4px solid var(--accent-orange);
     }
 
     .options-list {
@@ -136,7 +136,7 @@
 
     .selected-info {
         color: var(--accent-gold);
-font-weight: 500;
+        font-weight: 500;
     }
 </style>
 
@@ -144,265 +144,288 @@ font-weight: 500;
 
 <div class="row">
     <div class="col-md-8 form-container">
-   <form method="post">
-   <div class="form-group mb-3">
-    <label asp-for="Comentario.Contenido" class="form-label">Contenido</label>
-  <textarea asp-for="Comentario.Contenido" class="form-control" rows="4" placeholder="Escribe tu comentario aquí..."></textarea>
-    <span asp-validation-for="Comentario.Contenido" class="text-danger"></span>
-    </div>
+        <form method="post">
+            <div class="form-group mb-3">
+                <label asp-for="Comentario.Contenido" class="form-label">Contenido</label>
+                <textarea asp-for="Comentario.Contenido" class="form-control" rows="4" placeholder="Escribe tu comentario aquí..."></textarea>
+                <span asp-validation-for="Comentario.Contenido" class="text-danger"></span>
+            </div>
 
-   <!-- ✅ NUEVO: Buscador de tareas -->
-   <div class="form-group mb-3">
-        <label class="form-label">Tarea</label>
- <input type="text" 
-       id="tareaSearch" 
-            class="search-input" 
-            placeholder="🔍 Buscar tarea por título..."
-    autocomplete="off">
-        
-     <div id="tareasList" class="options-list">
-      @if (Model.Tareas != null && Model.Tareas.Any())
-    {
-      @foreach (var tarea in Model.Tareas)
-       {
-            <div class="option-item tarea-option" 
-       data-id="@tarea.Id" 
-            data-titulo="@tarea.Titulo.ToLower()"
-     onclick="selectTarea(@tarea.Id, '@tarea.Titulo')">
- @tarea.Titulo
-           </div>
-        }
-      }
-            else
-     {
-           <div class="no-results">No hay tareas disponibles</div>
-}
-        </div>
-    <div id="noResultsTarea" class="no-results" style="display: none;">
-        No se encontraron tareas
-        </div>
-  
-        <!-- Hidden field para enviar el ID -->
-      <input type="hidden" asp-for="Comentario.IdTarea" id="tareaIdInput" />
-        <span asp-validation-for="Comentario.IdTarea" class="text-danger"></span>
-        
- <small class="text-muted d-block mt-2">
-            Tarea seleccionada: <span id="selectedTareaName" class="selected-info">Ninguna</span>
-    </small>
-    </div>
+            <!-- Buscador de tareas -->
+            <div class="form-group mb-3">
+                <label class="form-label">Tarea</label>
+                <input type="text"
+                       id="tareaSearch"
+                       class="search-input"
+                       placeholder="🔍 Buscar tarea por título..."
+                       autocomplete="off">
 
-    <!-- ✅ NUEVO: Buscador de destinatarios -->
-    <div class="form-group mb-3">
-   <label class="form-label">Dirigido a</label>
-        <input type="text" 
-     id="destinatarioSearch" 
-   class="search-input" 
-           placeholder="🔍 Buscar destinatario..."
-  autocomplete="off">
-     
-<div id="destinatariosList" class="options-list">
-  <!-- Opciones generadas dinámicamente por JavaScript -->
-      </div>
-        <div id="noResultsDestinatario" class="no-results" style="display: none;">
-      No se encontraron usuarios
-        </div>
-  
-        <!-- Hidden field para enviar el ID -->
-        <input type="hidden" asp-for="DirigidoAUsuarioId" id="destinatarioIdInput" />
-     
-      <small class="text-muted d-block mt-2">
-      @if (User.IsInRole("Empleado"))
-            {
-<text>Solo puedes enviar comentarios a usuarios asignados a la misma tarea.</text>
-      }
-    else if (User.IsInRole("JefeDeProyecto"))
-    {
-   <text>Solo puedes enviar comentarios a empleados asignados a la tarea seleccionada.</text>
-            }
-        <br>
-   Destinatario seleccionado: <span id="selectedDestinatarioName" class="selected-info">Ninguno</span>
-      </small>
-    </div>
+                <div id="tareasList" class="options-list">
+                    @if (Model.Tareas != null && Model.Tareas.Any())
+                    {
+                        @foreach (var tarea in Model.Tareas)
+                        {
+                            <div class="option-item tarea-option"
+                                 data-id="@tarea.Id"
+                                 data-titulo="@tarea.Titulo.ToLower()"
+                                 onclick="selectTarea(@tarea.Id, '@tarea.Titulo')">
+                                @tarea.Titulo
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="no-results">No hay tareas disponibles</div>
+                    }
+                </div>
+                <div id="noResultsTarea" class="no-results" style="display: none;">
+                    No se encontraron tareas
+                </div>
 
-    <div class="mt-4">
- <button type="submit" class="btn btn-volcanic-primary">Guardar Comentario</button>
-   <a asp-page="Index" class="btn btn-volcanic-secondary ms-2">Cancelar</a>
-     </div>
-  </form>
+                <!-- Hidden field para enviar el ID -->
+                <input type="hidden" asp-for="Comentario.IdTarea" id="tareaIdInput" />
+                <span asp-validation-for="Comentario.IdTarea" class="text-danger"></span>
+
+                <small class="text-muted d-block mt-2">
+                    Tarea seleccionada: <span id="selectedTareaName" class="selected-info">Ninguna</span>
+                </small>
+            </div>
+
+            <!-- Buscador de destinatarios -->
+            <div class="form-group mb-3">
+                <label class="form-label">Dirigido a</label>
+                <input type="text"
+                       id="destinatarioSearch"
+                       class="search-input"
+                       placeholder="🔍 Buscar destinatario..."
+                       autocomplete="off">
+
+                <div id="destinatariosList" class="options-list">
+                    <!-- Opciones generadas dinámicamente por JavaScript -->
+                </div>
+                <div id="noResultsDestinatario" class="no-results" style="display: none;">
+                    No se encontraron usuarios
+                </div>
+
+                <!-- Hidden field para enviar el ID -->
+                <input type="hidden" asp-for="DirigidoAUsuarioId" id="destinatarioIdInput" />
+
+                <small class="text-muted d-block mt-2">
+                    @if (User.IsInRole("Empleado"))
+                    {
+                        <text>Solo puedes enviar comentarios a usuarios asignados a la misma tarea.</text>
+                    }
+                    else if (User.IsInRole("JefeDeProyecto"))
+                    {
+                        <text>Solo puedes enviar comentarios a empleados asignados a la tarea seleccionada.</text>
+                    }
+                    <br>
+                    Destinatario seleccionado: <span id="selectedDestinatarioName" class="selected-info">Ninguno</span>
+                </small>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-volcanic-primary">Guardar Comentario</button>
+                <a asp-page="Index" class="btn btn-volcanic-secondary ms-2">Cancelar</a>
+            </div>
+        </form>
     </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-  
+
     <script>
- // Mapa de tareas a usuarios (del backend)
-  var tareaUsuariosMap = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
-Model.TareaUsuariosMap.ToDictionary(
-            kvp => kvp.Key.ToString(),
-      kvp => kvp.Value.Select(u => new {
-     Id = u.Id,
-     Nombres = u.Nombres,
-  PrimerApellido = u.PrimerApellido,
-     Rol = u.Rol
-       }).ToList()
-      )
- ));
+        // Mapa de tareas a usuarios (del backend)
+        var tareaUsuariosMap = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+            Model.TareaUsuariosMap.ToDictionary(
+                kvp => kvp.Key.ToString(),
+                kvp => kvp.Value.Select(u => new {
+                    Id = u.Id,
+                    Nombres = u.Nombres,
+                    PrimerApellido = u.PrimerApellido,
+                    Rol = u.Rol
+                }).ToList()
+            )
+        ));
 
-      // ✅ NUEVO: Búsqueda de tareas
-   const tareaSearch = document.getElementById('tareaSearch');
-   const tareaOptions = document.querySelectorAll('.tarea-option');
-    const noResultsTarea = document.getElementById('noResultsTarea');
+        // Búsqueda de tareas
+        const tareaSearch = document.getElementById('tareaSearch');
+        const tareaOptions = document.querySelectorAll('.tarea-option');
+        const noResultsTarea = document.getElementById('noResultsTarea');
         const tareaIdInput = document.getElementById('tareaIdInput');
-    const selectedTareaName = document.getElementById('selectedTareaName');
-    const tareasList = document.getElementById('tareasList');
+        const selectedTareaName = document.getElementById('selectedTareaName');
+        const tareasList = document.getElementById('tareasList');
 
- tareaSearch.addEventListener('input', function() {
-    const searchTerm = this.value.toLowerCase().trim();
-         let visibleCount = 0;
+        tareaSearch.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            let visibleCount = 0;
 
-tareaOptions.forEach(function(option) {
-   const titulo = option.getAttribute('data-titulo');
-     
-       if (titulo.includes(searchTerm) || searchTerm === '') {
-                 option.classList.remove('hidden');
-           visibleCount++;
-        } else {
-        option.classList.add('hidden');
-  }
+            tareaOptions.forEach(function(option) {
+                const titulo = option.getAttribute('data-titulo');
+
+                if (titulo.includes(searchTerm) || searchTerm === '') {
+                    option.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    option.classList.add('hidden');
+                }
             });
 
-            // Mostrar mensaje si no hay resultados
-     if (visibleCount === 0 && searchTerm !== '') {
+            if (visibleCount === 0 && searchTerm !== '') {
                 tareasList.style.display = 'none';
-      noResultsTarea.style.display = 'block';
+                noResultsTarea.style.display = 'block';
             } else {
-           tareasList.style.display = 'block';
-        noResultsTarea.style.display = 'none';
-          }
+                tareasList.style.display = 'block';
+                noResultsTarea.style.display = 'none';
+            }
         });
 
-        // ✅ Seleccionar tarea
         function selectTarea(id, titulo) {
             tareaIdInput.value = id;
-   selectedTareaName.textContent = titulo;
-       tareaSearch.value = '';
-    
+            selectedTareaName.textContent = titulo;
+            tareaSearch.value = titulo; 
+            
             // Resaltar selección
             tareaOptions.forEach(opt => opt.classList.remove('selected'));
-            document.querySelector(`.tarea-option[data-id="${id}"]`).classList.add('selected');
-         
-   // Mostrar todas las tareas
-        tareaOptions.forEach(opt => opt.classList.remove('hidden'));
-  tareasList.style.display = 'block';
-         noResultsTarea.style.display = 'none';
-          
-   // Actualizar destinatarios
-          actualizarDestinatarios();
+            const selectedOption = document.querySelector(`.tarea-option[data-id="${id}"]`);
+            if (selectedOption) {
+                selectedOption.classList.add('selected');
+            }
+            
+            // Ocultar la lista de tareas después de la selección
+            tareasList.style.display = 'none';
+            
+            // Actualizar destinatarios (¡CRÍTICO!)
+            actualizarDestinatarios();
         }
 
-      // ✅ NUEVO: Búsqueda de destinatarios
-    const destinatarioSearch = document.getElementById('destinatarioSearch');
+        // Búsqueda de destinatarios
+        const destinatarioSearch = document.getElementById('destinatarioSearch');
         const destinatariosList = document.getElementById('destinatariosList');
         const noResultsDestinatario = document.getElementById('noResultsDestinatario');
         const destinatarioIdInput = document.getElementById('destinatarioIdInput');
-      const selectedDestinatarioName = document.getElementById('selectedDestinatarioName');
+        const selectedDestinatarioName = document.getElementById('selectedDestinatarioName');
 
-    destinatarioSearch.addEventListener('input', function() {
+        destinatarioSearch.addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase().trim();
             const options = document.querySelectorAll('.destinatario-option');
             let visibleCount = 0;
 
             options.forEach(function(option) {
-       const nombre = option.getAttribute('data-nombre');
-    
-     if (nombre.includes(searchTerm) || searchTerm === '') {
-        option.classList.remove('hidden');
-         visibleCount++;
-  } else {
-         option.classList.add('hidden');
-        }
-   });
+                const nombre = option.getAttribute('data-nombre');
 
-      // Mostrar mensaje si no hay resultados
-   if (visibleCount === 0 && searchTerm !== '') {
-         destinatariosList.style.display = 'none';
-       noResultsDestinatario.style.display = 'block';
+                if (nombre.includes(searchTerm) || searchTerm === '') {
+                    option.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    option.classList.add('hidden');
+                }
+            });
+
+            if (visibleCount === 0 && searchTerm !== '') {
+                destinatariosList.style.display = 'none';
+                noResultsDestinatario.style.display = 'block';
             } else {
-           destinatariosList.style.display = 'block';
+                destinatariosList.style.display = 'block';
                 noResultsDestinatario.style.display = 'none';
             }
-   });
+        });
 
-        // ✅ Seleccionar destinatario
         function selectDestinatario(id, nombre) {
             destinatarioIdInput.value = id;
- selectedDestinatarioName.textContent = nombre;
-   destinatarioSearch.value = '';
-            
-      // Resaltar selección
+            selectedDestinatarioName.textContent = nombre;
+            destinatarioSearch.value = nombre; 
             const options = document.querySelectorAll('.destinatario-option');
- options.forEach(opt => opt.classList.remove('selected'));
-  document.querySelector(`.destinatario-option[data-id="${id}"]`).classList.add('selected');
-       
-      // Mostrar todos
-            options.forEach(opt => opt.classList.remove('hidden'));
-     destinatariosList.style.display = 'block';
-    noResultsDestinatario.style.display = 'none';
+            options.forEach(opt => opt.classList.remove('selected'));
+            const selectedOption = document.querySelector(`.destinatario-option[data-id="${id}"]`);
+            if (selectedOption) {
+                selectedOption.classList.add('selected');
+            }
+            destinatariosList.style.display = 'none';
         }
 
-      // Función para actualizar destinatarios según la tarea
-  function actualizarDestinatarios() {
-      var tareaId = tareaIdInput.value;
-            
-  // Limpiar opciones
-      destinatariosList.innerHTML = '';
-        destinatarioSearch.value = '';
-     selectedDestinatarioName.textContent = 'Ninguno';
+        function actualizarDestinatarios() {
+            var tareaId = tareaIdInput.value;
+            destinatariosList.innerHTML = '';
+            destinatarioSearch.value = '';
+            selectedDestinatarioName.textContent = 'Ninguno';
+            destinatarioIdInput.value = ''; 
 
-      if (!tareaId || !tareaUsuariosMap[tareaId]) {
-         destinatariosList.innerHTML = '<div class="no-results">No hay usuarios disponibles para esta tarea</div>';
-    return;
-    }
+            if (!tareaId || !tareaUsuariosMap[tareaId]) {
+                destinatariosList.innerHTML = '<div class="no-results">No hay usuarios disponibles para esta tarea</div>';
+                destinatariosList.style.display = 'block';
+                noResultsDestinatario.style.display = 'none';
+                return;
+            }
 
-var usuarios = tareaUsuariosMap[tareaId];
+            var usuarios = tareaUsuariosMap[tareaId];
 
-     if (usuarios.length === 0) {
-     destinatariosList.innerHTML = '<div class="no-results">No hay usuarios asignados a esta tarea</div>';
-         return;
- }
+            if (!usuarios || usuarios.length === 0) {
+                destinatariosList.innerHTML = '<div class="no-results">No hay usuarios asignados a esta tarea</div>';
+                destinatariosList.style.display = 'block';
+                noResultsDestinatario.style.display = 'none';
+                return;
+            }
 
-   // Agregar usuarios disponibles con buscador
-   usuarios.forEach(function(usuario, index) {
-     var nombreCompleto = usuario.Nombres + ' ' + usuario.PrimerApellido;
-      var etiqueta = usuario.Rol === 'JefeDeProyecto' ? ' (Jefe de Proyecto)' : ' (Empleado)';
- var textoCompleto = nombreCompleto + etiqueta;
-    
-            var div = document.createElement('div');
-       div.className = 'option-item destinatario-option';
-        div.setAttribute('data-id', usuario.Id);
-       div.setAttribute('data-nombre', textoCompleto.toLowerCase());
-                div.setAttribute('onclick', `selectDestinatario(${usuario.Id}, '${textoCompleto}')`);
+            // Agregar usuarios disponibles a la lista de opciones
+            usuarios.forEach(function(usuario) { 
+                var nombreCompleto = usuario.Nombres + ' ' + usuario.PrimerApellido;
+                var etiquetaRol = '';
+                if (usuario.Rol === 'JefeDeProyecto') {
+                    etiquetaRol = ' (Jefe de Proyecto)';
+                } else if (usuario.Rol === 'Empleado') {
+                    etiquetaRol = ' (Empleado)';
+                }
+                var textoCompleto = nombreCompleto + etiquetaRol;
+                
+                var div = document.createElement('div');
+                div.className = 'option-item destinatario-option';
+                div.setAttribute('data-id', usuario.Id);
+                div.setAttribute('data-nombre', textoCompleto.toLowerCase());
+                div.setAttribute('onclick', `selectDestinatario(${usuario.Id}, '${textoCompleto.replace(/'/g, "\\'")}')`);
                 div.textContent = textoCompleto;
-    
-       destinatariosList.appendChild(div);
-
-     // Seleccionar el primero por defecto
-       if (index === 0) {
-           selectDestinatario(usuario.Id, textoCompleto);
-      }
-    });
+                
+                destinatariosList.appendChild(div);
+            });
+            destinatariosList.style.display = 'block';
+            noResultsDestinatario.style.display = 'none';
         }
-
-   // Ejecutar al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
-            // Seleccionar la primera tarea por defecto
             if (tareaOptions.length > 0) {
-         const firstTarea = tareaOptions[0];
-      const id = firstTarea.getAttribute('data-id');
-          const titulo = firstTarea.textContent.trim();
-  selectTarea(id, titulo);
-        }
-   });
+                const firstTarea = tareaOptions[0];
+                const id = firstTarea.getAttribute('data-id');
+                const titulo = firstTarea.textContent.trim();
+                selectTarea(id, titulo); 
+            } else {
+                destinatariosList.innerHTML = '<div class="no-results">Selecciona una tarea primero</div>';
+                destinatariosList.style.display = 'block';
+            }
+            tareasList.style.display = 'none';
+            destinatariosList.style.display = 'none';
+            tareaSearch.addEventListener('focus', function() {
+                tareasList.style.display = 'block';
+                noResultsTarea.style.display = 'none';
+            });
+            tareaSearch.addEventListener('blur', function() {
+                setTimeout(() => {
+                    if (!tareasList.contains(document.activeElement)) { 
+                        tareasList.style.display = 'none';
+                    }
+                }, 100); 
+            });
+
+            destinatarioSearch.addEventListener('focus', function() {
+                destinatariosList.style.display = 'block';
+                noResultsDestinatario.style.display = 'none';
+            });
+            destinatarioSearch.addEventListener('blur', function() {
+                setTimeout(() => {
+                    if (!destinatariosList.contains(document.activeElement)) {
+                        destinatariosList.style.display = 'none';
+                    }
+                }, 100);
+            });
+        });
     </script>
 }

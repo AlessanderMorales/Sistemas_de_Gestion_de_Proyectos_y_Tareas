@@ -6,8 +6,9 @@ using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Comentarios;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Tareas;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Usuarios;
 using System.Security.Claims;
-using System.Collections.Generic; // Asegúrate de que este using esté presente
-using System.Linq; // Asegúrate de que este using esté presente
+using System.Collections.Generic;
+using System.Linq;
+using System; // Asegúrate de que este using esté presente
 
 namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
 {
@@ -50,36 +51,48 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
 
             UsuarioActualId = idTemp;
 
+            // ================================
+            // 📌 Obtener tareas según rol
+            // ================================
             if (User.IsInRole("Empleado"))
             {
-                Tareas = (await _tareaApi.GetByUsuarioAsync(UsuarioActualId)).ToList();
+                Tareas = (await _tareaApi.GetByUsuarioAsync(UsuarioActualId))?.ToList() ?? new List<TareaDTO>();
             }
             else
             {
-                Tareas = (await _tareaApi.GetAllAsync()).ToList();
+                Tareas = (await _tareaApi.GetAllAsync())?.ToList() ?? new List<TareaDTO>();
             }
 
+            // ================================
+            // 📌 Construir mapa tarea → usuarios asignados
+            // ================================
             TareaUsuariosMap = new Dictionary<int, List<UsuarioDTO>>();
+            var allUsuarios = (await _usuarioApi.GetAllAsync())?.ToList() ?? new List<UsuarioDTO>(); // Obtener todos los usuarios de una vez
 
             foreach (var t in Tareas)
             {
                 // Obtener IDs de usuarios asignados desde el microservicio tareas
                 // t.Id es int (no nullable) por la definición de TareaDTO, así que esto es seguro
-                var usuariosIds = await _tareaApi.GetUsuariosAsignadosAsync(t.Id);
+                var usuariosIds = await _tareaApi.GetUsuariosAsignadosAsync(t.Id); // Esto devuelve List<int>
 
-                var usuarios = new List<UsuarioDTO>();
+                var usuariosElegibles = new List<UsuarioDTO>();
 
                 foreach (var uid in usuariosIds)
                 {
-                    var u = await _usuarioApi.GetAsync(uid);
+                    var u = allUsuarios.FirstOrDefault(usuario => usuario.Id == uid); // Buscar en la lista completa
+                    // Filtrar usuarios: no el actual, no SuperAdmin, y el usuario debe existir
                     if (u != null && u.Id != UsuarioActualId && u.Rol != "SuperAdmin")
-                        usuarios.Add(u);
+                        usuariosElegibles.Add(u);
                 }
 
-                TareaUsuariosMap[t.Id] = usuarios;
+                TareaUsuariosMap[t.Id] = usuariosElegibles;
             }
 
-            if (Tareas.Any())
+            // ================================
+            // 📌 Preseleccionar primer destinatario si existe (para el caso de un Post fallido)
+            // Esto es solo para inicializar, la lógica JS gestiona la preselección visible.
+            // ================================
+            if (DirigidoAUsuarioId == 0 && Tareas.Any())
             {
                 var firstTarea = Tareas.First();
 
@@ -104,23 +117,23 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
             UsuarioActualId = idTemp;
 
             // ================================
-            // 📌 Validación básica
+            // 📌 Validación de ID de Tarea
             // ================================
-            // Primero, validamos IdTarea antes de intentar usarlo
-            // <-- ¡CORRECCIÓN CLAVE AQUÍ! -->
-            if (!Comentario.IdTarea.HasValue || Comentario.IdTarea.Value <= 0) // Verifica si tiene valor y es válido
+            // Comentario.IdTarea es int? en ComentarioDTO, así que usamos .HasValue y .Value
+            if (!Comentario.IdTarea.HasValue || Comentario.IdTarea.Value <= 0)
             {
                 TempData["ErrorMessage"] = "Debes seleccionar una tarea válida.";
-                // Recargar datos para la vista si hay un error de validación
-                await OnGetAsync();
-                return Page(); // Devuelve la página con el error y los datos precargados
+                await OnGetAsync(); // Recargar datos para la vista
+                return Page();
             }
 
-
+            // ================================
+            // 📌 Validación de Destinatario
+            // ================================
             if (DirigidoAUsuarioId <= 0)
             {
                 TempData["ErrorMessage"] = "Debes seleccionar un destinatario.";
-                await OnGetAsync(); 
+                await OnGetAsync();
                 return Page();
             }
 
@@ -132,42 +145,40 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
             }
 
             // ================================
-            // 📌 Validar tarea (ahora es seguro usar .Value)
+            // 📌 Validar existencia de la tarea seleccionada
             // ================================
-            // <-- ¡CORRECCIÓN CLAVE AQUÍ! -->
-            var tarea = await _tareaApi.GetAsync(Comentario.IdTarea.Value); // Usamos .Value porque ya verificamos HasValue
-
+            var tarea = await _tareaApi.GetAsync(Comentario.IdTarea.Value); // Usamos .Value
             if (tarea == null)
             {
                 TempData["ErrorMessage"] = "La tarea seleccionada no existe.";
-                await OnGetAsync(); // Recargar datos para la vista
+                await OnGetAsync();
                 return Page();
             }
 
             // ================================
-            // 📌 Validar destinatario
+            // 📌 Validar existencia y rol del destinatario
             // ================================
             var destinatario = await _usuarioApi.GetAsync(DirigidoAUsuarioId);
 
             if (destinatario == null)
             {
                 TempData["ErrorMessage"] = "El destinatario no existe.";
-                await OnGetAsync(); // Recargar datos para la vista
+                await OnGetAsync();
                 return Page();
             }
 
             if (destinatario.Rol == "SuperAdmin")
             {
                 TempData["ErrorMessage"] = "No puedes enviar comentarios al administrador.";
-                await OnGetAsync(); // Recargar datos para la vista
+                await OnGetAsync();
                 return Page();
             }
 
             // ================================
             // 📌 Construir comentario
             // ================================
-            Comentario.IdUsuario = UsuarioActualId;           // autor
-            Comentario.IdDestinatario = DirigidoAUsuarioId;  // destinatario
+            Comentario.IdUsuario = UsuarioActualId;
+            Comentario.IdDestinatario = DirigidoAUsuarioId;
             Comentario.Estado = 1;
             Comentario.Fecha = DateTime.Now;
 
@@ -179,7 +190,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
             if (!ok)
             {
                 TempData["ErrorMessage"] = "No se pudo guardar el comentario.";
-                await OnGetAsync(); // Recargar datos para la vista
+                await OnGetAsync();
                 return Page();
             }
 
