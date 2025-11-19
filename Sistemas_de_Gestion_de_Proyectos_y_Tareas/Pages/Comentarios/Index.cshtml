@@ -1,186 +1,185 @@
 ﻿@page
 @model Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios.ComentariosIndexModel
 @{
-  ViewData["Title"] = "Lista de Comentarios";
+    ViewData["Title"] = "Lista de Comentarios";
 }
 
 <style>
     :root {
-    --accent-red: #D32F2F;
+        --accent-red: #D32F2F;
         --accent-orange: #FF5722;
-   --accent-gold: #FFD700;
-    --accent-edit: #ffc107;
-   --accent-view: #17a2b8;
- }
+        --accent-gold: #FFD700;
+        --accent-edit: #ffc107;
+        --accent-view: #17a2b8;
+    }
 
     .title-volcanic {
-  background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
-  -webkit-background-clip: text;
-   -webkit-text-fill-color: transparent;
-  font-weight: 700;
+        background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 700;
     }
 
     .header-actions {
-     display: flex;
-     justify-content: space-between;
-   align-items: center;
-     margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
         border-bottom: 2px solid rgba(255,255,255,0.1);
-     padding-bottom: 1rem;
+        padding-bottom: 1rem;
     }
 
-    /* ✅ NUEVO: Estilos para el buscador */
     .search-container {
-    margin-bottom: 1.5rem;
-    max-width: 500px;
+        margin-bottom: 1.5rem;
+        max-width: 500px;
     }
 
     .search-input {
-  background-color: #3a3a40;
-  color: #f5f5f7;
- border: 1px solid #555;
-border-radius: 8px;
-      padding: 0.75rem 1rem;
+        background-color: #3a3a40;
+        color: #f5f5f7;
+        border: 1px solid #555;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
         width: 100%;
- transition: all 0.3s ease;
+        transition: all 0.3s ease;
     }
 
-    .search-input:focus {
-        background-color: #4a4a50;
-    border-color: var(--accent-orange);
-        box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
-        outline: none;
- }
+        .search-input:focus {
+            background-color: #4a4a50;
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
+            outline: none;
+        }
 
-  .search-input::placeholder {
-     color: #888;
-    }
+        .search-input::placeholder {
+            color: #888;
+        }
 
     .table-volcanic {
-   background-color: transparent;
-      color: #e0e0e0;
-border-collapse: separate;
-    border-spacing: 0 10px;
+        background-color: transparent;
+        color: #e0e0e0;
+        border-collapse: separate;
+        border-spacing: 0 10px;
     }
 
         .table-volcanic > :not(caption) > * > * {
-   background-color: #3a3a40;
-padding: 1.25rem;
-   border-width: 0;
-       vertical-align: middle;
-      }
+            background-color: #3a3a40;
+            padding: 1.25rem;
+            border-width: 0;
+            vertical-align: middle;
+        }
 
-    .table-volcanic thead th {
-   background-color: transparent;
-    color: var(--accent-gold);
-      font-size: 0.9rem;
- text-transform: uppercase;
-   letter-spacing: 1px;
-  border-bottom: 2px solid var(--accent-orange);
-      }
+        .table-volcanic thead th {
+            background-color: transparent;
+            color: var(--accent-gold);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid var(--accent-orange);
+        }
 
         .table-volcanic tbody tr:hover {
-  background-color: #4a4a50;
-    }
+            background-color: #4a4a50;
+        }
 
     .btn-action {
-  border-radius: 6px;
-   font-weight: 500;
-   padding: 5px 12px;
- transition: all 0.2s ease;
+        border-radius: 6px;
+        font-weight: 500;
+        padding: 5px 12px;
+        transition: all 0.2s ease;
     }
 
-   .btn-action:hover {
-    transform: translateY(-1px);
-   }
+        .btn-action:hover {
+            transform: translateY(-1px);
+        }
 
     .btn-view {
-     background-color: var(--accent-view);
- border-color: var(--accent-view);
-    color: white;
+        background-color: var(--accent-view);
+        border-color: var(--accent-view);
+        color: white;
     }
 
     .btn-edit {
-   background-color: var(--accent-edit);
-    border-color: var(--accent-edit);
-  color: #212529;
+        background-color: var(--accent-edit);
+        border-color: var(--accent-edit);
+        color: #212529;
     }
 
     .btn-delete {
-   background-color: var(--accent-red);
- border-color: var(--accent-red);
-  color: white;
- }
+        background-color: var(--accent-red);
+        border-color: var(--accent-red);
+        color: white;
+    }
 
-.btn-volcanic-primary {
+    .btn-volcanic-primary {
         background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
-      border: none;
-    color: white;
-   font-weight: bold;
-     padding: 10px 20px;
-   border-radius: 8px;
-   transition: all 0.3s ease;
- }
+        border: none;
+        color: white;
+        font-weight: bold;
+        padding: 10px 20px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
 
- .btn-volcanic-primary:hover {
-    transform: translateY(-2px);
-     box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
+        .btn-volcanic-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
         }
 
     .modal-content.volcanic-modal {
         background-color: #2c2c31;
-   color: #f5f5f7;
-   border: 1px solid rgba(255,255,255,0.2);
-   border-radius: 15px;
+        color: #f5f5f7;
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 15px;
     }
 
-.volcanic-modal .modal-header {
-   border-bottom: 1px solid var(--accent-orange);
+    .volcanic-modal .modal-header {
+        border-bottom: 1px solid var(--accent-orange);
     }
 
-.volcanic-modal .modal-footer {
-   border-top: 1px solid rgba(255,255,255,0.1);
+    .volcanic-modal .modal-footer {
+        border-top: 1px solid rgba(255,255,255,0.1);
     }
 
     .btn-volcanic-delete {
         background-color: var(--accent-red);
         border: none;
-color: white;
-   font-weight: bold;
-     padding: 10px 20px;
-   border-radius: 8px;
- }
+        color: white;
+        font-weight: bold;
+        padding: 10px 20px;
+        border-radius: 8px;
+    }
 
-  .btn-volcanic-secondary-modal {
- background-color: #4a4a50;
-    border: none;
-     color: white;
-    font-weight: bold;
-  padding: 10px 20px;
-   border-radius: 8px;
- }
+    .btn-volcanic-secondary-modal {
+        background-color: #4a4a50;
+        border: none;
+        color: white;
+        font-weight: bold;
+        padding: 10px 20px;
+        border-radius: 8px;
+    }
 
     /* Estilos para badges de Tipo (Enviado/Recibido) */
- .badge {
+    .badge {
         font-size: 0.85rem;
-     font-weight: 600;
-  padding: 6px 12px;
-    border-radius: 20px;
-  text-transform: uppercase;
+        font-weight: 600;
+        padding: 6px 12px;
+        border-radius: 20px;
+        text-transform: uppercase;
         letter-spacing: 0.5px;
     }
 
-.badge.bg-info {
-     background: linear-gradient(135deg, #2196F3, #1976D2) !important;
- color: white;
-  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
-    }
+        .badge.bg-info {
+            background: linear-gradient(135deg, #2196F3, #1976D2) !important;
+            color: white;
+            box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+        }
 
-    .badge.bg-success {
-   background: linear-gradient(135deg, #4CAF50, #388E3C) !important;
- color: white;
-   box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
-}
+        .badge.bg-success {
+            background: linear-gradient(135deg, #4CAF50, #388E3C) !important;
+            color: white;
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+        }
 
     /* ✅ NUEVO: Estilos para filas ocultas */
     .hidden-row {
@@ -188,7 +187,7 @@ color: white;
     }
 
     .no-results {
-      text-align: center;
+        text-align: center;
         padding: 2rem;
         color: #888;
         font-style: italic;
@@ -201,229 +200,252 @@ color: white;
     <a asp-page="Create" class="btn btn-volcanic-primary">Nuevo Comentario</a>
 </div>
 
-<!-- ✅ NUEVO: Buscador con autocompletado -->
+<!-- Buscador con autocompletado -->
 <div class="search-container">
-    <input type="text" 
-           id="searchInput" 
-           class="search-input" 
-           placeholder="🔍 Buscar por contenido, proyecto, tarea o autor..." 
- autocomplete="off">
+    <input type="text"
+           id="searchInput"
+           class="search-input"
+           placeholder="🔍 Buscar por contenido, proyecto, tarea o autor..."
+           autocomplete="off">
 </div>
 
 <table class="table table-volcanic">
-  <thead>
-   <tr>
-      @* Columna Tipo solo para empleados *@
-     @if (User.IsInRole("Empleado"))
-   {
-   <th class="text-center">Tipo</th>
-    }
-    <th>Contenido</th>
-  <th>Fecha</th>
-  <th>Proyecto</th>
- <th>Tarea</th>
-      @* ✅ MEJORA 5: Cambio de "Autor" a mostrar según contexto *@
-      @if (User.IsInRole("Empleado"))
-      {
-  <th>@(User.IsInRole("Empleado") ? "Dirigido a / Autor" : "Autor")</th>
-      }
-      else
-      {
-<th>Autor</th>
-      }
-  
-      @* Solo el Jefe ve la columna "Dirigido a" *@
-  @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
-   {
-  <th>Dirigido a</th>
-     }
-       <th class="text-center">Acciones</th>
-</tr>
+    <thead>
+        <tr>
+            @* Columna Tipo solo para empleados *@
+            @if (User.IsInRole("Empleado"))
+            {
+                <th class="text-center">Tipo</th>
+            }
+            <th>Contenido</th>
+            <th>Fecha</th>
+            <th>Proyecto</th>
+            <th>Tarea</th>
+            @* Cambio de "Autor" a mostrar según contexto *@
+            @if (User.IsInRole("Empleado"))
+            {
+                <th>@(User.IsInRole("Empleado") ? "Dirigido a / Autor" : "Autor")</th>
+            }
+            else
+            {
+                <th>Autor</th>
+            }
+
+            @* Solo el Jefe ve la columna "Dirigido a" *@
+            @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
+            {
+                <th>Dirigido a</th>
+            }
+            <th class="text-center">Acciones</th>
+        </tr>
     </thead>
     <tbody id="comentariosTableBody">
- @foreach (var c in Model.Comentarios)
-    {
-  <tr class="comentario-row"
-      data-contenido="@c.Contenido.ToLower()"
-      data-proyecto="@(c.Tarea?.ProyectoNombre?.ToLower() ?? "")"
-  data-tarea="@(c.Tarea?.Titulo?.ToLower() ?? "")"
-      data-autor="@(c.Usuario != null ? $"{c.Usuario.Nombres} {c.Usuario.PrimerApellido}".ToLower() : "")"
-       data-dirigido="@(c.Tarea?.UsuarioAsignadoNombre?.ToLower() ?? "")">
-  @* Columna Tipo para empleados *@
-   @if (User.IsInRole("Empleado"))
-    {
-   <td class="text-center">
- @if (c.IdUsuario == Model.UsuarioActualId)
-   {
-            <span class="badge bg-info">Enviado</span>
- }
-      else
- {
-       <span class="badge bg-success">Recibido</span>
-         }
- </td>
-      }
-
-<td>@c.Contenido</td>
-      <td>@c.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
-   <td>@(c.Tarea != null && !string.IsNullOrEmpty(c.Tarea.ProyectoNombre) ? c.Tarea.ProyectoNombre : "-")</td>
-<td>@(c.Tarea != null ? c.Tarea.Titulo : "-")</td>
-
-        @* ✅ MEJORA 5: Lógica mejorada para empleados *@
-      @if (User.IsInRole("Empleado"))
+        @foreach (var c in Model.Comentarios)
         {
-            <td>
-         @if (c.IdUsuario == Model.UsuarioActualId)
+            <tr class="comentario-row"
+                data-contenido="@c.Contenido.ToLower()"
+                data-proyecto="@(c.Tarea?.ProyectoNombre?.ToLower() ?? "")"
+                data-tarea="@(c.Tarea?.Titulo?.ToLower() ?? "")"
+                data-autor="@(c.Usuario != null ? $"{c.Usuario.Nombres} {c.Usuario.PrimerApellido}".ToLower() : "")"
+                data-dirigido="@( (c.Destinatario != null ? $"{c.Destinatario.Nombres} {c.Destinatario.PrimerApellido}" : (c.Tarea?.UsuarioAsignadoNombre ?? ""))?.ToLower() ?? "")">
+                @* Columna Tipo para empleados (CORREGIDO Y MEJORADO) *@
+                @if (User.IsInRole("Empleado"))
                 {
-        @* Si YO envié el comentario, mostrar a quién se lo envié *@
-           if (c.Tarea != null && !string.IsNullOrEmpty(c.Tarea.UsuarioAsignadoNombre))
-  {
-            <span class="text-warning">📤 Para: @c.Tarea.UsuarioAsignadoNombre</span>
-        }
-         else
-    {
-    <span class="text-muted">Sin destinatario</span>
-      }
-   }
-              else
-         {
-    @* Si RECIBÍ el comentario, mostrar quién me lo envió *@
-     <span class="text-info">📥 De: @(c.Usuario != null ? $"{c.Usuario.Nombres} {c.Usuario.PrimerApellido}" : "-")</span>
-      }
-    </td>
-        }
-        else if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
-        {
-   <td>@(c.Usuario != null ? $"{c.Usuario.Nombres} {c.Usuario.PrimerApellido}" : "-")</td>
-        }
- 
-      @* Solo el Jefe ve a quién está dirigido *@
-      @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
-     {
-      <td>
-       @if (c.Tarea != null && !string.IsNullOrEmpty(c.Tarea.UsuarioAsignadoNombre))
- {
-         <span class="text-warning">@c.Tarea.UsuarioAsignadoNombre</span>
-  }
- else
- {
-      <span class="text-muted">Sin asignar</span>
- }
-  </td>
-  }
-  
-  <td class="text-center">
+                    <td class="text-center">
+                        @if (c.IdUsuario == Model.UsuarioActualId) // Comentario hecho por el usuario actual
+                        {
+                            <span class="badge bg-info">Enviado</span>
+                        }
+                        else if (c.IdDestinatario.HasValue && c.IdDestinatario.Value == Model.UsuarioActualId) // Dirigido directamente al usuario actual
+                        {
+                            <span class="badge bg-success">Recibido</span>
+                        }
+                        else if (c.Tarea != null && c.Tarea.IdUsuarioAsignado.HasValue && c.Tarea.IdUsuarioAsignado.Value == Model.UsuarioActualId) // Dirigido indirectamente vía tarea asignada
+                        {
+                            <span class="badge bg-success">Recibido (Tarea)</span>
+                        }
+                        else // Otros comentarios relevantes para el empleado
+                        {
+                            <span class="badge bg-secondary">Otro</span>
+                        }
+                    </td>
+                }
+
+                <td>@c.Contenido</td>
+                <td>@c.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@(c.Tarea != null && !string.IsNullOrEmpty(c.Tarea.ProyectoNombre) ? c.Tarea.ProyectoNombre : "-")</td>
+                <td>@(c.Tarea != null ? c.Tarea.Titulo : "-")</td>
+
+                @* Lógica mejorada para empleados *@
+                @if (User.IsInRole("Empleado"))
+                {
+                    <td>
+                        @if (c.IdUsuario == Model.UsuarioActualId) // Si YO envié el comentario
+                        {
+                            @* Si YO envié el comentario, mostrar a quién se lo envié *@
+                            if (c.Destinatario != null)
+                            {
+                                <span class="text-warning">📤 Para: @($"{c.Destinatario.Nombres} {c.Destinatario.PrimerApellido}")</span>
+                            }
+                            else if (c.Tarea != null && !string.IsNullOrEmpty(c.Tarea.UsuarioAsignadoNombre))
+                            {
+                                <span class="text-warning">📤 Para Tarea: @c.Tarea.UsuarioAsignadoNombre</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Sin destinatario</span>
+                            }
+                        }
+                        else if (c.IdDestinatario.HasValue && c.IdDestinatario.Value == Model.UsuarioActualId) // Si FUI el destinatario directo
+                        {
+                            @* Si RECIBÍ el comentario directamente, mostrar quién me lo envió *@
+                            <span class="text-info">📥 De: @(c.Usuario != null ? $"{c.Usuario.Nombres} {c.Usuario.PrimerApellido}" : "-")</span>
+                        }
+                        else if (c.Tarea != null && c.Tarea.IdUsuarioAsignado.HasValue && c.Tarea.IdUsuarioAsignado.Value == Model.UsuarioActualId) // Si RECIBÍ el comentario (asignado a la tarea)
+                        {
+                            @* Si RECIBÍ el comentario por tarea, mostrar quién me lo envió *@
+                            <span class="text-info">📥 De: @(c.Usuario != null ? $"{c.Usuario.Nombres} {c.Usuario.PrimerApellido}" : "-") (Tarea)</span>
+                        }
+                        else // Otros comentarios relevantes para el empleado
+                        {
+                            <span class="text-muted">Autor: @(c.Usuario != null ? $"{c.Usuario.Nombres} {c.Usuario.PrimerApellido}" : "-")</span>
+                        }
+                    </td>
+                }
+                else if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
+                {
+                    <td>@(c.Usuario != null ? $"{c.Usuario.Nombres} {c.Usuario.PrimerApellido}" : "-")</td>
+                }
+
+                @* Solo el Jefe ve a quién está dirigido (CORREGIDO Y MEJORADO) *@
+                @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
+                {
+                    <td>
+                        @if (c.Destinatario != null)
+                        {
+                            <span class="text-warning">@($"{c.Destinatario.Nombres} {c.Destinatario.PrimerApellido}")</span>
+                        }
+                        else if (c.Tarea != null && !string.IsNullOrEmpty(c.Tarea.UsuarioAsignadoNombre))
+                        {
+                            <span class="text-warning">@c.Tarea.UsuarioAsignadoNombre (Tarea)</span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">Sin asignar</span>
+                        }
+                    </td>
+                }
+
+                <td class="text-center">
                     <a asp-page="/Comentarios/Mostrar" asp-route-id="@c.IdComentario" class="btn btn-sm btn-view">Ver</a>
 
-  @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
-  {
+                    @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
+                    {
                         <a asp-page="/Comentarios/Edit" asp-route-id="@c.IdComentario" class="btn btn-sm btn-edit">Editar</a>
-    <button type="button" class="btn btn-sm btn-delete"
-      data-bs-toggle="modal"
-   data-bs-target="#confirmDeleteModal"
-    data-item-id="@c.IdComentario">
-    Eliminar
-  </button>
-   }
-       </td>
- </tr>
-     }
-  </tbody>
+                        <button type="button" class="btn btn-sm btn-delete"
+                                data-bs-toggle="modal"
+                                data-bs-target="#confirmDeleteModal"
+                                data-item-id="@c.IdComentario">
+                            Eliminar
+                        </button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
 
-<!-- ✅ NUEVO: Mensaje cuando no hay resultados -->
+<!-- Mensaje cuando no hay resultados -->
 <div id="noResults" class="no-results hidden-row">
     No se encontraron comentarios que coincidan con tu búsqueda.
 </div>
 
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
- <div class="modal-dialog modal-dialog-centered">
-<div class="modal-content volcanic-modal">
- <div class="modal-header">
-        <h5 class="modal-title" id="modalLabel">Confirmar Eliminación</h5>
-<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-  </div>
-<div class="modal-body">
- <p>¿Estás seguro de que deseas eliminar este comentario?</p>
- </div>
-  <div class="modal-footer">
-<button type="button" class="btn btn-volcanic-secondary-modal" data-bs-dismiss="modal">Cancelar</button>
-         <button type="button" class="btn-volcanic-delete" id="confirmDeleteButton">Sí, Eliminar</button>
- </div>
-  </div>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content volcanic-modal">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas eliminar este comentario?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-volcanic-secondary-modal" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn-volcanic-delete" id="confirmDeleteButton">Sí, Eliminar</button>
+            </div>
+        </div>
     </div>
 </div>
 
 @section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-var confirmDeleteModal = document.getElementById('confirmDeleteModal');
-  var confirmDeleteButton = document.getElementById('confirmDeleteButton');
-    var itemIdToDelete;
+            var confirmDeleteModal = document.getElementById('confirmDeleteModal');
+            var confirmDeleteButton = document.getElementById('confirmDeleteButton');
+            var itemIdToDelete;
 
-     confirmDeleteModal.addEventListener('show.bs.modal', function (event) {
-    var button = event.relatedTarget;
-   itemIdToDelete = button.getAttribute('data-item-id');
-});
+            confirmDeleteModal.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget;
+                itemIdToDelete = button.getAttribute('data-item-id');
+            });
 
-       confirmDeleteButton.addEventListener('click', function () {
-       if (itemIdToDelete) {
-        var form = document.createElement('form');
-          form.method = 'post';
-    form.action = '?handler=Delete&id=' + itemIdToDelete;
-       
-      var token = document.querySelector('input[name="__RequestVerificationToken"]');
- if (token) {
-   var hiddenToken = document.createElement('input');
- hiddenToken.type = 'hidden';
-         hiddenToken.name = '__RequestVerificationToken';
-         hiddenToken.value = token.value;
-       form.appendChild(hiddenToken);
-   }
-        
-  document.body.appendChild(form);
-         form.submit();
-  }
- });
+            confirmDeleteButton.addEventListener('click', function () {
+                if (itemIdToDelete) {
+                    var form = document.createElement('form');
+                    form.method = 'post';
+                    form.action = '?handler=Delete&id=' + itemIdToDelete;
 
-         // ✅ NUEVO: Funcionalidad de búsqueda con autocompletado
-     const searchInput = document.getElementById('searchInput');
-const comentarioRows = document.querySelectorAll('.comentario-row');
-      const noResults = document.getElementById('noResults');
+                    var token = document.querySelector('input[name="__RequestVerificationToken"]');
+                    if (token) {
+                        var hiddenToken = document.createElement('input');
+                        hiddenToken.type = 'hidden';
+                        hiddenToken.name = '__RequestVerificationToken';
+                        hiddenToken.value = token.value;
+                        form.appendChild(hiddenToken);
+                    }
 
-        searchInput.addEventListener('input', function() {
-       const searchTerm = this.value.toLowerCase().trim();
-  let visibleCount = 0;
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
 
-   comentarioRows.forEach(function(row) {
-   const contenido = row.getAttribute('data-contenido');
-     const proyecto = row.getAttribute('data-proyecto');
-        const tarea = row.getAttribute('data-tarea');
-      const autor = row.getAttribute('data-autor');
-      const dirigido = row.getAttribute('data-dirigido');
+            // Funcionalidad de búsqueda con autocompletado
+            const searchInput = document.getElementById('searchInput');
+            const comentarioRows = document.querySelectorAll('.comentario-row');
+            const noResults = document.getElementById('noResults');
 
-   // Buscar en todos los campos
-   const matches = contenido.includes(searchTerm) || 
- proyecto.includes(searchTerm) || 
- tarea.includes(searchTerm) ||
-      autor.includes(searchTerm) ||
-    dirigido.includes(searchTerm);
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase().trim();
+                let visibleCount = 0;
 
-         if (matches || searchTerm === '') {
-        row.classList.remove('hidden-row');
-     visibleCount++;
-        } else {
-                 row.classList.add('hidden-row');
-         }
-      });
+                comentarioRows.forEach(function(row) {
+                    const contenido = row.getAttribute('data-contenido');
+                    const proyecto = row.getAttribute('data-proyecto');
+                    const tarea = row.getAttribute('data-tarea');
+                    const autor = row.getAttribute('data-autor');
+                    const dirigido = row.getAttribute('data-dirigido');
 
-           // Mostrar mensaje si no hay resultados
-     if (visibleCount === 0 && searchTerm !== '') {
-noResults.classList.remove('hidden-row');
-    } else {
-noResults.classList.add('hidden-row');
-      }
-      });
- });
+                    const matches = contenido.includes(searchTerm) ||
+                                    proyecto.includes(searchTerm) ||
+                                    tarea.includes(searchTerm) ||
+                                    autor.includes(searchTerm) ||
+                                    dirigido.includes(searchTerm);
+
+                    if (matches || searchTerm === '') {
+                        row.classList.remove('hidden-row');
+                        visibleCount++;
+                    } else {
+                        row.classList.add('hidden-row');
+                    }
+                });
+
+                if (visibleCount === 0 && searchTerm !== '') {
+                    noResults.classList.remove('hidden-row');
+                } else {
+                    noResults.classList.add('hidden-row');
+                }
+            });
+        });
     </script>
 }

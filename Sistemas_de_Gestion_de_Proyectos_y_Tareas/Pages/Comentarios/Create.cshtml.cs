@@ -6,6 +6,8 @@ using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Comentarios;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Tareas;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Usuarios;
 using System.Security.Claims;
+using System.Collections.Generic; // Asegúrate de que este using esté presente
+using System.Linq; // Asegúrate de que este using esté presente
 
 namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
 {
@@ -40,20 +42,14 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
 
         public async Task<IActionResult> OnGetAsync()
         {
-            // ================================
-            // 📌 Obtener ID del usuario actual
-            // ================================
             var idClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            int idTemp; // requerido porque UsuarioActualId NO puede usarse como out
+            int idTemp;
             if (!int.TryParse(idClaim, out idTemp))
                 return Unauthorized();
 
             UsuarioActualId = idTemp;
 
-            // ================================
-            // 📌 Obtener tareas según rol
-            // ================================
             if (User.IsInRole("Empleado"))
             {
                 Tareas = (await _tareaApi.GetByUsuarioAsync(UsuarioActualId)).ToList();
@@ -63,14 +59,12 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
                 Tareas = (await _tareaApi.GetAllAsync()).ToList();
             }
 
-            // ================================
-            // 📌 Construir mapa tarea → usuarios asignados
-            // ================================
             TareaUsuariosMap = new Dictionary<int, List<UsuarioDTO>>();
 
             foreach (var t in Tareas)
             {
                 // Obtener IDs de usuarios asignados desde el microservicio tareas
+                // t.Id es int (no nullable) por la definición de TareaDTO, así que esto es seguro
                 var usuariosIds = await _tareaApi.GetUsuariosAsignadosAsync(t.Id);
 
                 var usuarios = new List<UsuarioDTO>();
@@ -85,10 +79,6 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
                 TareaUsuariosMap[t.Id] = usuarios;
             }
 
-
-            // ================================
-            // 📌 Preseleccionar primer destinatario si existe
-            // ================================
             if (Tareas.Any())
             {
                 var firstTarea = Tareas.First();
@@ -105,12 +95,9 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
 
         public async Task<IActionResult> OnPostAsync()
         {
-            // ================================
-            // 📌 Obtener ID del usuario actual
-            // ================================
             var idClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            int idTemp;     // variable local requerida
+            int idTemp;
             if (!int.TryParse(idClaim, out idTemp))
                 return Unauthorized();
 
@@ -119,26 +106,42 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
             // ================================
             // 📌 Validación básica
             // ================================
+            // Primero, validamos IdTarea antes de intentar usarlo
+            // <-- ¡CORRECCIÓN CLAVE AQUÍ! -->
+            if (!Comentario.IdTarea.HasValue || Comentario.IdTarea.Value <= 0) // Verifica si tiene valor y es válido
+            {
+                TempData["ErrorMessage"] = "Debes seleccionar una tarea válida.";
+                // Recargar datos para la vista si hay un error de validación
+                await OnGetAsync();
+                return Page(); // Devuelve la página con el error y los datos precargados
+            }
+
+
             if (DirigidoAUsuarioId <= 0)
             {
                 TempData["ErrorMessage"] = "Debes seleccionar un destinatario.";
-                return RedirectToPage("Index");
+                await OnGetAsync(); 
+                return Page();
             }
 
             if (DirigidoAUsuarioId == UsuarioActualId)
             {
                 TempData["ErrorMessage"] = "No puedes comentarte a ti mismo.";
-                return RedirectToPage("Index");
+                await OnGetAsync();
+                return Page();
             }
 
             // ================================
-            // 📌 Validar tarea
+            // 📌 Validar tarea (ahora es seguro usar .Value)
             // ================================
-            var tarea = await _tareaApi.GetAsync(Comentario.IdTarea);
+            // <-- ¡CORRECCIÓN CLAVE AQUÍ! -->
+            var tarea = await _tareaApi.GetAsync(Comentario.IdTarea.Value); // Usamos .Value porque ya verificamos HasValue
+
             if (tarea == null)
             {
                 TempData["ErrorMessage"] = "La tarea seleccionada no existe.";
-                return RedirectToPage("Index");
+                await OnGetAsync(); // Recargar datos para la vista
+                return Page();
             }
 
             // ================================
@@ -149,13 +152,15 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
             if (destinatario == null)
             {
                 TempData["ErrorMessage"] = "El destinatario no existe.";
-                return RedirectToPage("Index");
+                await OnGetAsync(); // Recargar datos para la vista
+                return Page();
             }
 
             if (destinatario.Rol == "SuperAdmin")
             {
                 TempData["ErrorMessage"] = "No puedes enviar comentarios al administrador.";
-                return RedirectToPage("Index");
+                await OnGetAsync(); // Recargar datos para la vista
+                return Page();
             }
 
             // ================================
@@ -174,7 +179,8 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
             if (!ok)
             {
                 TempData["ErrorMessage"] = "No se pudo guardar el comentario.";
-                return RedirectToPage("Index");
+                await OnGetAsync(); // Recargar datos para la vista
+                return Page();
             }
 
             TempData["MensajeExito"] =
