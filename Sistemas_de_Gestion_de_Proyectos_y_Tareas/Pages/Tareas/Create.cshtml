@@ -181,7 +181,7 @@
                         <div class="proyecto-option"
                              data-id="@proyecto.IdProyecto"
                              data-nombre="@proyecto.Nombre.ToLower()"
-                             onclick="selectProyecto(@proyecto.IdProyecto, @Html.Raw(System.Text.Json.JsonSerializer.Serialize(proyecto.Nombre)))">
+                             onclick="selectProyecto(@proyecto.IdProyecto, '@proyecto.Nombre'.replaceAll('\'', '\\\''))">
                             @proyecto.Nombre
                         </div>
                     }
