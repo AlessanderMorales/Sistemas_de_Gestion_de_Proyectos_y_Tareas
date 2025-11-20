@@ -4,7 +4,7 @@
     var successMessage = TempData["SuccessMessage"] as string;
     var errorMessage = TempData["ErrorMessage"] as string;
 
-    var requiereCambioClaimValue = User.FindFirst("RequiereCambioContrase�a")?.Value;
+    var requiereCambioClaimValue = User.FindFirst("RequiereCambioContraseña")?.Value;
     var requiereCambioPassword = User.Identity?.IsAuthenticated == true && requiereCambioClaimValue == "True";
 
     var isPasswordChangePage = ViewContext.RouteData.Values["page"]?.ToString()?.Contains("CambiarPassword") == true;
@@ -12,9 +12,9 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="utf-8" />
+  <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Sistema de Gesti�n</title>
+<title>@ViewData["Title"] - Sistema de Gestión</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -273,7 +273,7 @@
     </style>
 </head>
 <body>
-    <div class="d-flex" id="wrapper">
+  <div class="d-flex" id="wrapper">
         <div class="border-end" id="sidebar-wrapper">
             <div class="sidebar-heading text-center">
                 <img src="~/Image/Logo.png" alt="Logo de Gesti�n" style="height:40px; margin-bottom:10px;" />
@@ -312,7 +312,7 @@
         </div>
 
         <div id="page-content-wrapper">
-            <nav class="navbar navbar-expand-lg border-bottom">
+        <nav class="navbar navbar-expand-lg border-bottom">
                 <div class="container-fluid">
                     <button class="btn" id="sidebarToggle">?</button>
                     <div class="ms-auto">
@@ -341,12 +341,12 @@
             </nav>
 
             @RenderBody()
-        </div>
+  </div>
     </div>
 
     <footer class="border-top text-muted text-center">
-        &copy; 2025 - Sistema de Gesti�n - <a asp-page="/Privacy">Privacy</a>
-    </footer>
+        &copy; 2025 - Sistema de Gestión - <a asp-page="/Privacy">Privacy</a>
+  </footer>
 
     <!-- ✅ Incluir modales globales -->
     <partial name="_Modals" />
@@ -354,65 +354,42 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-                    <h5 class="modal-title" id="logoutModalLabel">🚪 Confirmar Cierre de Sesión</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>¿Estás seguro de que deseas cerrar sesión?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-volcanic-secondary-modal" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-volcanic-delete" id="confirmLogoutButton">Sí, Cerrar Sesión</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/modals.js" asp-append-version="true"></script>
+  <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const sidebarToggle = document.body.querySelector('#sidebarToggle');
-            const wrapper = document.body.querySelector('#wrapper');
+     const sidebarToggle = document.body.querySelector('#sidebarToggle');
+  const wrapper = document.body.querySelector('#wrapper');
 
-            if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', event => {
-                    event.preventDefault();
-                    wrapper.classList.toggle('toggled');
-                });
-            }
+         if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', event => {
+ event.preventDefault();
+        wrapper.classList.toggle('toggled');
+ });
+       }
 
-            document.getElementById("openLogoutModal")?.addEventListener("click", () => {
-                new bootstrap.Modal(document.getElementById("logoutModal")).show();
-            });
+       // Abrir modal de logout cuando se hace clic en el botón
+       document.getElementById("openLogoutModal")?.addEventListener("click", () => {
+           const logoutModal = document.getElementById("logoutModal");
+   if (logoutModal) {
+      new bootstrap.Modal(logoutModal).show();
+  }
+          });
 
+            // Cerrar sidebar en móviles al hacer clic fuera
             if (window.innerWidth <= 768) {
-                document.addEventListener('click', function (event) {
-                    const sidebar = document.getElementById('sidebar-wrapper');
-                    const isClickInsideSidebar = sidebar.contains(event.target);
-                    const isToggleButton = event.target.closest('#sidebarToggle');
-                    if (!isClickInsideSidebar && !isToggleButton && !wrapper.classList.contains('toggled')) {
-                        wrapper.classList.add('toggled');
-                    }
-                });
-            }
-
-            const successModalEl = document.getElementById('successModal');
-            if (successModalEl) new bootstrap.Modal(successModalEl).show();
-
-            const errorModalEl = document.getElementById('errorModal');
-            if (errorModalEl) new bootstrap.Modal(errorModalEl).show();
-
-            const confirmLogoutButton = document.getElementById('confirmLogoutButton');
-            confirmLogoutButton?.addEventListener('click', () => {
-                const form = document.getElementById('logoutForm');
-                if (form) form.submit();
-            });
+    document.addEventListener('click', function (event) {
+         const sidebar = document.getElementById('sidebar-wrapper');
+       const isClickInsideSidebar = sidebar.contains(event.target);
+         const isToggleButton = event.target.closest('#sidebarToggle');
+     if (!isClickInsideSidebar && !isToggleButton && !wrapper.classList.contains('toggled')) {
+     wrapper.classList.add('toggled');
+          }
+        });
+ }
         });
     </script>
 </body>

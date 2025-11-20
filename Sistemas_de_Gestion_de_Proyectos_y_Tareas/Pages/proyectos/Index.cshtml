@@ -231,13 +231,14 @@
                     {
                 <a class="btn btn-sm btn-action btn-edit" asp-page="./Edit" asp-route-id="@item.IdProyecto">Editar</a>
                 <form method="post" asp-route-id="@item.IdProyecto" style="display:inline" id="deleteForm-@item.IdProyecto">
-                    <button type="button" class="btn btn-sm btn-action btn-delete"
-                            data-bs-toggle="modal"
-                            data-bs-target="#confirmDeleteModal"
-                            data-project-id="@item.IdProyecto">
-                        Eliminar
-                    </button>
-                </form>
+        <button type="button" 
+      class="btn btn-sm btn-action btn-delete"
+   data-bs-toggle="modal"
+   data-bs-target="#confirmDeleteModal"
+              data-item-id="@item.IdProyecto">
+  Eliminar
+        </button>
+           </form>
                     }
             </td>
         </tr>

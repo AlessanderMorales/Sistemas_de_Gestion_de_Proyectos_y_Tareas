@@ -331,13 +331,16 @@
                 @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
                     {
                 <a asp-page="/Comentarios/Edit" asp-route-id="@c.IdComentario" class="btn btn-sm btn-edit">Editar</a>
-                <button type="button" class="btn btn-sm btn-delete"
-                        data-bs-toggle="modal"
-                        data-bs-target="#confirmDeleteModal"
-                        data-item-id="@c.IdComentario">
-                    Eliminar
-                </button>
-                    }
+    <form method="post" style="display:inline" id="deleteForm-@c.IdComentario">
+ <button type="button" 
+  class="btn btn-sm btn-delete"
+   data-bs-toggle="modal"
+    data-bs-target="#confirmDeleteModal"
+         data-item-id="@c.IdComentario">
+       Eliminar
+   </button>
+       </form>
+ }
             </td>
         </tr>
         }

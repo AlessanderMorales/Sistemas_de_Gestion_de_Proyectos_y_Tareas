@@ -158,14 +158,13 @@
 
 @section Scripts {
     @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+   await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script>
         // ✅ Agregar confirmación antes de crear
-        setupFormConfirmation('createUserForm', 'confirmCreate');
-    </script>
-}
-
+        if (typeof setupFormConfirmation === 'function') {
+    setupFormConfirmation('createUserForm', 'confirmCreate');
+  }
     </script>
 }
 

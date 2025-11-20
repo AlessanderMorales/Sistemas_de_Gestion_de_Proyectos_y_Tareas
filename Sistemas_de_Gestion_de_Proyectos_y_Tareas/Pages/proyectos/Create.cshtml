@@ -132,116 +132,119 @@
 </div>
 
 @section Scripts {
-    <script>
-        setupFormConfirmation('createProyectoForm', 'confirmCreate');
-    </script>
     @{
+
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+ }
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const fechaInicioInput = document.querySelector('#fechaInicioInput');
-            const fechaFinInput = document.querySelector('#fechaFinInput');
-            const form = document.querySelector('form');
+        // ✅ Agregar confirmación antes de crear
+        if (typeof setupFormConfirmation === 'function') {
+   setupFormConfirmation('createProyectoForm', 'confirmCreate');
+      }
+
+ document.addEventListener('DOMContentLoaded', function () {
+     const fechaInicioInput = document.querySelector('#fechaInicioInput');
+const fechaFinInput = document.querySelector('#fechaFinInput');
+   const form = document.querySelector('form');
 
             flatpickr(fechaInicioInput, {
+        dateFormat: "d/m/Y",
+        locale: "es",
+         allowInput: true,
+       altInput: false,
+  disableMobile: false,
+          defaultDate: new Date(),
+   minDate: null,
+         onChange: function (selectedDates) {
+             const errorSpan = fechaInicioInput.parentElement.querySelector('.text-danger');
+          if (errorSpan) errorSpan.textContent = '';
+      fechaInicioInput.classList.remove('is-invalid');
+
+       if (selectedDates.length > 0) {
+     const fechaFinPicker = document.querySelector('#fechaFinInput')._flatpickr;
+    if (fechaFinPicker) {
+      fechaFinPicker.set('minDate', selectedDates[0]);
+              if (!fechaFinInput.value) {
+      fechaFinPicker.jumpToDate(selectedDates[0]);
+        }
+          }
+     }
+    }
+         });
+
+   flatpickr(fechaFinInput, {
                 dateFormat: "d/m/Y",
-                locale: "es",
-                allowInput: true,
-                altInput: false,
-                disableMobile: false,
+        locale: "es",
+     allowInput: true,
+  altInput: false,
+          disableMobile: false,
                 defaultDate: new Date(),
                 minDate: null,
-                onChange: function (selectedDates) {
-                    const errorSpan = fechaInicioInput.parentElement.querySelector('.text-danger');
-                    if (errorSpan) errorSpan.textContent = '';
-                    fechaInicioInput.classList.remove('is-invalid');
-
-                    if (selectedDates.length > 0) {
-                        const fechaFinPicker = document.querySelector('#fechaFinInput')._flatpickr;
-                        if (fechaFinPicker) {
-                            fechaFinPicker.set('minDate', selectedDates[0]);
-                            if (!fechaFinInput.value) {
-                                fechaFinPicker.jumpToDate(selectedDates[0]);
-                            }
-                        }
-                    }
+      onChange: function () {
+   const errorSpan = fechaFinInput.parentElement.querySelector('.text-danger');
+             if (errorSpan) errorSpan.textContent = '';
+     fechaFinInput.classList.remove('is-invalid');
                 }
-            });
+ });
 
-            flatpickr(fechaFinInput, {
-                dateFormat: "d/m/Y",
-                locale: "es",
-                allowInput: true,
-                altInput: false,
-                disableMobile: false,
-                defaultDate: new Date(),
-                minDate: null,
-                onChange: function () {
-                    const errorSpan = fechaFinInput.parentElement.querySelector('.text-danger');
-                    if (errorSpan) errorSpan.textContent = '';
-                    fechaFinInput.classList.remove('is-invalid');
-                }
-            });
-
-            function validarFormatoFecha(fecha) {
-                if (!fecha) return true;
-                const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-                if (!regex.test(fecha)) return false;
-                const [, dia, mes, año] = regex.exec(fecha);
-                const d = parseInt(dia, 10);
-                const m = parseInt(mes, 10);
-                const a = parseInt(año, 10);
-                if (m < 1 || m > 12) return false;
-                if (d < 1 || d > 31) return false;
-                const diasPorMes = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-                if (a % 4 === 0 && (a % 100 !== 0 || a % 400 === 0)) diasPorMes[1] = 29;
-                return d <= diasPorMes[m - 1];
+      function validarFormatoFecha(fecha) {
+         if (!fecha) return true;
+      const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+ if (!regex.test(fecha)) return false;
+       const [, dia, mes, año] = regex.exec(fecha);
+       const d = parseInt(dia, 10);
+         const m = parseInt(mes, 10);
+      const a = parseInt(año, 10);
+     if (m < 1 || m > 12) return false;
+          if (d < 1 || d > 31) return false;
+      const diasPorMes = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        if (a % 4 === 0 && (a % 100 !== 0 || a % 400 === 0)) diasPorMes[1] = 29;
+       return d <= diasPorMes[m - 1];
             }
 
-            function parsearFecha(fechaStr) {
-                const [dia, mes, año] = fechaStr.split('/').map(Number);
-                return new Date(año, mes - 1, dia);
+    function parsearFecha(fechaStr) {
+       const [dia, mes, año] = fechaStr.split('/').map(Number);
+        return new Date(año, mes - 1, dia);
             }
 
-            form.addEventListener('submit', function (event) {
-                const inicioStr = fechaInicioInput.value;
-                const finStr = fechaFinInput.value;
-                const errorSpanInicio = fechaInicioInput.parentElement.querySelector('.text-danger');
-                const errorSpanFin = fechaFinInput.parentElement.querySelector('.text-danger');
+  form.addEventListener('submit', function (event) {
+       const inicioStr = fechaInicioInput.value;
+   const finStr = fechaFinInput.value;
+    const errorSpanInicio = fechaInicioInput.parentElement.querySelector('.text-danger');
+   const errorSpanFin = fechaFinInput.parentElement.querySelector('.text-danger');
 
-                if (errorSpanInicio) errorSpanInicio.textContent = '';
-                if (errorSpanFin) errorSpanFin.textContent = '';
+        if (errorSpanInicio) errorSpanInicio.textContent = '';
+      if (errorSpanFin) errorSpanFin.textContent = '';
 
-                if (inicioStr && !validarFormatoFecha(inicioStr)) {
-                    event.preventDefault();
-                    if (errorSpanInicio) errorSpanInicio.textContent = 'Formato de fecha inválido. Use DD/MM/YYYY';
-                    fechaInicioInput.classList.add('is-invalid');
+   if (inicioStr && !validarFormatoFecha(inicioStr)) {
+  event.preventDefault();
+    if (errorSpanInicio) errorSpanInicio.textContent = 'Formato de fecha inválido. Use DD/MM/YYYY';
+           fechaInicioInput.classList.add('is-invalid');
+     return;
+              }
+
+              if (finStr && !validarFormatoFecha(finStr)) {
+         event.preventDefault();
+        if (errorSpanFin) errorSpanFin.textContent = 'Formato de fecha inválido. Use DD/MM/YYYY';
+   fechaFinInput.classList.add('is-invalid');
                     return;
-                }
+}
 
-                if (finStr && !validarFormatoFecha(finStr)) {
-                    event.preventDefault();
-                    if (errorSpanFin) errorSpanFin.textContent = 'Formato de fecha inválido. Use DD/MM/YYYY';
-                    fechaFinInput.classList.add('is-invalid');
-                    return;
-                }
-
-                if (inicioStr && finStr) {
-                    const inicio = parsearFecha(inicioStr);
-                    const fin = parsearFecha(finStr);
-                    if (fin < inicio) {
-                        event.preventDefault();
-                        if (errorSpanFin) errorSpanFin.textContent = 'La fecha de finalización no puede ser anterior a la fecha de inicio.';
-                        fechaFinInput.classList.add('is-invalid');
-                    } else if (fin.getTime() === inicio.getTime()) {
-                        event.preventDefault();
-                        if (errorSpanFin) errorSpanFin.textContent = 'La fecha de finalización no puede ser igual a la fecha de inicio.';
-                        fechaFinInput.classList.add('is-invalid');
-                    }
-                }
-            });
+           if (inicioStr && finStr) {
+           const inicio = parsearFecha(inicioStr);
+         const fin = parsearFecha(finStr);
+         if (fin < inicio) {
+   event.preventDefault();
+         if (errorSpanFin) errorSpanFin.textContent = 'La fecha de finalización no puede ser anterior a la fecha de inicio.';
+             fechaFinInput.classList.add('is-invalid');
+       } else if (fin.getTime() === inicio.getTime()) {
+            event.preventDefault();
+     if (errorSpanFin) errorSpanFin.textContent = 'La fecha de finalización no puede ser igual a la fecha de inicio.';
+        fechaFinInput.classList.add('is-invalid');
+         }
+         }
+        });
         });
     </script>
 }

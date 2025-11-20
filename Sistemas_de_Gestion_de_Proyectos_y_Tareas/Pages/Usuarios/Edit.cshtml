@@ -140,7 +140,10 @@
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
     <script>
-        setupFormConfirmation('editUserForm', 'confirmEdit');
+        // ✅ Agregar confirmación antes de guardar cambios
+        if (typeof setupFormConfirmation === 'function') {
+     setupFormConfirmation('editUserForm', 'confirmEdit');
+  }
     </script>
 }
 
