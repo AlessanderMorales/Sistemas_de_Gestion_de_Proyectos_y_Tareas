@@ -21,16 +21,19 @@
 
     .header-actions {
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 2rem;
         border-bottom: 2px solid rgba(255,255,255,0.1);
         padding-bottom: 1rem;
+        gap: 1rem;
     }
 
     .search-container {
         margin-bottom: 1.5rem;
         max-width: 500px;
+        width: 100%;
     }
 
     .search-input {
@@ -59,6 +62,7 @@
         color: #e0e0e0;
         border-collapse: separate;
         border-spacing: 0 10px;
+        width: 100%;
     }
 
         .table-volcanic > :not(caption) > * > * {
@@ -75,6 +79,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             border-bottom: 2px solid var(--accent-orange);
+            white-space: nowrap;
         }
 
         .table-volcanic tbody tr:hover {
@@ -231,7 +236,7 @@
     <h1 class="title-volcanic m-0">@ViewData["Title"]</h1>
     @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
     {
-    <a asp-page="Create" class="btn btn-volcanic-primary">Crear Nueva Tarea</a>
+        <a asp-page="Create" class="btn btn-volcanic-primary">Crear Nueva Tarea</a>
     }
 </div>
 
@@ -239,118 +244,132 @@
     <input type="text" id="searchInput" class="search-input" placeholder="Buscar por título, descripción, prioridad, estado o proyecto..." autocomplete="off">
 </div>
 
-<table class="table table-volcanic">
-    <thead>
-        <tr>
-            <th>Título</th>
-            <th>Descripción</th>
-            <th class="text-center">Prioridad</th>
-            <th class="text-center">Estado</th>
-            <th>Proyecto Asignado</th>
-            @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
-            {
-            <th>Asignado a</th>
-            }
-            <th class="text-center">Acciones</th>
-        </tr>
-    </thead>
-    <tbody id="tareasTableBody">
-        @foreach (var item in Model.Tareas)
-        {
-        <tr class="tarea-row"
-            data-titulo="@item.Titulo.ToLower()"
-            data-descripcion="@(item.Descripcion?.ToLower() ?? "")"
-            data-prioridad="@item.Prioridad.ToLower()"
-            data-status="@item.Status.ToLower()"
-            data-proyecto="@(item.ProyectoNombre?.ToLower() ?? "")"
-            data-usuario="@(item.UsuarioAsignadoNombre?.ToLower() ?? "")">
-            <td>@item.Titulo</td>
-            <td>@item.Descripcion</td>
-            <td class="text-center">
-                <span class="priority-badge priority-@(item.Prioridad.ToLower())">@item.Prioridad</span>
-            </td>
-            <td class="text-center">
-                @if (item.Status == "SinIniciar")
-                    {
-                <span class="status-badge status-sin-iniciar">Sin Iniciar</span>
-                    }
-                    else if (item.Status == "EnProgreso")
-                    {
-                <span class="status-badge status-en-progreso">En Progreso</span>
-                    }
-                    else if (item.Status == "Completada")
-                    {
-                <span class="status-badge status-completada">Completada</span>
-                    }
-            </td>
-            <td>
-                @if (!string.IsNullOrEmpty(item.ProyectoNombre))
-                    {
-                <a class="project-link" asp-page="/Proyectos/Mostrar" asp-route-id="@item.IdProyecto">@item.ProyectoNombre</a>
-                    }
-                    else
-                    {
-                <span class="text-muted">No asignado</span>
-                    }
-            </td>
-
-            @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
+<div class="table-responsive">
+    <table class="table table-volcanic">
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Descripción</th>
+                <th class="text-center">Prioridad</th>
+                <th class="text-center">Estado</th>
+                <th>Proyecto Asignado</th>
+                @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
                 {
-            <td>
-                @if (!string.IsNullOrEmpty(item.UsuarioAsignadoNombre))
+                    <th>Asignado a</th>
+                }
+                <th class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tareasTableBody">
+            @foreach (var item in Model.Tareas)
+            {
+                <tr class="tarea-row"
+                    data-titulo="@item.Titulo.ToLower()"
+                    data-descripcion="@(item.Descripcion?.ToLower() ?? "")"
+                    data-prioridad="@item.Prioridad.ToLower()"
+                    data-status="@item.Status.ToLower()"
+                    data-proyecto="@(item.ProyectoNombre?.ToLower() ?? "")"
+                    data-usuario="@(item.UsuarioAsignadoNombre?.ToLower() ?? "")">
+                    <td>@item.Titulo</td>
+                    <td>@item.Descripcion</td>
+                    <td class="text-center">
+                        <span class="priority-badge priority-@(item.Prioridad.ToLower())">@item.Prioridad</span>
+                    </td>
+                    <td class="text-center">
+                        @if (item.Status == "SinIniciar")
                         {
-                <span class="text-info">@item.UsuarioAsignadoNombre</span>
+                            <span class="status-badge status-sin-iniciar">Sin Iniciar</span>
+                        }
+                        else if (item.Status == "EnProgreso")
+                        {
+                            <span class="status-badge status-en-progreso">En Progreso</span>
+                        }
+                        else if (item.Status == "Completada")
+                        {
+                            <span class="status-badge status-completada">Completada</span>
+                        }
+                    </td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.ProyectoNombre))
+                        {
+                            <a class="project-link" asp-page="/Proyectos/Mostrar" asp-route-id="@item.IdProyecto">@item.ProyectoNombre</a>
                         }
                         else
                         {
-                <span class="text-muted">Sin asignar</span>
+                            <span class="text-muted">No asignado</span>
                         }
-            </td>
-                }
+                    </td>
 
-            <td class="text-center">
-                @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
+                    @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
                     {
-                <div class="d-flex justify-content-center gap-1 flex-wrap">
-                    <a class="btn btn-sm btn-info" asp-page="Edit" asp-route-id="@item.Id">Editar</a>
-                    <a class="btn btn-sm btn-status" asp-page="CambiarEstado" asp-route-id="@item.Id">Estado</a>
-                    <a class="btn btn-sm btn-warning" asp-page="Asignar" asp-route-id="@item.Id">Asignar</a>
-         <form method="post" style="display:inline" id="deleteForm-@item.Id">
-       <button type="button" 
-       class="btn btn-sm btn-secondary" 
-          data-bs-toggle="modal" 
-   data-bs-target="#confirmDeleteModal" 
- data-item-id="@item.Id">
-       Eliminar
-        </button>
-   </form>
-                </div>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.UsuarioAsignadoNombre))
+                            {
+                                <span class="text-info">@item.UsuarioAsignadoNombre</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Sin asignar</span>
+                            }
+                        </td>
                     }
-                    else if (User.IsInRole("Empleado"))
-                    {
-                <a class="btn btn-sm btn-status" asp-page="CambiarEstado" asp-route-id="@item.Id">Cambiar Estado</a>
-                    }
-            </td>
-        </tr>
-        }
-    </tbody>
-</table>
+
+                    <td class="text-center">
+                        <div class="d-flex justify-content-center gap-1 flex-wrap">
+                            @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
+                            {
+                                <a class="btn btn-sm btn-info" asp-page="Edit" asp-route-id="@item.Id">Editar</a>
+                                <a class="btn btn-sm btn-status" asp-page="CambiarEstado" asp-route-id="@item.Id">Estado</a>
+                                <a class="btn btn-sm btn-warning" asp-page="Asignar" asp-route-id="@item.Id">Asignar</a>
+                                <button type="button"
+                                        class="btn btn-sm btn-secondary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#confirmDeleteModal"
+                                        data-item-id="@item.Id">
+                                    Eliminar
+                                </button>
+                            }
+                            else if (User.IsInRole("Empleado"))
+                            {
+                                <a class="btn btn-sm btn-status" asp-page="CambiarEstado" asp-route-id="@item.Id">Cambiar Estado</a>
+                            }
+                        </div>
+                        <form method="post" style="display:none" id="deleteForm-@item.Id" asp-page-handler="Delete" asp-route-id="@item.Id"></form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 <div id="noResults" class="no-results hidden-row">
     No se encontraron tareas que coincidan con tu búsqueda.
 </div>
 
-<!-- Modal de eliminación en _Modals.cshtml -->
-</div>
-
 @section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Script de modal movido a modals.js
-
             const searchInput = document.getElementById('searchInput');
             const tareaRows = document.querySelectorAll('.tarea-row');
             const noResults = document.getElementById('noResults');
+
+            var confirmDeleteModal = document.getElementById('confirmDeleteModal');
+            var confirmDeleteButton = document.getElementById('confirmDeleteButton');
+            var itemIdToDelete;
+
+            if (confirmDeleteModal) {
+                confirmDeleteModal.addEventListener('show.bs.modal', function (event) {
+                    var button = event.relatedTarget;
+                    itemIdToDelete = button.getAttribute('data-item-id');
+                });
+
+                confirmDeleteButton.addEventListener('click', function () {
+                    var form = document.getElementById('deleteForm-' + itemIdToDelete);
+                    if (form) {
+                        form.submit();
+                    }
+                });
+            }
 
             searchInput.addEventListener('input', function () {
                 const searchTerm = this.value.toLowerCase().trim();
@@ -388,4 +407,3 @@
         });
     </script>
 }
-

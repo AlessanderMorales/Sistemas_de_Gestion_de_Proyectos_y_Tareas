@@ -49,6 +49,7 @@
 
     .form-container {
         max-width: 700px;
+        width: 100%;
     }
 
     .btn-volcanic-primary {
@@ -92,7 +93,7 @@
 
 <h1 class="title-volcanic">@ViewData["Title"]</h1>
 
-<div class="row">
+<div class="row justify-content-center justify-content-md-start">
     <div class="col-md-8 form-container">
         <form method="post" id="editProyectoForm">
             <input type="hidden" asp-for="Proyecto.IdProyecto" />
@@ -116,8 +117,8 @@
                            maxlength="10"
                            id="fechaInicioInput"
                            value="@(Model.Proyecto.FechaInicio.HasValue
-                                   ? Model.Proyecto.FechaInicio.Value.ToString("dd/MM/yyyy")
-                                   : "")" />
+                                                              ? Model.Proyecto.FechaInicio.Value.ToString("dd/MM/yyyy")
+                                                              : "")" />
                     <div class="date-format-hint">Formato: DD/MM/YYYY</div>
                     <span asp-validation-for="Proyecto.FechaInicio" class="text-danger"></span>
                 </div>
@@ -130,8 +131,8 @@
                            maxlength="10"
                            id="fechaFinInput"
                            value="@(Model.Proyecto.FechaFin.HasValue
-                                   ? Model.Proyecto.FechaFin.Value.ToString("dd/MM/yyyy")
-                                   : "")" />
+                                                              ? Model.Proyecto.FechaFin.Value.ToString("dd/MM/yyyy")
+                                                              : "")" />
                     <div class="date-format-hint">Formato: DD/MM/YYYY</div>
                     <span asp-validation-for="Proyecto.FechaFin" class="text-danger"></span>
                 </div>
@@ -262,4 +263,3 @@
         });
     </script>
 }
-

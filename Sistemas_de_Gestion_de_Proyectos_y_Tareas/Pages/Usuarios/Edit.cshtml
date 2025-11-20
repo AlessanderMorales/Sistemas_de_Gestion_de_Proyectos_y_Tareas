@@ -54,6 +54,7 @@
 
     .form-container {
         max-width: 700px;
+        width: 100%;
     }
 
     .btn-volcanic-primary {
@@ -90,7 +91,7 @@
 
 <h1 class="title-volcanic">@ViewData["Title"]</h1>
 
-<div class="row">
+<div class="row justify-content-center justify-content-md-start">
     <div class="col-md-8 form-container">
         <form method="post" id="editUserForm">
             <input type="hidden" asp-for="Usuario.Id" />
@@ -138,12 +139,12 @@
 </div>
 
 @section Scripts {
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
     <script>
-        // ✅ Agregar confirmación antes de guardar cambios
         if (typeof setupFormConfirmation === 'function') {
-     setupFormConfirmation('editUserForm', 'confirmEdit');
-  }
+            setupFormConfirmation('editUserForm', 'confirmEdit');
+        }
     </script>
 }
-

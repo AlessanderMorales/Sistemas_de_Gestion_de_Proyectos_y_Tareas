@@ -1,15 +1,15 @@
-@page "{id:int}"
+﻿@page "{id:int}"
 @model Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Proyectos.GestionarUsuariosModel
 @{
     ViewData["Title"] = "Gestionar Usuarios del Proyecto";
 }
 
 <style>
- :root {
+    :root {
         --accent-red: #D32F2F;
         --accent-orange: #FF5722;
         --accent-gold: #FFD700;
-  --text-primary: #f5f5f7;
+        --text-primary: #f5f5f7;
     }
 
     .title-volcanic {
@@ -23,16 +23,16 @@
     }
 
     .project-info {
-   background-color: #3a3a40;
+        background-color: #3a3a40;
         padding: 1.5rem;
-     border-radius: 12px;
+        border-radius: 12px;
         margin-bottom: 2rem;
         border-left: 4px solid var(--accent-gold);
     }
 
     .users-section {
         display: grid;
-   grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr 1fr;
         gap: 2rem;
         margin-bottom: 2rem;
     }
@@ -44,10 +44,10 @@
     }
 
     .card-title {
-color: var(--accent-orange);
-font-weight: 600;
+        color: var(--accent-orange);
+        font-weight: 600;
         margin-bottom: 1rem;
-  display: flex;
+        display: flex;
         align-items: center;
         gap: 0.5rem;
     }
@@ -57,29 +57,29 @@ font-weight: 600;
         color: white;
         padding: 0.2rem 0.6rem;
         border-radius: 12px;
-     font-size: 0.8rem;
+        font-size: 0.8rem;
         font-weight: 700;
     }
 
     .user-item {
-   background-color: #2c2c31;
-    padding: 1rem;
- margin-bottom: 0.75rem;
-     border-radius: 8px;
+        background-color: #2c2c31;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        border-radius: 8px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         transition: all 0.2s ease;
     }
 
-    .user-item:hover {
-        background-color: #4a4a50;
-   }
+        .user-item:hover {
+            background-color: #4a4a50;
+        }
 
     .user-info h6 {
-  color: var(--text-primary);
-     margin: 0 0 0.25rem 0;
-      font-size: 1rem;
+        color: var(--text-primary);
+        margin: 0 0 0.25rem 0;
+        font-size: 1rem;
     }
 
     .user-info small {
@@ -90,15 +90,15 @@ font-weight: 600;
         padding: 0.3rem 0.8rem;
         border-radius: 15px;
         font-size: 0.75rem;
-font-weight: 600;
-    text-transform: uppercase;
+        font-weight: 600;
+        text-transform: uppercase;
         margin-left: 0.5rem;
     }
 
     .role-jefe {
         background-color: #FF5722;
         color: white;
-  }
+    }
 
     .role-empleado {
         background-color: #2196F3;
@@ -115,46 +115,46 @@ font-weight: 600;
         transition: all 0.3s ease;
     }
 
-    .btn-volcanic-primary:hover {
-        transform: translateY(-2px);
-     box-shadow: 0 3px 10px rgba(76, 175, 80, 0.4);
-    }
+        .btn-volcanic-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(76, 175, 80, 0.4);
+        }
 
     .btn-volcanic-danger {
-      background: linear-gradient(45deg, #D32F2F, #FF5722);
+        background: linear-gradient(45deg, #D32F2F, #FF5722);
         border: none;
         color: white;
-    font-weight: bold;
-     padding: 0.5rem 1rem;
+        font-weight: bold;
+        padding: 0.5rem 1rem;
         border-radius: 6px;
         transition: all 0.3s ease;
     }
 
-    .btn-volcanic-danger:hover {
-     transform: translateY(-2px);
-        box-shadow: 0 3px 10px rgba(211, 47, 47, 0.4);
-    }
+        .btn-volcanic-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(211, 47, 47, 0.4);
+        }
 
     .btn-volcanic-secondary {
         background-color: transparent;
         border: 2px solid #6c757d;
         color: #ced4da;
         font-weight: bold;
- padding: 0.6rem 1.5rem;
+        padding: 0.6rem 1.5rem;
         border-radius: 8px;
         transition: all 0.3s ease;
     }
 
-    .btn-volcanic-secondary:hover {
-  background-color: #6c757d;
-        color: white;
-    }
+        .btn-volcanic-secondary:hover {
+            background-color: #6c757d;
+            color: white;
+        }
 
     .empty-state {
         text-align: center;
         padding: 2rem;
         color: #6c757d;
-    font-style: italic;
+        font-style: italic;
     }
 
     @@media (max-width: 768px) {
@@ -169,161 +169,152 @@ font-weight: 600;
 @if (Model.Proyecto != null)
 {
     <div class="project-info">
-      <h3 style="color: var(--accent-gold); margin-bottom: 0.5rem;">?? @Model.Proyecto.Nombre</h3>
+        <h3 style="color: var(--accent-gold); margin-bottom: 0.5rem;">📂 @Model.Proyecto.Nombre</h3>
         <p style="color: #ced4da; margin: 0;">@Model.Proyecto.Descripcion</p>
     </div>
 
- <div class="users-section">
-        <!-- Usuarios Asignados -->
-     <div class="user-list-card">
-     <h4 class="card-title">
-      ? Usuarios Asignados
-        <span class="count-badge">@Model.UsuariosAsignados.Count</span>
-        </h4>
-
-    @if (Model.UsuariosAsignados.Any())
-            {
-      @foreach (var usuario in Model.UsuariosAsignados)
-     {
-              <div class="user-item">
-          <div class="user-info">
-         <h6>
-  @usuario.Nombres @usuario.PrimerApellido
- <span class="role-badge @(usuario.Rol == "JefeDeProyecto" ? "role-jefe" : "role-empleado")">
-      @(usuario.Rol == "JefeDeProyecto" ? "Jefe" : "Empleado")
- </span>
-</h6>
-           <small>@usuario.Email</small>
-           </div>
-       <button type="button" 
-       class="btn btn-sm btn-volcanic-danger"
-            data-bs-toggle="modal" 
-           data-bs-target="#confirmDesasignarModal"
-   data-usuario-id="@usuario.Id"
-      data-usuario-nombre="@usuario.Nombres @usuario.PrimerApellido"
-            data-proyecto-id="@Model.Proyecto.IdProyecto">
- ? Desasignar
-        </button>
-    </div>
-      }
-  }
-   else
-    {
-                <div class="empty-state">
-          <p>No hay usuarios asignados a este proyecto.</p>
-       </div>
-            }
-      </div>
-
-        <!-- Usuarios Disponibles -->
+    <div class="users-section">
         <div class="user-list-card">
             <h4 class="card-title">
-     ?? Usuarios Disponibles
-  <span class="count-badge">@Model.UsuariosDisponibles.Count</span>
-      </h4>
+                👥 Usuarios Asignados
+                <span class="count-badge">@Model.UsuariosAsignados.Count</span>
+            </h4>
 
-    @if (Model.UsuariosDisponibles.Any())
-     {
-           @foreach (var usuario in Model.UsuariosDisponibles)
-      {
-         <div class="user-item">
-        <div class="user-info">
-        <h6>
-        @usuario.Nombres @usuario.PrimerApellido
-       <span class="role-badge @(usuario.Rol == "JefeDeProyecto" ? "role-jefe" : "role-empleado")">
- @(usuario.Rol == "JefeDeProyecto" ? "Jefe" : "Empleado")
-      </span>
-    </h6>
- <small>@usuario.Email</small>
-                  </div>
-         <form method="post" asp-page-handler="Asignar" style="margin: 0;">
-         <input type="hidden" name="idProyecto" value="@Model.Proyecto.IdProyecto" />
-     <input type="hidden" name="idUsuario" value="@usuario.Id" />
-         <button type="submit" class="btn btn-sm btn-volcanic-primary">
-    ? Asignar
-         </button>
-    </form>
- </div>
-      }
-   }
-     else
+            @if (Model.UsuariosAsignados.Any())
             {
-         <div class="empty-state">
-             <p>Todos los usuarios ya est�n asignados.</p>
+                @foreach (var usuario in Model.UsuariosAsignados)
+                {
+                    <div class="user-item">
+                        <div class="user-info">
+                            <h6>
+                                @usuario.Nombres @usuario.PrimerApellido
+                                <span class="role-badge @(usuario.Rol == "JefeDeProyecto" ? "role-jefe" : "role-empleado")">
+                                    @(usuario.Rol == "JefeDeProyecto" ? "Jefe" : "Empleado")
+                                </span>
+                            </h6>
+                            <small>@usuario.Email</small>
+                        </div>
+                        <button type="button"
+                                class="btn btn-sm btn-volcanic-danger"
+                                data-bs-toggle="modal"
+                                data-bs-target="#confirmDesasignarModal"
+                                data-usuario-id="@usuario.Id"
+                                data-usuario-nombre="@usuario.Nombres @usuario.PrimerApellido"
+                                data-proyecto-id="@Model.Proyecto.IdProyecto">
+                            ❌ Desasignar
+                        </button>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">
+                    <p>No hay usuarios asignados a este proyecto.</p>
                 </div>
-      }
+            }
+        </div>
+
+        <div class="user-list-card">
+            <h4 class="card-title">
+                ➕ Usuarios Disponibles
+                <span class="count-badge">@Model.UsuariosDisponibles.Count</span>
+            </h4>
+
+            @if (Model.UsuariosDisponibles.Any())
+            {
+                @foreach (var usuario in Model.UsuariosDisponibles)
+                {
+                    <div class="user-item">
+                        <div class="user-info">
+                            <h6>
+                                @usuario.Nombres @usuario.PrimerApellido
+                                <span class="role-badge @(usuario.Rol == "JefeDeProyecto" ? "role-jefe" : "role-empleado")">
+                                    @(usuario.Rol == "JefeDeProyecto" ? "Jefe" : "Empleado")
+                                </span>
+                            </h6>
+                            <small>@usuario.Email</small>
+                        </div>
+                        <form method="post" asp-page-handler="Asignar" style="margin: 0;">
+                            <input type="hidden" name="idProyecto" value="@Model.Proyecto.IdProyecto" />
+                            <input type="hidden" name="idUsuario" value="@usuario.Id" />
+                            <button type="submit" class="btn btn-sm btn-volcanic-primary">
+                                ✅ Asignar
+                            </button>
+                        </form>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">
+                    <p>Todos los usuarios ya están asignados.</p>
+                </div>
+            }
         </div>
     </div>
 
- <div class="mt-4">
-     <a asp-page="./Index" class="btn btn-volcanic-secondary">? Volver a Proyectos</a>
+    <div class="mt-4">
+        <a asp-page="./Index" class="btn btn-volcanic-secondary">🔙 Volver a Proyectos</a>
     </div>
 }
 else
 {
     <div class="alert alert-danger">
         <h4>Proyecto no encontrado</h4>
-     <p>El proyecto que buscas no existe o fue eliminado.</p>
+        <p>El proyecto que buscas no existe o fue eliminado.</p>
     </div>
 }
 
-<!-- Modal de Confirmaci�n de Desasignaci�n -->
 <div class="modal fade" id="confirmDesasignarModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
- <div class="modal-content" style="background-color: #2c2c31; color: #f5f5f7; border: 1px solid rgba(255,255,255,0.2);">
-          <div class="modal-header" style="border-bottom: 1px solid var(--accent-orange);">
-          <h5 class="modal-title" id="confirmModalLabel">?? Confirmar Desasignaci�n</h5>
- <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-    </div>
-    <div class="modal-body">
-       <p id="confirmMessage">�Est�s seguro de que deseas desasignar a <strong id="usuarioNombre"></strong> del proyecto?</p>
-         <div class="alert alert-warning" style="background-color: #4a4a50; border-left: 4px solid var(--accent-orange); color: #f5f5f7;">
-    <strong>?? Advertencia:</strong> Se eliminar�n <strong>todas las tareas</strong> asignadas a este usuario en este proyecto.
-    </div>
+        <div class="modal-content" style="background-color: #2c2c31; color: #f5f5f7; border: 1px solid rgba(255,255,255,0.2);">
+            <div class="modal-header" style="border-bottom: 1px solid var(--accent-orange);">
+                <h5 class="modal-title" id="confirmModalLabel">⚠️ Confirmar Desasignación</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage">¿Estás seguro de que deseas desasignar a <strong id="usuarioNombre"></strong> del proyecto?</p>
+                <div class="alert alert-warning" style="background-color: #4a4a50; border-left: 4px solid var(--accent-orange); color: #f5f5f7;">
+                    <strong>⚠️ Advertencia:</strong> Se eliminarán <strong>todas las tareas</strong> asignadas a este usuario en este proyecto.
+                </div>
             </div>
             <div class="modal-footer" style="border-top: 1px solid rgba(255,255,255,0.1);">
-          <button type="button" class="btn btn-volcanic-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn btn-volcanic-danger" id="confirmDesasignarBtn">S�, Desasignar</button>
-</div>
-      </div>
+                <button type="button" class="btn btn-volcanic-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-volcanic-danger" id="confirmDesasignarBtn">Sí, Desasignar</button>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Form oculto para desasignar -->
 <form id="desasignarForm" method="post" asp-page-handler="Desasignar" style="display: none;">
     <input type="hidden" id="desasignarProyectoId" name="idProyecto" value="" />
-  <input type="hidden" id="desasignarUsuarioId" name="idUsuario" value="" />
+    <input type="hidden" id="desasignarUsuarioId" name="idUsuario" value="" />
 </form>
 
 @section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-  var confirmModal = document.getElementById('confirmDesasignarModal');
+            var confirmModal = document.getElementById('confirmDesasignarModal');
             var confirmBtn = document.getElementById('confirmDesasignarBtn');
-    var usuarioNombreEl = document.getElementById('usuarioNombre');
-   var desasignarForm = document.getElementById('desasignarForm');
-        var desasignarProyectoIdInput = document.getElementById('desasignarProyectoId');
-        var desasignarUsuarioIdInput = document.getElementById('desasignarUsuarioId');
+            var usuarioNombreEl = document.getElementById('usuarioNombre');
+            var desasignarForm = document.getElementById('desasignarForm');
+            var desasignarProyectoIdInput = document.getElementById('desasignarProyectoId');
+            var desasignarUsuarioIdInput = document.getElementById('desasignarUsuarioId');
 
-    // Cuando se abre el modal, capturar datos del usuario
-      confirmModal.addEventListener('show.bs.modal', function (event) {
-             var button = event.relatedTarget;
-    var usuarioId = button.getAttribute('data-usuario-id');
-      var usuarioNombre = button.getAttribute('data-usuario-nombre');
-          var proyectoId = button.getAttribute('data-proyecto-id');
+            confirmModal.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget;
+                var usuarioId = button.getAttribute('data-usuario-id');
+                var usuarioNombre = button.getAttribute('data-usuario-nombre');
+                var proyectoId = button.getAttribute('data-proyecto-id');
 
-             // Actualizar el mensaje del modal
                 usuarioNombreEl.textContent = usuarioNombre;
-
-      // Guardar los IDs en los inputs ocultos
-         desasignarProyectoIdInput.value = proyectoId;
+                desasignarProyectoIdInput.value = proyectoId;
                 desasignarUsuarioIdInput.value = usuarioId;
-     });
+            });
 
-    // Cuando se confirma, enviar el form
-   confirmBtn.addEventListener('click', function () {
-         desasignarForm.submit();
-      });
-     });
+            confirmBtn.addEventListener('click', function () {
+                desasignarForm.submit();
+            });
+        });
     </script>
 }

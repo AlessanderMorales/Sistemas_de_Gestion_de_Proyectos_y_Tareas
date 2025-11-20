@@ -6,19 +6,19 @@
 
 <style>
     :root {
- --accent-red: #D32F2F;
+        --accent-red: #D32F2F;
         --accent-orange: #FF5722;
-      --accent-gold: #FFD700;
- --text-primary: #f5f5f7;
+        --accent-gold: #FFD700;
+        --text-primary: #f5f5f7;
     }
 
     .title-volcanic {
         background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
- -webkit-background-clip: text;
+        -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-  font-weight: 700;
+        font-weight: 700;
         border-bottom: 2px solid rgba(255,255,255,0.1);
-    padding-bottom: 0.5rem;
+        padding-bottom: 0.5rem;
         margin-bottom: 2rem;
     }
 
@@ -29,36 +29,39 @@
         border-radius: 8px;
         padding: 0.75rem 1rem;
     }
+
     .form-control:focus, .form-select:focus {
         background-color: #4a4a50;
         color: var(--text-primary);
         border-color: var(--accent-orange);
         box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
     }
-    
+
     .form-label {
         color: var(--text-primary);
-   font-weight: 500;
+        font-weight: 500;
     }
 
     .text-danger {
-      color: #ff5252 !important;
-  font-weight: 500;
+        color: #ff5252 !important;
+        font-weight: 500;
     }
-    
+
     .form-container {
-     max-width: 700px;
+        max-width: 700px;
+        width: 100%;
     }
 
     .btn-volcanic-primary {
         background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
         border: none;
         color: white;
-   font-weight: bold;
+        font-weight: bold;
         padding: 12px 25px;
         border-radius: 8px;
         transition: all 0.3s ease;
     }
+
     .btn-volcanic-primary:hover {
         transform: translateY(-2px);
         box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
@@ -67,19 +70,19 @@
     .btn-volcanic-secondary {
         background-color: transparent;
         border: 2px solid #6c757d;
-    color: #ced4da;
+        color: #ced4da;
         font-weight: bold;
         padding: 10px 25px;
- border-radius: 8px;
-    transition: all 0.3s ease;
+        border-radius: 8px;
+        transition: all 0.3s ease;
     }
+
     .btn-volcanic-secondary:hover {
         background-color: #6c757d;
         color: white;
-     border-color: #6c757d;
+        border-color: #6c757d;
     }
 
-    /* Estilos para buscadores */
     .search-input {
         background-color: #3a3a40;
         color: var(--text-primary);
@@ -142,16 +145,15 @@
 
 <h2 class="title-volcanic">@ViewData["Title"]</h2>
 
-<div class="row">
+<div class="row justify-content-center justify-content-md-start">
     <div class="col-md-8 form-container">
-        <form method="post" id="createComentarioForm">
+        <form method="post">
             <div class="form-group mb-3">
                 <label asp-for="Comentario.Contenido" class="form-label">Contenido</label>
                 <textarea asp-for="Comentario.Contenido" class="form-control" rows="4" placeholder="Escribe tu comentario aquí..."></textarea>
                 <span asp-validation-for="Comentario.Contenido" class="text-danger"></span>
             </div>
 
-            <!-- Buscador de tareas -->
             <div class="form-group mb-3">
                 <label class="form-label">Tarea</label>
                 <input type="text"
@@ -182,7 +184,6 @@
                     No se encontraron tareas
                 </div>
 
-                <!-- Hidden field para enviar el ID -->
                 <input type="hidden" asp-for="Comentario.IdTarea" id="tareaIdInput" />
                 <span asp-validation-for="Comentario.IdTarea" class="text-danger"></span>
 
@@ -191,7 +192,6 @@
                 </small>
             </div>
 
-            <!-- Buscador de destinatarios -->
             <div class="form-group mb-3">
                 <label class="form-label">Dirigido a</label>
                 <input type="text"
@@ -201,13 +201,11 @@
                        autocomplete="off">
 
                 <div id="destinatariosList" class="options-list">
-                    <!-- Opciones generadas dinámicamente por JavaScript -->
                 </div>
                 <div id="noResultsDestinatario" class="no-results" style="display: none;">
                     No se encontraron usuarios
                 </div>
 
-                <!-- Hidden field para enviar el ID -->
                 <input type="hidden" asp-for="DirigidoAUsuarioId" id="destinatarioIdInput" />
 
                 <small class="text-muted d-block mt-2">
@@ -236,7 +234,6 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script>
-        // Mapa de tareas a usuarios (del backend)
         var tareaUsuariosMap = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
             Model.TareaUsuariosMap.ToDictionary(
                 kvp => kvp.Key.ToString(),
@@ -249,7 +246,6 @@
             )
         ));
 
-        // Búsqueda de tareas
         const tareaSearch = document.getElementById('tareaSearch');
         const tareaOptions = document.querySelectorAll('.tarea-option');
         const noResultsTarea = document.getElementById('noResultsTarea');
@@ -284,23 +280,18 @@
         function selectTarea(id, titulo) {
             tareaIdInput.value = id;
             selectedTareaName.textContent = titulo;
-            tareaSearch.value = titulo; 
-            
-            // Resaltar selección
+            tareaSearch.value = titulo;
+
             tareaOptions.forEach(opt => opt.classList.remove('selected'));
             const selectedOption = document.querySelector(`.tarea-option[data-id="${id}"]`);
             if (selectedOption) {
                 selectedOption.classList.add('selected');
             }
-            
-            // Ocultar la lista de tareas después de la selección
+
             tareasList.style.display = 'none';
-            
-            // Actualizar destinatarios (¡CRÍTICO!)
             actualizarDestinatarios();
         }
 
-        // Búsqueda de destinatarios
         const destinatarioSearch = document.getElementById('destinatarioSearch');
         const destinatariosList = document.getElementById('destinatariosList');
         const noResultsDestinatario = document.getElementById('noResultsDestinatario');
@@ -335,29 +326,22 @@
         function selectDestinatario(id, nombre) {
             destinatarioIdInput.value = id;
             selectedDestinatarioName.textContent = nombre;
-            destinatarioSearch.value = nombre; 
-            
-            // Resaltar selección
+            destinatarioSearch.value = nombre;
             const options = document.querySelectorAll('.destinatario-option');
             options.forEach(opt => opt.classList.remove('selected'));
             const selectedOption = document.querySelector(`.destinatario-option[data-id="${id}"]`);
             if (selectedOption) {
                 selectedOption.classList.add('selected');
             }
-
-            // Ocultar la lista de destinatarios después de la selección
             destinatariosList.style.display = 'none';
         }
 
-        // Función para actualizar destinatarios según la tarea (¡CRÍTICO!)
         function actualizarDestinatarios() {
             var tareaId = tareaIdInput.value;
-            
-            // Limpiar opciones actuales y resetear la búsqueda
             destinatariosList.innerHTML = '';
             destinatarioSearch.value = '';
             selectedDestinatarioName.textContent = 'Ninguno';
-            destinatarioIdInput.value = ''; // Resetear el ID oculto
+            destinatarioIdInput.value = '';
 
             if (!tareaId || !tareaUsuariosMap[tareaId]) {
                 destinatariosList.innerHTML = '<div class="no-results">No hay usuarios disponibles para esta tarea</div>';
@@ -375,8 +359,7 @@
                 return;
             }
 
-            // Agregar usuarios disponibles a la lista de opciones
-            usuarios.forEach(function(usuario) { 
+            usuarios.forEach(function(usuario) {
                 var nombreCompleto = usuario.Nombres + ' ' + usuario.PrimerApellido;
                 var etiquetaRol = '';
                 if (usuario.Rol === 'JefeDeProyecto') {
@@ -385,69 +368,42 @@
                     etiquetaRol = ' (Empleado)';
                 }
                 var textoCompleto = nombreCompleto + etiquetaRol;
-                
+
                 var div = document.createElement('div');
                 div.className = 'option-item destinatario-option';
                 div.setAttribute('data-id', usuario.Id);
                 div.setAttribute('data-nombre', textoCompleto.toLowerCase());
                 div.setAttribute('onclick', `selectDestinatario(${usuario.Id}, '${textoCompleto.replace(/'/g, "\\'")}')`);
                 div.textContent = textoCompleto;
-                
+
                 destinatariosList.appendChild(div);
             });
-
-            // Después de agregar todos los usuarios, asegúrate de que la lista sea visible
             destinatariosList.style.display = 'block';
             noResultsDestinatario.style.display = 'none';
-
-            // Opcional: Si quieres que siempre haya un destinatario seleccionado por defecto al cargar la tarea,
-            // y no solo al hacer clic, puedes añadir esta lógica AQUÍ.
-            // Por ejemplo, seleccionar el primero:
-            // if (usuarios.length > 0 && destinatarioIdInput.value === '') {
-            //     var firstUser = usuarios[0];
-            //     var firstName = firstUser.Nombres + ' ' + firstUser.PrimerApellido;
-            //     var firstEtiquetaRol = '';
-            //     if (firstUser.Rol === 'JefeDeProyecto') { firstEtiquetaRol = ' (Jefe de Proyecto)'; }
-            //     else if (firstUser.Rol === 'Empleado') { firstEtiquetaRol = ' (Empleado)'; }
-            //     selectDestinatario(firstUser.Id, firstName + firstEtiquetaRol);
-            // }
         }
 
-        // Ejecutar al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar la lista de tareas y sus destinatarios
-            if (!tareaId || !tareaUsuariosMap[tareaId]) {
-                destinatariosList.innerHTML = '<div class="no-results">No hay usuarios disponibles para esta tarea</div>';
-                destinatariosList.style.display = 'block';
-                noResultsDestinatario.style.display = 'none';
-
-                     // 🔥 MUY IMPORTANTE – RESET TOTAL
-                destinatarioSearch.value = '';
-                destinatarioIdInput.value = '';
-                selectedDestinatarioName.textContent = 'Ninguno';
-
-                return;
+            if (tareaOptions.length > 0) {
+                const firstTarea = tareaOptions[0];
+                const id = firstTarea.getAttribute('data-id');
+                const titulo = firstTarea.textContent.trim();
+                selectTarea(id, titulo);
             } else {
-                // Si no hay tareas, limpiar y mostrar mensaje en destinatarios
                 destinatariosList.innerHTML = '<div class="no-results">Selecciona una tarea primero</div>';
                 destinatariosList.style.display = 'block';
             }
-
-            // Ocultar las listas inicialmente (se mostrarán al hacer focus)
             tareasList.style.display = 'none';
             destinatariosList.style.display = 'none';
-            
-            // Eventos para mostrar/ocultar listas al enfocar/desenfocar los buscadores
             tareaSearch.addEventListener('focus', function() {
                 tareasList.style.display = 'block';
                 noResultsTarea.style.display = 'none';
             });
             tareaSearch.addEventListener('blur', function() {
                 setTimeout(() => {
-                    if (!tareasList.contains(document.activeElement)) { 
+                    if (!tareasList.contains(document.activeElement)) {
                         tareasList.style.display = 'none';
                     }
-                }, 100); 
+                }, 100);
             });
 
             destinatarioSearch.addEventListener('focus', function() {

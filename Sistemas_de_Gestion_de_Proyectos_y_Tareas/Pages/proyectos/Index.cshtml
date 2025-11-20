@@ -22,21 +22,25 @@
 
     .header-actions {
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 2rem;
         border-bottom: 2px solid rgba(255,255,255,0.1);
         padding-bottom: 1rem;
+        gap: 1rem;
     }
 
     .header-buttons {
         display: flex;
+        flex-wrap: wrap;
         gap: 10px;
     }
 
     .search-container {
         margin-bottom: 1.5rem;
         max-width: 500px;
+        width: 100%;
     }
 
     .search-input {
@@ -65,6 +69,7 @@
         color: #e0e0e0;
         border-collapse: separate;
         border-spacing: 0 10px;
+        width: 100%;
     }
 
         .table-volcanic > :not(caption) > * > * {
@@ -81,6 +86,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             border-bottom: 2px solid var(--accent-orange);
+            white-space: nowrap;
         }
 
         .table-volcanic tbody tr {
@@ -88,7 +94,7 @@
         }
 
             .table-volcanic tbody tr:hover {
-                transform: scale(1.02);
+                transform: scale(1.01);
                 background-color: #4a4a50;
                 box-shadow: 0 10px 20px rgba(0,0,0,0.4);
                 cursor: pointer;
@@ -188,13 +194,7 @@
     <div class="header-buttons">
         @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
         {
-        <form method="post" asp-page-handler="GenerarPdfGeneral">
-            <button type="submit" class="btn btn-volcanic-primary">📄 Descargar Reporte PDF</button>
-        </form>
-        <form method="post" asp-page-handler="GenerarExcelGeneral">
-            <button type="submit" class="btn btn-volcanic-primary">📥 Descargar Reporte Excel</button>
-        </form>
-        <a asp-page="Create" class="btn btn-volcanic-primary">Crear Nuevo Proyecto</a>
+            <a asp-page="Create" class="btn btn-volcanic-primary">Crear Nuevo Proyecto</a>
         }
     </div>
 </div>
@@ -203,60 +203,58 @@
     <input type="text" id="searchInput" class="search-input" placeholder="🔍 Buscar por nombre, descripción o fechas..." autocomplete="off">
 </div>
 
-<table class="table table-volcanic" id="proyectosTable">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Inicio</th>
-            <th>Fin</th>
-            <th class="text-center">Acciones</th>
-        </tr>
-    </thead>
-    <tbody id="proyectosTableBody">
-        @foreach (var item in Model.Proyectos)
-        {
-        <tr class="proyecto-row"
-            data-nombre="@item.Nombre.ToLower()"
-            data-descripcion="@(item.Descripcion?.ToLower() ?? "")"
-            data-inicio="@(item.FechaInicio.HasValue ? item.FechaInicio.Value.ToString("dd/MM/yyyy") : "")"
-            data-fin="@(item.FechaFin.HasValue ? item.FechaFin.Value.ToString("dd/MM/yyyy") : "")">
-            <td>@item.Nombre</td>
-            <td>@item.Descripcion</td>
-            <td>@(item.FechaInicio.HasValue ? item.FechaInicio.Value.ToShortDateString() : "")</td>
-            <td>@(item.FechaFin.HasValue ? item.FechaFin.Value.ToShortDateString() : "")</td>
-            <td class="text-center">
-                <a class="btn btn-sm btn-action btn-view" asp-page="./Mostrar" asp-route-id="@item.IdProyecto">Ver</a>
-                @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
-                    {
-                <a class="btn btn-sm btn-action btn-edit" asp-page="./Edit" asp-route-id="@item.IdProyecto">Editar</a>
-                <form method="post" asp-route-id="@item.IdProyecto" style="display:inline" id="deleteForm-@item.IdProyecto">
-        <button type="button" 
-      class="btn btn-sm btn-action btn-delete"
-   data-bs-toggle="modal"
-   data-bs-target="#confirmDeleteModal"
-              data-item-id="@item.IdProyecto">
-  Eliminar
-        </button>
-           </form>
-                    }
-            </td>
-        </tr>
-        }
-    </tbody>
-</table>
+<div class="table-responsive">
+    <table class="table table-volcanic" id="proyectosTable">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+                <th class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="proyectosTableBody">
+            @foreach (var item in Model.Proyectos)
+            {
+                <tr class="proyecto-row"
+                    data-nombre="@item.Nombre.ToLower()"
+                    data-descripcion="@(item.Descripcion?.ToLower() ?? "")"
+                    data-inicio="@(item.FechaInicio.HasValue? item.FechaInicio.Value.ToString("dd/MM/yyyy") : "")"
+                    data-fin="@(item.FechaFin.HasValue? item.FechaFin.Value.ToString("dd/MM/yyyy") : "")">
+                    <td>@item.Nombre</td>
+                    <td>@item.Descripcion</td>
+                    <td>@(item.FechaInicio.HasValue? item.FechaInicio.Value.ToShortDateString() : "")</td>
+                    <td>@(item.FechaFin.HasValue? item.FechaFin.Value.ToShortDateString() : "")</td>
+                    <td class="text-center">
+                        <div class="d-flex gap-1 justify-content-center">
+                            <a class="btn btn-sm btn-action btn-view" asp-page="./Mostrar" asp-route-id="@item.IdProyecto">Ver</a>
+                            @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
+                            {
+                                <a class="btn btn-sm btn-action btn-edit" asp-page="./Edit" asp-route-id="@item.IdProyecto">Editar</a>
+                                <form method="post" asp-route-id="@item.IdProyecto" style="display:inline" id="deleteForm-@item.IdProyecto">
+                                    <button type="button"
+                                            class="btn btn-sm btn-action btn-delete"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#confirmDeleteModal"
+                                            data-item-id="@item.IdProyecto">
+                                        Eliminar
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 <div id="noResults" class="no-results hidden-row">No se encontraron proyectos que coincidan con tu búsqueda.</div>
-
-<!-- Modal de eliminación en _Modals.cshtml -->
-</div>
 
 @section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Script de modal movido a modals.js
-
-            // Funcionalidad de búsqueda con autocompletado
             const searchInput = document.getElementById('searchInput');
             const proyectoRows = document.querySelectorAll('.proyecto-row');
             const noResults = document.getElementById('noResults');
@@ -293,4 +291,3 @@
         });
     </script>
 }
-

@@ -44,6 +44,7 @@
 
     .form-container {
         max-width: 700px;
+        width: 100%;
     }
 
     .btn-volcanic-primary {
@@ -80,9 +81,9 @@
 
 <h2 class="title-volcanic">@ViewData["Title"]</h2>
 
-<div class="row">
+<div class="row justify-content-center justify-content-md-start">
     <div class="col-md-8 form-container">
-        <form method="post" id="editComentarioForm">
+        <form method="post">
             @Html.AntiForgeryToken()
 
             <input type="hidden" asp-for="Comentario.IdComentario" />
@@ -94,9 +95,9 @@
             <input type="hidden" asp-for="Comentario.Usuario" />
             <input type="hidden" asp-for="Comentario.Tarea" />
 
-            <div class="form-group">
-                <label asp-for="Comentario.Contenido" class="form-label"></label>
-                <textarea asp-for="Comentario.Contenido" class="form-control"></textarea>
+            <div class="form-group mb-3">
+                <label asp-for="Comentario.Contenido" class="form-label">Contenido</label>
+                <textarea asp-for="Comentario.Contenido" class="form-control" rows="4"></textarea>
             </div>
 
             <button type="submit" class="btn btn-volcanic-primary">Actualizar</button>
@@ -104,11 +105,3 @@
         </form>
     </div>
 </div>
-
-
-@section Scripts {
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-    <script>
-        setupFormConfirmation('editComentarioForm', 'confirmEdit');
-    </script>
-}

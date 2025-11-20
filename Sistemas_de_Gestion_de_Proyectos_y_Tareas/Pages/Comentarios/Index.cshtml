@@ -22,16 +22,19 @@
 
     .header-actions {
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 2rem;
         border-bottom: 2px solid rgba(255,255,255,0.1);
         padding-bottom: 1rem;
+        gap: 1rem;
     }
 
     .search-container {
         margin-bottom: 1.5rem;
         max-width: 500px;
+        width: 100%;
     }
 
     .search-input {
@@ -60,6 +63,7 @@
         color: #e0e0e0;
         border-collapse: separate;
         border-spacing: 0 10px;
+        width: 100%;
     }
 
         .table-volcanic > :not(caption) > * > * {
@@ -76,6 +80,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             border-bottom: 2px solid var(--accent-orange);
+            white-space: nowrap;
         }
 
         .table-volcanic tbody tr:hover {
@@ -201,172 +206,213 @@
     <input type="text"
            id="searchInput"
            class="search-input"
-           placeholder="Buscar por contenido, proyecto, tarea o autor..."
+           placeholder="🔍 Buscar por contenido, proyecto, tarea o autor..."
            autocomplete="off">
 </div>
 
-<table class="table table-volcanic">
-    <thead>
-        <tr>
-            @if (User.IsInRole("Empleado"))
-            {
-            <th class="text-center">Tipo</th>
-            }
-            <th>Contenido</th>
-            <th>Fecha</th>
-            <th>Proyecto</th>
-            <th>Tarea</th>
-
-            @if (User.IsInRole("Empleado"))
-            {
-            <th>@(User.IsInRole("Empleado") ? "Dirigido a / Autor" : "Autor")</th>
-            }
-            else
-            {
-            <th>Autor</th>
-            }
-
-            @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
-            {
-            <th>Dirigido a</th>
-            }
-            <th class="text-center">Acciones</th>
-        </tr>
-    </thead>
-    <tbody id="comentariosTableBody">
-        @foreach (var c in Model.Comentarios)
-        {
-        <tr class="comentario-row"
-            data-contenido="@c.Contenido.ToLower()"
-            data-proyecto="@(c.Tarea?.ProyectoNombre?.ToLower() ?? "")"
-            data-tarea="@(c.Tarea?.Titulo?.ToLower() ?? "")"
-            data-autor="@(c.Usuario != null ? $"{c.Usuario.Nombres} {c.Usuario.PrimerApellido}".ToLower() : "")"
-            data-dirigido="@((c.Destinatario != null ? $"{c.Destinatario.Nombres} {c.Destinatario.PrimerApellido}" : (c.Tarea?.UsuarioAsignadoNombre ?? ""))?.ToLower() ?? "")">
-
-            @if (User.IsInRole("Empleado"))
+<div class="table-responsive">
+    <table class="table table-volcanic">
+        <thead>
+            <tr>
+                @if (User.IsInRole("Empleado"))
                 {
-            <td class="text-center">
-                @if (c.IdUsuario == Model.UsuarioActualId)
-                        {
-                <span class="badge bg-info">Enviado</span>
-                        }
-                        else if (c.IdDestinatario.HasValue && c.IdDestinatario.Value == Model.UsuarioActualId)
-                        {
-                <span class="badge bg-success">Recibido</span>
-                        }
-                        else if (c.Tarea != null && c.Tarea.IdUsuarioAsignado.HasValue && c.Tarea.IdUsuarioAsignado.Value == Model.UsuarioActualId)
-                        {
-                <span class="badge bg-success">Recibido (Tarea)</span>
-                        }
-                        else
-                        {
-                <span class="badge bg-secondary">Otro</span>
-                        }
-            </td>
+                    <th class="text-center">Tipo</th>
                 }
-
-            <td>@c.Contenido</td>
-            <td>@c.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
-            <td>@(c.Tarea != null && !string.IsNullOrEmpty(c.Tarea.ProyectoNombre) ? c.Tarea.ProyectoNombre : "-")</td>
-            <td>@(c.Tarea != null ? c.Tarea.Titulo : "-")</td>
-
-            @if (User.IsInRole("Empleado"))
+                <th>Contenido</th>
+                <th>Fecha</th>
+                <th>Proyecto</th>
+                <th>Tarea</th>
+                @if (User.IsInRole("Empleado"))
                 {
-            <td>
-                @if (c.IdUsuario == Model.UsuarioActualId)
-                        {
-                            if (c.Destinatario != null)
+                    <th>@(User.IsInRole("Empleado") ? "Dirigido a / Autor" : "Autor")</th>
+                }
+                else
+                {
+                    <th>Autor</th>
+                }
+                @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
+                {
+                    <th>Dirigido a</th>
+                }
+                <th class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="comentariosTableBody">
+            @foreach (var c in Model.Comentarios)
+            {
+                <tr class="comentario-row"
+                    data-contenido="@c.Contenido.ToLower()"
+                    data-proyecto="@(c.Tarea?.ProyectoNombre?.ToLower() ?? "")"
+                    data-tarea="@(c.Tarea?.Titulo?.ToLower() ?? "")"
+                    data-autor="@(c.Usuario != null ? $"{c.Usuario.Nombres} {c.Usuario.PrimerApellido}".ToLower() : "")"
+                    data-dirigido="@( (c.Destinatario != null ? $"{c.Destinatario.Nombres} {c.Destinatario.PrimerApellido}" : (c.Tarea?.UsuarioAsignadoNombre ?? ""))?.ToLower() ?? "")">
+                    @if (User.IsInRole("Empleado"))
+                    {
+                        <td class="text-center">
+                            @if (c.IdUsuario == Model.UsuarioActualId)
                             {
-                <span class="text-warning">Para: @($"{c.Destinatario.Nombres} {c.Destinatario.PrimerApellido}")</span>
+                                <span class="badge bg-info">Enviado</span>
                             }
-                            else if (c.Tarea != null && !string.IsNullOrEmpty(c.Tarea.UsuarioAsignadoNombre))
+                            else if (c.IdDestinatario.HasValue && c.IdDestinatario.Value == Model.UsuarioActualId)
                             {
-                <span class="text-warning">Para Tarea: @c.Tarea.UsuarioAsignadoNombre</span>
+                                <span class="badge bg-success">Recibido</span>
+                            }
+                            else if (c.Tarea != null && c.Tarea.IdUsuarioAsignado.HasValue && c.Tarea.IdUsuarioAsignado.Value == Model.UsuarioActualId)
+                            {
+                                <span class="badge bg-success">Recibido (Tarea)</span>
                             }
                             else
                             {
-                <span class="text-muted">Sin destinatario</span>
+                                <span class="badge bg-secondary">Otro</span>
                             }
-                        }
-                        else if (c.IdDestinatario.HasValue && c.IdDestinatario.Value == Model.UsuarioActualId)
-                        {
-                <span class="text-info">De: @(c.Usuario != null ? $"{c.Usuario.Nombres} {c.Usuario.PrimerApellido}" : "-")</span>
-                        }
-                        else if (c.Tarea != null && c.Tarea.IdUsuarioAsignado.HasValue && c.Tarea.IdUsuarioAsignado.Value == Model.UsuarioActualId)
-                        {
-                <span class="text-info">De: @(c.Usuario != null ? $"{c.Usuario.Nombres} {c.Usuario.PrimerApellido}" : "-") (Tarea)</span>
-                        }
-                        else
-                        {
-                <span class="text-muted">Autor: @(c.Usuario != null ? $"{c.Usuario.Nombres} {c.Usuario.PrimerApellido}" : "-")</span>
-                        }
-            </td>
-                }
-                else if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
-                {
-            <td>@(c.Usuario != null ? $"{c.Usuario.Nombres} {c.Usuario.PrimerApellido}" : "-")</td>
-                }
+                        </td>
+                    }
 
-            @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
-                {
-            <td>
-                @if (c.Destinatario != null)
-                        {
-                <span class="text-warning">@($"{c.Destinatario.Nombres} {c.Destinatario.PrimerApellido}")</span>
-                        }
-                        else if (c.Tarea != null && !string.IsNullOrEmpty(c.Tarea.UsuarioAsignadoNombre))
-                        {
-                <span class="text-warning">@c.Tarea.UsuarioAsignadoNombre (Tarea)</span>
-                        }
-                        else
-                        {
-                <span class="text-muted">Sin asignar</span>
-                        }
-            </td>
-                }
+                    <td>@c.Contenido</td>
+                    <td>@c.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>@(c.Tarea != null && !string.IsNullOrEmpty(c.Tarea.ProyectoNombre) ? c.Tarea.ProyectoNombre : "-")</td>
+                    <td>@(c.Tarea != null ? c.Tarea.Titulo : "-")</td>
 
-            <td class="text-center">
-                <a asp-page="/Comentarios/Mostrar" asp-route-id="@c.IdComentario" class="btn btn-sm btn-view">Ver</a>
-
-                @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
+                    @if (User.IsInRole("Empleado"))
                     {
-                <a asp-page="/Comentarios/Edit" asp-route-id="@c.IdComentario" class="btn btn-sm btn-edit">Editar</a>
-    <form method="post" style="display:inline" id="deleteForm-@c.IdComentario">
- <button type="button" 
-  class="btn btn-sm btn-delete"
-   data-bs-toggle="modal"
-    data-bs-target="#confirmDeleteModal"
-         data-item-id="@c.IdComentario">
-       Eliminar
-   </button>
-       </form>
- }
-            </td>
-        </tr>
-        }
-    </tbody>
-</table>
+                        <td>
+                            @if (c.IdUsuario == Model.UsuarioActualId)
+                            {
+                                if (c.Destinatario != null)
+                                {
+                                    <span class="text-warning">📤 Para: @($"{c.Destinatario.Nombres} {c.Destinatario.PrimerApellido}")</span>
+                                }
+                                else if (c.Tarea != null && !string.IsNullOrEmpty(c.Tarea.UsuarioAsignadoNombre))
+                                {
+                                    <span class="text-warning">📤 Para Tarea: @c.Tarea.UsuarioAsignadoNombre</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Sin destinatario</span>
+                                }
+                            }
+                            else if (c.IdDestinatario.HasValue && c.IdDestinatario.Value == Model.UsuarioActualId)
+                            {
+                                <span class="text-info">📥 De: @(c.Usuario != null ? $"{c.Usuario.Nombres} {c.Usuario.PrimerApellido}" : "-")</span>
+                            }
+                            else if (c.Tarea != null && c.Tarea.IdUsuarioAsignado.HasValue && c.Tarea.IdUsuarioAsignado.Value == Model.UsuarioActualId)
+                            {
+                                <span class="text-info">📥 De: @(c.Usuario != null ? $"{c.Usuario.Nombres} {c.Usuario.PrimerApellido}" : "-") (Tarea)</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Autor: @(c.Usuario != null ? $"{c.Usuario.Nombres} {c.Usuario.PrimerApellido}" : "-")</span>
+                            }
+                        </td>
+                    }
+                    else if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
+                    {
+                        <td>@(c.Usuario != null ? $"{c.Usuario.Nombres} {c.Usuario.PrimerApellido}" : "-")</td>
+                    }
+
+                    @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
+                    {
+                        <td>
+                            @if (c.Destinatario != null)
+                            {
+                                <span class="text-warning">@($"{c.Destinatario.Nombres} {c.Destinatario.PrimerApellido}")</span>
+                            }
+                            else if (c.Tarea != null && !string.IsNullOrEmpty(c.Tarea.UsuarioAsignadoNombre))
+                            {
+                                <span class="text-warning">@c.Tarea.UsuarioAsignadoNombre (Tarea)</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Sin asignar</span>
+                            }
+                        </td>
+                    }
+
+                    <td class="text-center">
+                        <div class="d-flex gap-1 justify-content-center">
+                            <a asp-page="/Comentarios/Mostrar" asp-route-id="@c.IdComentario" class="btn btn-sm btn-view">Ver</a>
+
+                            @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
+                            {
+                                <a asp-page="/Comentarios/Edit" asp-route-id="@c.IdComentario" class="btn btn-sm btn-edit">Editar</a>
+                                <button type="button" class="btn btn-sm btn-delete"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#confirmDeleteModal"
+                                        data-item-id="@c.IdComentario">
+                                    Eliminar
+                                </button>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 <div id="noResults" class="no-results hidden-row">
     No se encontraron comentarios que coincidan con tu búsqueda.
 </div>
 
-<!-- Modal de eliminación movido a _Modals.cshtml -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content volcanic-modal">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas eliminar este comentario?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-volcanic-secondary-modal" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn-volcanic-delete" id="confirmDeleteButton">Sí, Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Script de modal movido a modals.js
+            var confirmDeleteModal = document.getElementById('confirmDeleteModal');
+            var confirmDeleteButton = document.getElementById('confirmDeleteButton');
+            var itemIdToDelete;
+
+            confirmDeleteModal.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget;
+                itemIdToDelete = button.getAttribute('data-item-id');
+            });
+
+            confirmDeleteButton.addEventListener('click', function () {
+                if (itemIdToDelete) {
+                    var form = document.createElement('form');
+                    form.method = 'post';
+                    form.action = '?handler=Delete&id=' + itemIdToDelete;
+
+                    var token = document.querySelector('input[name="__RequestVerificationToken"]');
+                    if (token) {
+                        var hiddenToken = document.createElement('input');
+                        hiddenToken.type = 'hidden';
+                        hiddenToken.name = '__RequestVerificationToken';
+                        hiddenToken.value = token.value;
+                        form.appendChild(hiddenToken);
+                    }
+
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
 
             const searchInput = document.getElementById('searchInput');
             const comentarioRows = document.querySelectorAll('.comentario-row');
             const noResults = document.getElementById('noResults');
 
-            searchInput.addEventListener('input', function () {
+            searchInput.addEventListener('input', function() {
                 const searchTerm = this.value.toLowerCase().trim();
                 let visibleCount = 0;
 
-                comentarioRows.forEach(function (row) {
+                comentarioRows.forEach(function(row) {
                     const contenido = row.getAttribute('data-contenido');
                     const proyecto = row.getAttribute('data-proyecto');
                     const tarea = row.getAttribute('data-tarea');
@@ -374,10 +420,10 @@
                     const dirigido = row.getAttribute('data-dirigido');
 
                     const matches = contenido.includes(searchTerm) ||
-                        proyecto.includes(searchTerm) ||
-                        tarea.includes(searchTerm) ||
-                        autor.includes(searchTerm) ||
-                        dirigido.includes(searchTerm);
+                                    proyecto.includes(searchTerm) ||
+                                    tarea.includes(searchTerm) ||
+                                    autor.includes(searchTerm) ||
+                                    dirigido.includes(searchTerm);
 
                     if (matches || searchTerm === '') {
                         row.classList.remove('hidden-row');
@@ -396,6 +442,3 @@
         });
     </script>
 }
-
-
-

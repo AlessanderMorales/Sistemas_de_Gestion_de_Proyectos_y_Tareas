@@ -119,61 +119,60 @@
 
 @if (Model.Tarea != null)
 {
-<div class="info-box">
-    <h5>Información de la Tarea</h5>
-    <p><strong>Título:</strong> @Model.Tarea.Titulo</p>
-    <p><strong>Descripción:</strong> @Model.Tarea.Descripcion</p>
-    <p><strong>Prioridad:</strong> @Model.Tarea.Prioridad</p>
-    <p>
-        <strong>Estado Actual:</strong>
-        @if (Model.Tarea.Status == "SinIniciar")
+    <div class="info-box">
+        <h5>Información de la Tarea</h5>
+        <p><strong>Título:</strong> @Model.Tarea.Titulo</p>
+        <p><strong>Descripción:</strong> @Model.Tarea.Descripcion</p>
+        <p><strong>Prioridad:</strong> @Model.Tarea.Prioridad</p>
+        <p>
+            <strong>Estado Actual:</strong>
+            @if (Model.Tarea.Status == "SinIniciar")
             {
-        <span class="status-badge status-sin-iniciar">Sin Iniciar</span>
+                <span class="status-badge status-sin-iniciar">Sin Iniciar</span>
             }
             else if (Model.Tarea.Status == "EnProgreso")
             {
-        <span class="status-badge status-en-progreso">En Progreso</span>
+                <span class="status-badge status-en-progreso">En Progreso</span>
             }
             else if (Model.Tarea.Status == "Completada")
             {
-        <span class="status-badge status-completada">Completada</span>
+                <span class="status-badge status-completada">Completada</span>
             }
-    </p>
-</div>
-
-<div class="row">
-    <div class="col-md-6">
-        <form method="post" id="cambiarEstadoForm">
-            <input type="hidden" asp-for="TareaId" />
-
-            <div class="form-group mb-3">
-                <label asp-for="NuevoStatus" class="form-label">Nuevo Estado</label>
-                <select asp-for="NuevoStatus" class="form-select" asp-items="Model.StatusDisponibles"></select>
-                <span asp-validation-for="NuevoStatus" class="text-danger"></span>
-            </div>
-
-            <div class="mt-4">
-                <button type="submit" class="btn btn-volcanic-primary">Actualizar Estado</button>
-                <a asp-page="Index" class="btn btn-volcanic-secondary ms-2">Cancelar</a>
-            </div>
-        </form>
+        </p>
     </div>
-</div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post" id="cambiarEstadoForm">
+                <input type="hidden" asp-for="TareaId" />
+
+                <div class="form-group mb-3">
+                    <label asp-for="NuevoStatus" class="form-label">Nuevo Estado</label>
+                    <select asp-for="NuevoStatus" class="form-select" asp-items="Model.StatusDisponibles"></select>
+                    <span asp-validation-for="NuevoStatus" class="text-danger"></span>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-volcanic-primary">Actualizar Estado</button>
+                    <a asp-page="Index" class="btn btn-volcanic-secondary ms-2">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
 }
 else
 {
-<div class="alert alert-danger" role="alert">
-    <h4 class="alert-heading">Tarea no encontrada</h4>
-    <p>La tarea que buscas no existe o fue eliminada.</p>
-    <hr>
-    <a asp-page="Index" class="btn btn-primary">Volver a la Lista</a>
-</div>
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Tarea no encontrada</h4>
+        <p>La tarea que buscas no existe o fue eliminada.</p>
+        <hr>
+        <a asp-page="Index" class="btn btn-primary">Volver a la Lista</a>
+    </div>
 }
 
 @section Scripts {
     <script>
-      setupFormConfirmation('cambiarEstadoForm', 'confirmEdit');
+        setupFormConfirmation('cambiarEstadoForm', 'confirmEdit');
     </script>
     <partial name="_ValidationScriptsPartial" />
 }
-

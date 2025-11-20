@@ -51,6 +51,7 @@
 
     .form-container {
         max-width: 700px;
+        width: 100%;
     }
 
     .btn-volcanic-primary {
@@ -87,7 +88,7 @@
 
 <h1 class="title-volcanic">@ViewData["Title"]</h1>
 
-<div class="row">
+<div class="row justify-content-center justify-content-md-start">
     <div class="col-md-8 form-container">
         <form method="post" id="editTareaForm" asp-route-id="@Model.Tarea.Id">
 
@@ -100,17 +101,17 @@
             <input type="hidden" asp-for="Tarea.Status" />
 
             <div class="mb-3">
-                <label asp-for="Tarea.Titulo"></label>
+                <label asp-for="Tarea.Titulo" class="form-label"></label>
                 <input asp-for="Tarea.Titulo" class="form-control" />
             </div>
 
             <div class="mb-3">
-                <label asp-for="Tarea.Descripcion"></label>
-                <textarea asp-for="Tarea.Descripcion" class="form-control"></textarea>
+                <label asp-for="Tarea.Descripcion" class="form-label"></label>
+                <textarea asp-for="Tarea.Descripcion" class="form-control" rows="3"></textarea>
             </div>
 
             <div class="mb-3">
-                <label asp-for="Tarea.Prioridad"></label>
+                <label asp-for="Tarea.Prioridad" class="form-label"></label>
                 <select asp-for="Tarea.Prioridad" class="form-select">
                     <option value="Alta">Alta</option>
                     <option value="Media">Media</option>
@@ -119,21 +120,25 @@
             </div>
 
             <div class="mb-3">
-                <label asp-for="Tarea.IdProyecto">Proyecto</label>
+                <label asp-for="Tarea.IdProyecto" class="form-label">Proyecto</label>
                 <select asp-for="Tarea.IdProyecto"
                         class="form-select"
                         asp-items="Model.ProyectosDisponibles"></select>
             </div>
 
-            <button type="submit" class="btn btn-volcanic-primary">Actualizar Tarea</button>
-            <a asp-page="Index" class="btn btn-volcanic-secondary ms-2">Cancelar</a>
+            <div class="mt-4">
+                <button type="submit" class="btn btn-volcanic-primary">Actualizar Tarea</button>
+                <a asp-page="Index" class="btn btn-volcanic-secondary ms-2">Cancelar</a>
+            </div>
         </form>
     </div>
 </div>
 
 @section Scripts {
+    <script>
+        setupFormConfirmation('editTareaForm', 'confirmEdit');
+    </script>
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
-

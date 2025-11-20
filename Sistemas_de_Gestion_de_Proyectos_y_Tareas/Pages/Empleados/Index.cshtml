@@ -1,4 +1,4 @@
-@page
+﻿@page
 @model Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Empleados.IndexModel
 @{
     ViewData["Title"] = "Empleados y sus Asignaciones";
@@ -6,153 +6,163 @@
 
 <style>
     :root {
- --accent-red: #D32F2F;
+        --accent-red: #D32F2F;
         --accent-orange: #FF5722;
-   --accent-gold: #FFD700;
-  --text-primary: #f5f5f7;
+        --accent-gold: #FFD700;
+        --text-primary: #f5f5f7;
     }
 
     .title-volcanic {
-background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
-  -webkit-background-clip: text;
+        background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
+        -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-   font-weight: 700;
-    border-bottom: 2px solid rgba(255,255,255,0.1);
-  padding-bottom: 1rem;
-      margin-bottom: 2rem;
+        font-weight: 700;
+        border-bottom: 2px solid rgba(255,255,255,0.1);
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
     }
 
     .employee-card {
         background-color: #3a3a40;
-    padding: 1.5rem;
-   border-radius: 12px;
-      margin-bottom: 1.5rem;
-  border-left: 4px solid var(--accent-orange);
-  transition: all 0.3s ease;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        border-left: 4px solid var(--accent-orange);
+        transition: all 0.3s ease;
     }
 
-    .employee-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(255, 87, 34, 0.3);
-    }
+        .employee-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 87, 34, 0.3);
+        }
 
-  .employee-header {
-   display: flex;
+    .employee-header {
+        display: flex;
+        flex-wrap: wrap;
         justify-content: space-between;
-  align-items: center;
-margin-bottom: 1rem;
+        align-items: center;
+        margin-bottom: 1rem;
         padding-bottom: 0.75rem;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        gap: 10px;
     }
 
     .employee-name {
- color: var(--accent-gold);
-  font-size: 1.3rem;
+        color: var(--accent-gold);
+        font-size: 1.3rem;
         font-weight: 700;
         margin: 0;
     }
 
     .employee-role {
         padding: 0.4rem 1rem;
-   border-radius: 20px;
-  font-weight: 600;
-   font-size: 0.85rem;
-  text-transform: uppercase;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
     }
 
     .role-jefe {
-     background: linear-gradient(135deg, #FF5722, #D32F2F);
-  color: white;
- }
+        background: linear-gradient(135deg, #FF5722, #D32F2F);
+        color: white;
+    }
 
     .role-empleado {
-    background: linear-gradient(135deg, #2196F3, #1976D2);
-color: white;
+        background: linear-gradient(135deg, #2196F3, #1976D2);
+        color: white;
     }
 
     .employee-info {
-      display: grid;
-    grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
         margin-top: 1rem;
     }
 
-  .info-section {
-   background-color: #2c2c31;
-    padding: 1rem;
-  border-radius: 8px;
+    .info-section {
+        background-color: #2c2c31;
+        padding: 1rem;
+        border-radius: 8px;
     }
 
     .info-title {
-   color: var(--accent-orange);
+        color: var(--accent-orange);
         font-weight: 600;
         margin-bottom: 0.75rem;
-   font-size: 0.95rem;
+        font-size: 0.95rem;
         display: flex;
-  align-items: center;
-     gap: 0.5rem;
+        align-items: center;
+        gap: 0.5rem;
     }
 
     .info-count {
         background-color: var(--accent-orange);
-   color: white;
-padding: 0.2rem 0.6rem;
-   border-radius: 12px;
+        color: white;
+        padding: 0.2rem 0.6rem;
+        border-radius: 12px;
         font-size: 0.8rem;
         font-weight: 700;
     }
 
     .assignment-list {
-   list-style: none;
+        list-style: none;
         padding: 0;
- margin: 0;
+        margin: 0;
     }
 
-.assignment-list li {
-        background-color: #3a3a40;
-        padding: 0.6rem 1rem;
- margin-bottom: 0.5rem;
-        border-radius: 6px;
-   color: var(--text-primary);
-        font-size: 0.9rem;
-     border-left: 3px solid var(--accent-gold);
-    }
+        .assignment-list li {
+            background-color: #3a3a40;
+            padding: 0.6rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            border-left: 3px solid var(--accent-gold);
+        }
 
-    .assignment-list li:last-child {
-  margin-bottom: 0;
-    }
+            .assignment-list li:last-child {
+                margin-bottom: 0;
+            }
 
     .no-assignments {
-   color: #6c757d;
+        color: #6c757d;
         font-style: italic;
         text-align: center;
-   padding: 1rem;
+        padding: 1rem;
+    }
+
+    .stats-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 2rem;
     }
 
     .stats-badge {
         display: inline-flex;
-  align-items: center;
+        align-items: center;
         gap: 0.5rem;
         background-color: #4a4a50;
         padding: 0.5rem 1rem;
-    border-radius: 8px;
- margin-right: 1rem;
+        border-radius: 8px;
+        flex: 1 1 auto;
     }
 
-    .stats-badge .number {
-   color: var(--accent-gold);
-        font-weight: 700;
-      font-size: 1.2rem;
-    }
+        .stats-badge .number {
+            color: var(--accent-gold);
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
 
-    .stats-badge .label {
-  color: #ced4da;
-font-size: 0.85rem;
- }
+        .stats-badge .label {
+            color: #ced4da;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
 
     @@media (max-width: 768px) {
         .employee-info {
-      grid-template-columns: 1fr;
+            grid-template-columns: 1fr;
         }
     }
 </style>
@@ -161,97 +171,95 @@ font-size: 0.85rem;
 
 @if (Model.Empleados != null && Model.Empleados.Any())
 {
-    <div class="mb-3">
+    <div class="stats-container">
         <div class="stats-badge">
-    <span class="number">@Model.Empleados.Count</span>
-        <span class="label">Total Usuarios</span>
+            <span class="number">@Model.Empleados.Count</span>
+            <span class="label">Total Usuarios</span>
         </div>
         <div class="stats-badge">
-  <span class="number">@Model.Empleados.Count(e => e.Usuario.Rol == "JefeDeProyecto")</span>
-     <span class="label">Jefes de Proyecto</span>
- </div>
-  <div class="stats-badge">
-     <span class="number">@Model.Empleados.Count(e => e.Usuario.Rol == "Empleado")</span>
-  <span class="label">Empleados</span>
+            <span class="number">@Model.Empleados.Count(e => e.Usuario.Rol == "JefeDeProyecto")</span>
+            <span class="label">Jefes de Proyecto</span>
+        </div>
+        <div class="stats-badge">
+            <span class="number">@Model.Empleados.Count(e => e.Usuario.Rol == "Empleado")</span>
+            <span class="label">Empleados</span>
         </div>
     </div>
 
     @foreach (var emp in Model.Empleados)
     {
-    <div class="employee-card">
-       <div class="employee-header">
-        <h3 class="employee-name">
-    @emp.Usuario.Nombres @emp.Usuario.PrimerApellido 
- @if (!string.IsNullOrEmpty(emp.Usuario.SegundoApellido))
-     {
-     <text>@emp.Usuario.SegundoApellido</text>
-            }
-         </h3>
-    <span class="employee-role @(emp.Usuario.Rol == "JefeDeProyecto" ? "role-jefe" : "role-empleado")">
-      @(emp.Usuario.Rol == "JefeDeProyecto" ? "Jefe de Proyecto" : "Empleado")
-        </span>
+        <div class="employee-card">
+            <div class="employee-header">
+                <h3 class="employee-name">
+                    @emp.Usuario.Nombres @emp.Usuario.PrimerApellido
+                    @if (!string.IsNullOrEmpty(emp.Usuario.SegundoApellido))
+                    {
+                        <text>@emp.Usuario.SegundoApellido</text>
+                    }
+                </h3>
+                <span class="employee-role @(emp.Usuario.Rol == "JefeDeProyecto" ? "role-jefe" : "role-empleado")">
+                    @(emp.Usuario.Rol == "JefeDeProyecto" ? "Jefe de Proyecto" : "Empleado")
+                </span>
             </div>
 
-       <div class="mb-2">
-     <small class="text-muted">
-           <strong>Email:</strong> @emp.Usuario.Email | <strong>Usuario:</strong> @emp.Usuario.NombreUsuario
-     </small>
-   </div>
+            <div class="mb-2">
+                <small class="text-muted">
+                    <strong>Email:</strong> @emp.Usuario.Email | <strong>Usuario:</strong> @emp.Usuario.NombreUsuario
+                </small>
+            </div>
 
-     <div class="employee-info">
-        <!-- Proyectos Asignados -->
- <div class="info-section">
-       <div class="info-title">
-    ?? Proyectos Asignados
- <span class="info-count">@emp.TotalProyectos</span>
-    </div>
-     @if (emp.ProyectosAsignados.Any())
-       {
- <ul class="assignment-list">
-   @foreach (var proyecto in emp.ProyectosAsignados)
-           {
-     <li>@proyecto</li>
-      }
-   </ul>
-         }
-  else
-  {
-       <p class="no-assignments">Sin proyectos asignados</p>
-  }
-    </div>
+            <div class="employee-info">
+                <div class="info-section">
+                    <div class="info-title">
+                        📂 Proyectos Asignados
+                        <span class="info-count">@emp.TotalProyectos</span>
+                    </div>
+                    @if (emp.ProyectosAsignados.Any())
+                    {
+                        <ul class="assignment-list">
+                            @foreach (var proyecto in emp.ProyectosAsignados)
+                            {
+                                <li>@proyecto</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="no-assignments">Sin proyectos asignados</p>
+                    }
+                </div>
 
-        <!-- Tareas Asignadas -->
-    <div class="info-section">
-       <div class="info-title">
-         ? Tareas Asignadas
-         <span class="info-count">@emp.TotalTareas</span>
-          </div>
-           @if (emp.TareasAsignadas.Any())
-     {
-      <ul class="assignment-list">
-      @foreach (var tarea in emp.TareasAsignadas.Take(5))
-  {
-     <li>@tarea</li>
-       }
-      @if (emp.TareasAsignadas.Count > 5)
- {
-      <li class="text-muted">... y @(emp.TareasAsignadas.Count - 5) m�s</li>
-              }
-     </ul>
-                }
-  else
-    {
-    <p class="no-assignments">Sin tareas asignadas</p>
-        }
-    </div>
-   </div>
-  </div>
+                <div class="info-section">
+                    <div class="info-title">
+                        📋 Tareas Asignadas
+                        <span class="info-count">@emp.TotalTareas</span>
+                    </div>
+                    @if (emp.TareasAsignadas.Any())
+                    {
+                        <ul class="assignment-list">
+                            @foreach (var tarea in emp.TareasAsignadas.Take(5))
+                            {
+                                <li>@tarea</li>
+                            }
+                            @if (emp.TareasAsignadas.Count > 5)
+                            {
+                                <li class="text-muted">... y @(emp.TareasAsignadas.Count - 5) más</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="no-assignments">Sin tareas asignadas</p>
+                    }
+                </div>
+            </div>
+        </div>
     }
 }
 else
 {
     <div class="alert alert-info">
         <h4>No hay empleados registrados</h4>
-     <p>Actualmente no hay empleados o jefes de proyecto en el sistema.</p>
+        <p>Actualmente no hay empleados o jefes de proyecto en el sistema.</p>
     </div>
 }

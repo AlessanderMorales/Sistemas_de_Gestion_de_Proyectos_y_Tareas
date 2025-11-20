@@ -53,6 +53,7 @@
 
     .form-container {
         max-width: 700px;
+        width: 100%;
     }
 
     .btn-volcanic-primary {
@@ -96,28 +97,28 @@
 
 <h1 class="title-volcanic">@ViewData["Title"]</h1>
 
-<div class="row">
+<div class="row justify-content-center justify-content-md-start">
     <div class="col-md-8 form-container">
         <form method="post" id="createProyectoForm">
             <div class="mb-3">
-                <label asp-for="Proyecto.Nombre" class="form-label"></label>
+                <label asp-for="Proyecto.Nombre" class="form-label">Nombre del Proyecto</label>
                 <input asp-for="Proyecto.Nombre" class="form-control" placeholder="Ej: Desarrollo de App Móvil" />
                 <span asp-validation-for="Proyecto.Nombre" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="Proyecto.Descripcion" class="form-label"></label>
+                <label asp-for="Proyecto.Descripcion" class="form-label">Descripción</label>
                 <textarea asp-for="Proyecto.Descripcion" class="form-control" rows="4" placeholder="Describe los objetivos y el alcance del proyecto..."></textarea>
                 <span asp-validation-for="Proyecto.Descripcion" class="text-danger"></span>
             </div>
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label asp-for="Proyecto.FechaInicio" class="form-label"></label>
+                    <label asp-for="Proyecto.FechaInicio" class="form-label">Fecha de Inicio</label>
                     <input asp-for="Proyecto.FechaInicio" class="form-control fecha-input" type="text" placeholder="DD/MM/YYYY" maxlength="10" id="fechaInicioInput" />
                     <div class="date-format-hint">Formato: DD/MM/YYYY</div>
                     <span asp-validation-for="Proyecto.FechaInicio" class="text-danger"></span>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label asp-for="Proyecto.FechaFin" class="form-label"></label>
+                    <label asp-for="Proyecto.FechaFin" class="form-label">Fecha de Fin</label>
                     <input asp-for="Proyecto.FechaFin" class="form-control fecha-input" type="text" placeholder="DD/MM/YYYY" maxlength="10" id="fechaFinInput" />
                     <div class="date-format-hint">Formato: DD/MM/YYYY</div>
                     <span asp-validation-for="Proyecto.FechaFin" class="text-danger"></span>
@@ -133,119 +134,116 @@
 
 @section Scripts {
     @{
-
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
- }
+    }
 
     <script>
-        // ========================================
         if (typeof setupFormConfirmation === 'function') {
-   setupFormConfirmation('createProyectoForm', 'confirmCreate');
-      }
+            setupFormConfirmation('createProyectoForm', 'confirmCreate');
+        }
 
- document.addEventListener('DOMContentLoaded', function () {
-     const fechaInicioInput = document.querySelector('#fechaInicioInput');
-const fechaFinInput = document.querySelector('#fechaFinInput');
-   const form = document.querySelector('form');
+        document.addEventListener('DOMContentLoaded', function () {
+            const fechaInicioInput = document.querySelector('#fechaInicioInput');
+            const fechaFinInput = document.querySelector('#fechaFinInput');
+            const form = document.querySelector('form');
 
             flatpickr(fechaInicioInput, {
-        dateFormat: "d/m/Y",
-        locale: "es",
-         allowInput: true,
-       altInput: false,
-  disableMobile: false,
-          defaultDate: new Date(),
-   minDate: null,
-         onChange: function (selectedDates) {
-             const errorSpan = fechaInicioInput.parentElement.querySelector('.text-danger');
-          if (errorSpan) errorSpan.textContent = '';
-      fechaInicioInput.classList.remove('is-invalid');
-
-       if (selectedDates.length > 0) {
-     const fechaFinPicker = document.querySelector('#fechaFinInput')._flatpickr;
-    if (fechaFinPicker) {
-      fechaFinPicker.set('minDate', selectedDates[0]);
-              if (!fechaFinInput.value) {
-      fechaFinPicker.jumpToDate(selectedDates[0]);
-        }
-          }
-     }
-    }
-         });
-
-   flatpickr(fechaFinInput, {
                 dateFormat: "d/m/Y",
-        locale: "es",
-     allowInput: true,
-  altInput: false,
-          disableMobile: false,
+                locale: "es",
+                allowInput: true,
+                altInput: false,
+                disableMobile: false,
                 defaultDate: new Date(),
                 minDate: null,
-      onChange: function () {
-   const errorSpan = fechaFinInput.parentElement.querySelector('.text-danger');
-             if (errorSpan) errorSpan.textContent = '';
-     fechaFinInput.classList.remove('is-invalid');
+                onChange: function (selectedDates) {
+                    const errorSpan = fechaInicioInput.parentElement.querySelector('.text-danger');
+                    if (errorSpan) errorSpan.textContent = '';
+                    fechaInicioInput.classList.remove('is-invalid');
+
+                    if (selectedDates.length > 0) {
+                        const fechaFinPicker = document.querySelector('#fechaFinInput')._flatpickr;
+                        if (fechaFinPicker) {
+                            fechaFinPicker.set('minDate', selectedDates[0]);
+                            if (!fechaFinInput.value) {
+                                fechaFinPicker.jumpToDate(selectedDates[0]);
+                            }
+                        }
+                    }
                 }
- });
+            });
 
-      function validarFormatoFecha(fecha) {
-         if (!fecha) return true;
-      const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
- if (!regex.test(fecha)) return false;
-       const [, dia, mes, año] = regex.exec(fecha);
-       const d = parseInt(dia, 10);
-         const m = parseInt(mes, 10);
-      const a = parseInt(año, 10);
-     if (m < 1 || m > 12) return false;
-          if (d < 1 || d > 31) return false;
-      const diasPorMes = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-        if (a % 4 === 0 && (a % 100 !== 0 || a % 400 === 0)) diasPorMes[1] = 29;
-       return d <= diasPorMes[m - 1];
+            flatpickr(fechaFinInput, {
+                dateFormat: "d/m/Y",
+                locale: "es",
+                allowInput: true,
+                altInput: false,
+                disableMobile: false,
+                defaultDate: new Date(),
+                minDate: null,
+                onChange: function () {
+                    const errorSpan = fechaFinInput.parentElement.querySelector('.text-danger');
+                    if (errorSpan) errorSpan.textContent = '';
+                    fechaFinInput.classList.remove('is-invalid');
+                }
+            });
+
+            function validarFormatoFecha(fecha) {
+                if (!fecha) return true;
+                const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+                if (!regex.test(fecha)) return false;
+                const [, dia, mes, año] = regex.exec(fecha);
+                const d = parseInt(dia, 10);
+                const m = parseInt(mes, 10);
+                const a = parseInt(año, 10);
+                if (m < 1 || m > 12) return false;
+                if (d < 1 || d > 31) return false;
+                const diasPorMes = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+                if (a % 4 === 0 && (a % 100 !== 0 || a % 400 === 0)) diasPorMes[1] = 29;
+                return d <= diasPorMes[m - 1];
             }
 
-    function parsearFecha(fechaStr) {
-       const [dia, mes, año] = fechaStr.split('/').map(Number);
-        return new Date(año, mes - 1, dia);
+            function parsearFecha(fechaStr) {
+                const [dia, mes, año] = fechaStr.split('/').map(Number);
+                return new Date(año, mes - 1, dia);
             }
 
-  form.addEventListener('submit', function (event) {
-       const inicioStr = fechaInicioInput.value;
-   const finStr = fechaFinInput.value;
-    const errorSpanInicio = fechaInicioInput.parentElement.querySelector('.text-danger');
-   const errorSpanFin = fechaFinInput.parentElement.querySelector('.text-danger');
+            form.addEventListener('submit', function (event) {
+                const inicioStr = fechaInicioInput.value;
+                const finStr = fechaFinInput.value;
+                const errorSpanInicio = fechaInicioInput.parentElement.querySelector('.text-danger');
+                const errorSpanFin = fechaFinInput.parentElement.querySelector('.text-danger');
 
-        if (errorSpanInicio) errorSpanInicio.textContent = '';
-      if (errorSpanFin) errorSpanFin.textContent = '';
+                if (errorSpanInicio) errorSpanInicio.textContent = '';
+                if (errorSpanFin) errorSpanFin.textContent = '';
 
-   if (inicioStr && !validarFormatoFecha(inicioStr)) {
-  event.preventDefault();
-    if (errorSpanInicio) errorSpanInicio.textContent = 'Formato de fecha inválido. Use DD/MM/YYYY';
-           fechaInicioInput.classList.add('is-invalid');
-     return;
-              }
-
-              if (finStr && !validarFormatoFecha(finStr)) {
-         event.preventDefault();
-        if (errorSpanFin) errorSpanFin.textContent = 'Formato de fecha inválido. Use DD/MM/YYYY';
-   fechaFinInput.classList.add('is-invalid');
+                if (inicioStr && !validarFormatoFecha(inicioStr)) {
+                    event.preventDefault();
+                    if (errorSpanInicio) errorSpanInicio.textContent = 'Formato de fecha inválido. Use DD/MM/YYYY';
+                    fechaInicioInput.classList.add('is-invalid');
                     return;
-}
+                }
 
-           if (inicioStr && finStr) {
-           const inicio = parsearFecha(inicioStr);
-         const fin = parsearFecha(finStr);
-         if (fin < inicio) {
-   event.preventDefault();
-         if (errorSpanFin) errorSpanFin.textContent = 'La fecha de finalización no puede ser anterior a la fecha de inicio.';
-             fechaFinInput.classList.add('is-invalid');
-       } else if (fin.getTime() === inicio.getTime()) {
-            event.preventDefault();
-     if (errorSpanFin) errorSpanFin.textContent = 'La fecha de finalización no puede ser igual a la fecha de inicio.';
-        fechaFinInput.classList.add('is-invalid');
-         }
-         }
-        });
+                if (finStr && !validarFormatoFecha(finStr)) {
+                    event.preventDefault();
+                    if (errorSpanFin) errorSpanFin.textContent = 'Formato de fecha inválido. Use DD/MM/YYYY';
+                    fechaFinInput.classList.add('is-invalid');
+                    return;
+                }
+
+                if (inicioStr && finStr) {
+                    const inicio = parsearFecha(inicioStr);
+                    const fin = parsearFecha(finStr);
+                    if (fin < inicio) {
+                        event.preventDefault();
+                        if (errorSpanFin) errorSpanFin.textContent = 'La fecha de finalización no puede ser anterior a la fecha de inicio.';
+                        fechaFinInput.classList.add('is-invalid');
+                    } else if (fin.getTime() === inicio.getTime()) {
+                        event.preventDefault();
+                        if (errorSpanFin) errorSpanFin.textContent = 'La fecha de finalización no puede ser igual a la fecha de inicio.';
+                        fechaFinInput.classList.add('is-invalid');
+                    }
+                }
+            });
         });
     </script>
 }
-

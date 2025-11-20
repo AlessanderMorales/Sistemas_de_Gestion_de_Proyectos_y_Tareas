@@ -1,118 +1,109 @@
-@* Partial View para Modales Globales *@
-
-<!-- Modal de Confirmación de Edición -->
-<div class="modal fade" id="confirmEditModal" tabindex="-1" aria-labelledby="confirmEditModalLabel" aria-hidden="true">
+ï»¿<div class="modal fade" id="confirmEditModal" tabindex="-1" aria-labelledby="confirmEditModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content volcanic-modal">
             <div class="modal-header">
-     <h5 class="modal-title" id="confirmEditModalLabel">?? Confirmar Edición</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-     </div>
- <div class="modal-body">
-                <p>¿Estás seguro de que deseas guardar estos cambios?</p>
-         </div>
+                <h5 class="modal-title" id="confirmEditModalLabel">âœï¸ Confirmar EdiciÃ³n</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Â¿EstÃ¡s seguro de que deseas guardar estos cambios?</p>
+            </div>
             <div class="modal-footer">
-  <button type="button" class="btn btn-volcanic-secondary-modal" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-volcanic-primary" id="confirmEditButton">Sí, Guardar</button>
-       </div>
+                <button type="button" class="btn btn-volcanic-secondary-modal" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-volcanic-primary" id="confirmEditButton">SÃ­, Guardar</button>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Modal de Confirmación de Eliminación -->
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content volcanic-modal">
-         <div class="modal-header">
-   <h5 class="modal-title" id="confirmDeleteModalLabel">??? Confirmar Eliminación</h5>
-             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-       </div>
-      <div class="modal-body">
-       <p>¿Estás seguro de que deseas eliminar este elemento? Esta acción no se puede deshacer.</p>
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">ğŸ—‘ï¸ Confirmar EliminaciÃ³n</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Â¿EstÃ¡s seguro de que deseas eliminar este elemento? Esta acciÃ³n no se puede deshacer.</p>
             </div>
             <div class="modal-footer">
-             <button type="button" class="btn btn-volcanic-secondary-modal" data-bs-dismiss="modal">Cancelar</button>
-             <button type="button" class="btn btn-volcanic-delete" id="confirmDeleteButton">Sí, Eliminar</button>
+                <button type="button" class="btn btn-volcanic-secondary-modal" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-volcanic-delete" id="confirmDeleteButton">SÃ­, Eliminar</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Modal de Confirmación de Creación -->
 <div class="modal fade" id="confirmCreateModal" tabindex="-1" aria-labelledby="confirmCreateModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content volcanic-modal">
             <div class="modal-header">
-   <h5 class="modal-title" id="confirmCreateModalLabel">? Confirmar Creación</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-   </div>
-        <div class="modal-body">
-    <p>¿Estás seguro de que deseas crear este elemento?</p>
+                <h5 class="modal-title" id="confirmCreateModalLabel">ğŸ’¾ Confirmar CreaciÃ³n</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-    <div class="modal-footer">
+            <div class="modal-body">
+                <p>Â¿EstÃ¡s seguro de que deseas crear este elemento?</p>
+            </div>
+            <div class="modal-footer">
                 <button type="button" class="btn btn-volcanic-secondary-modal" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-volcanic-primary" id="confirmCreateButton">Sí, Crear</button>
-     </div>
+                <button type="button" class="btn btn-volcanic-primary" id="confirmCreateButton">SÃ­, Crear</button>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Modal de Éxito -->
 <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content volcanic-modal">
-      <div class="modal-header" style="border-bottom: 1px solid #28a745;">
-    <h5 class="modal-title" id="successModalLabel">? Operación Exitosa</h5>
-     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header" style="border-bottom: 1px solid #28a745;">
+                <h5 class="modal-title" id="successModalLabel">âœ… OperaciÃ³n Exitosa</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-   <p></p>
-      </div>
+                <p></p>
+            </div>
             <div class="modal-footer">
-   <button type="button" class="btn btn-volcanic-primary" data-bs-dismiss="modal">Aceptar</button>
+                <button type="button" class="btn btn-volcanic-primary" data-bs-dismiss="modal">Aceptar</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Modal de Error -->
 <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-   <div class="modal-content volcanic-modal">
-      <div class="modal-header" style="border-bottom: 1px solid #dc3545;">
-    <h5 class="modal-title" id="errorModalLabel">? Error</h5>
+        <div class="modal-content volcanic-modal">
+            <div class="modal-header" style="border-bottom: 1px solid #dc3545;">
+                <h5 class="modal-title" id="errorModalLabel">âš ï¸ Error</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-     </div>
-       <div class="modal-body">
-          <p></p>
-    </div>
-            <div class="modal-footer">
-        <button type="button" class="btn btn-volcanic-delete" data-bs-dismiss="modal">Aceptar</button>
             </div>
-  </div>
+            <div class="modal-body">
+                <p></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-volcanic-delete" data-bs-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Modal de Logout -->
 <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-  <div class="modal-content volcanic-modal">
-   <div class="modal-header">
-       <h5 class="modal-title" id="logoutModalLabel">?? Confirmar Cierre de Sesión</h5>
+        <div class="modal-content volcanic-modal">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logoutModalLabel">ğŸšª Confirmar Cierre de SesiÃ³n</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Â¿EstÃ¡s seguro de que deseas cerrar sesiÃ³n?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-volcanic-secondary-modal" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-volcanic-delete" id="confirmLogoutButton">SÃ­, Cerrar SesiÃ³n</button>
+            </div>
         </div>
- <div class="modal-body">
-                <p>¿Estás seguro de que deseas cerrar sesión?</p>
-        </div>
- <div class="modal-footer">
-      <button type="button" class="btn btn-volcanic-secondary-modal" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-volcanic-delete" id="confirmLogoutButton">Sí, Cerrar Sesión</button>
-         </div>
-     </div>
     </div>
 </div>
 
-@* Hidden divs para mostrar mensajes de TempData *@
 @if (TempData["SuccessMessage"] != null)
 {
     <div data-success-message="@TempData["SuccessMessage"]" style="display:none;"></div>

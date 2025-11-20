@@ -49,6 +49,7 @@
 
     .form-container {
         max-width: 700px;
+        width: 100%;
     }
 
     .btn-volcanic-primary {
@@ -99,7 +100,7 @@
 
 <h1 class="title-volcanic">@ViewData["Title"]</h1>
 
-<div class="row">
+<div class="row justify-content-center justify-content-md-start">
     <div class="col-md-8 form-container">
         <div class="info-box">
             <strong>Generación Automática</strong>
@@ -158,14 +159,11 @@
 
 @section Scripts {
     @{
-   await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script>
-        // ✅ Agregar confirmación antes de crear
         if (typeof setupFormConfirmation === 'function') {
-    setupFormConfirmation('createUserForm', 'confirmCreate');
-  }
+            setupFormConfirmation('createUserForm', 'confirmCreate');
+        }
     </script>
 }
-
-
