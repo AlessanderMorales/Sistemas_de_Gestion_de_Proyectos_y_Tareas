@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.ApiClients;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Tareas;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
 {
@@ -26,22 +27,19 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
         public async Task<IActionResult> OnGetAsync(int id)
         {
             TareaId = id;
+            Tarea = await _tareaApi.GetByIdAsync(id);
 
-            // ✔ Obtener tarea desde el microservicio
-            Tarea = await _tareaApi.GetAsync(id);
             if (Tarea == null)
             {
                 TempData["ErrorMessage"] = "Tarea no encontrada.";
                 return RedirectToPage("Index");
             }
 
-            // ✔ Validar que el empleado esté asignado
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             if (User.IsInRole("Empleado"))
             {
                 var asignados = await _tareaApi.GetUsuariosAsignadosAsync(id);
-
                 if (!asignados.Contains(userId))
                 {
                     TempData["ErrorMessage"] = "No tienes permiso para cambiar el estado.";
@@ -49,7 +47,6 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
                 }
             }
 
-            // ✔ Lista de estados
             StatusDisponibles = new SelectList(new[]
             {
                 new { Value = "SinIniciar", Text = "Sin Iniciar" },
@@ -63,15 +60,13 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
 
         public async Task<IActionResult> OnPostAsync()
         {
-            // ✔ Validar existencia de la tarea
-            var tarea = await _tareaApi.GetAsync(TareaId);
+            var tarea = await _tareaApi.GetByIdAsync(TareaId);
             if (tarea == null)
             {
                 TempData["ErrorMessage"] = "Tarea no encontrada.";
                 return RedirectToPage("Index");
             }
 
-            // ✔ Validar permiso
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             if (User.IsInRole("Empleado"))
@@ -84,7 +79,6 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
                 }
             }
 
-            // ✔ Llamar API
             var ok = await _tareaApi.CambiarEstadoAsync(TareaId,
                 new CambiarEstadoTareaDTO { NuevoEstado = NuevoStatus });
 

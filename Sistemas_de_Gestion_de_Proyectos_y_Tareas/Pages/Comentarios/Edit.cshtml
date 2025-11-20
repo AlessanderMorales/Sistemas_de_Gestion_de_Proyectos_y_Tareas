@@ -29,18 +29,19 @@
         border-radius: 8px;
         padding: 0.75rem 1rem;
     }
-    .form-control:focus {
-        background-color: #4a4a50;
-        color: var(--text-primary);
-        border-color: var(--accent-orange);
-        box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
-    }
-    
+
+        .form-control:focus {
+            background-color: #4a4a50;
+            color: var(--text-primary);
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
+        }
+
     .form-label {
         color: var(--text-primary);
         font-weight: 500;
     }
-    
+
     .form-container {
         max-width: 700px;
     }
@@ -54,10 +55,11 @@
         border-radius: 8px;
         transition: all 0.3s ease;
     }
-    .btn-volcanic-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
-    }
+
+        .btn-volcanic-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
+        }
 
     .btn-volcanic-secondary {
         background-color: transparent;
@@ -68,18 +70,19 @@
         border-radius: 8px;
         transition: all 0.3s ease;
     }
-    .btn-volcanic-secondary:hover {
-        background-color: #6c757d;
-        color: white;
-        border-color: #6c757d;
-    }
+
+        .btn-volcanic-secondary:hover {
+            background-color: #6c757d;
+            color: white;
+            border-color: #6c757d;
+        }
 </style>
 
 <h2 class="title-volcanic">@ViewData["Title"]</h2>
 
 <div class="row">
     <div class="col-md-8 form-container">
-        <form method="post">
+        <form method="post" id="editComentarioForm">
             @Html.AntiForgeryToken()
 
             <input type="hidden" asp-for="Comentario.IdComentario" />
@@ -92,7 +95,7 @@
             <input type="hidden" asp-for="Comentario.Tarea" />
 
             <div class="form-group">
-                <label asp-for="Comentario.Contenido"></label>
+                <label asp-for="Comentario.Contenido" class="form-label"></label>
                 <textarea asp-for="Comentario.Contenido" class="form-control"></textarea>
             </div>
 
@@ -101,3 +104,11 @@
         </form>
     </div>
 </div>
+
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        setupFormConfirmation('editComentarioForm', 'confirmEdit');
+    </script>
+}

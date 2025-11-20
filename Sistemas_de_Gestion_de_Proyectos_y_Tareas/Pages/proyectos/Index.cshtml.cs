@@ -30,7 +30,6 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Proyectos
 
         public async Task OnGetAsync()
         {
-            // Caso 1: El usuario es empleado → solo ver proyectos asignados
             if (User.IsInRole("Empleado"))
             {
                 var idClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -42,7 +41,6 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Proyectos
                 }
             }
 
-            // Caso 2: Jefe o Admin → ver todos
             Proyectos = await _proyectoApi.GetAllAsync();
         }
 

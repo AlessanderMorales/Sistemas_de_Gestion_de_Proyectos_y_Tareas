@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.ApiClients;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Tareas;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Usuarios;
@@ -47,7 +47,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
                 }
             }
 
-            // Si es jefe o admin → ver todas las tareas
+            // Si es jefe/admin → ver todas las tareas
             var todas = await _tareaApi.GetAllAsync();
             Tareas = await EnriquecerTareas(todas);
         }
@@ -67,11 +67,11 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
 
             try
             {
-                // 1️⃣ Traer TODOS los comentarios (no hay endpoint por tarea)
+                // 1️⃣ Obtener TODOS los comentarios para filtrarlos por IdTarea
                 var todosComentarios = (await _comentarioApi.GetAllAsync())
                                         ?.ToList() ?? new List<ComentarioDTO>();
 
-                // 2️⃣ Filtrar los que dependen de esta tarea
+                // 2️⃣ Filtrar comentarios que dependen de esta tarea
                 var comentariosDeTarea = todosComentarios
                     .Where(c => c.IdTarea == id)
                     .ToList();
@@ -87,7 +87,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
             }
             catch (Exception ex)
             {
-                Console.WriteLine("ERROR en eliminación en cascada de comentarios por tarea: " + ex.Message);
+                Console.WriteLine("ERROR en eliminación en cascada (tarea→comentarios): " + ex.Message);
                 ok = false;
             }
 
@@ -118,14 +118,11 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
                     Descripcion = t.Descripcion,
                     Prioridad = t.Prioridad,
                     Status = t.Status,
-                    IdProyecto = t.IdProyecto
+                    IdProyecto = t.IdProyecto,
+                    ProyectoNombre = proyectos.FirstOrDefault(p => p.IdProyecto == t.IdProyecto)?.Nombre
                 };
 
-                // Proyecto asignado
-                tarea.ProyectoNombre =
-                    proyectos.FirstOrDefault(p => p.IdProyecto == t.IdProyecto)?.Nombre;
-
-                // Usuarios asignados
+                // Usuarios asignados a la tarea
                 var asignados = await _tareaApi.GetUsuariosAsignadosAsync(t.Id);
 
                 if (asignados.Any())

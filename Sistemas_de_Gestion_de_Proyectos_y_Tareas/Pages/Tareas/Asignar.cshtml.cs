@@ -6,6 +6,8 @@ using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Tareas;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Usuarios;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
 {
@@ -14,17 +16,12 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
     {
         private readonly TareaApiClient _tareaApi;
         private readonly UsuarioApiClient _usuarioApi;
+
         public List<UsuarioDTO> UsuariosActualmenteAsignados { get; set; } = new();
+        public List<UsuarioDTO> UsuariosDisponibles { get; set; } = new();
+        public List<UsuarioDTO> UsuariosAsignados { get; set; } = new();
+        public List<SelectListItem> UsuariosDisponiblesSelectList { get; set; }
 
-        public AsignarModel(TareaApiClient tareaApi, UsuarioApiClient usuarioApi)
-        {
-            _tareaApi = tareaApi;
-            _usuarioApi = usuarioApi;
-        }
-
-        // ===========
-        // PROPIEDADES
-        // ===========
         [BindProperty]
         public int TareaId { get; set; }
 
@@ -32,24 +29,20 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
         public List<int> UsuariosIds { get; set; } = new();
 
         public string NombreTarea { get; set; } = "";
-        public List<UsuarioDTO> UsuariosDisponibles { get; set; } = new();
-        public List<UsuarioDTO> UsuariosAsignados { get; set; } = new();
 
-        // Propiedad para la lista de usuarios disponibles
-        public List<SelectListItem> UsuariosDisponiblesSelectList { get; set; }
+        public AsignarModel(TareaApiClient tareaApi, UsuarioApiClient usuarioApi)
+        {
+            _tareaApi = tareaApi;
+            _usuarioApi = usuarioApi;
+        }
 
-        // ===========
-        // ON GET
-        // ===========
         public async Task<IActionResult> OnGetAsync(int id)
         {
             TareaId = id;
 
-            // 1. Obtener tarea y nombre
-            var tarea = await _tareaApi.GetAsync(id);
+            var tarea = await _tareaApi.GetByIdAsync(id);
             NombreTarea = tarea?.Titulo ?? "Tarea desconocida";
 
-            // 2. Obtener usuarios asignados
             var asignadosIds = await _tareaApi.GetUsuariosAsignadosAsync(id);
             var todos = await _usuarioApi.GetAllAsync();
 
@@ -57,7 +50,6 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
                 .Where(u => asignadosIds.Contains(u.Id))
                 .ToList();
 
-            // 3. Usuarios disponibles = todos excepto superadmin
             UsuariosDisponibles = todos
                 .Where(u => u.Rol != "SuperAdmin")
                 .ToList();
@@ -65,9 +57,6 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
             return Page();
         }
 
-        // ===========
-        // ON POST
-        // ===========
         public async Task<IActionResult> OnPostAsync()
         {
             if (UsuariosIds == null || !UsuariosIds.Any())
@@ -93,10 +82,8 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
             TempData["SuccessMessage"] = "Usuarios asignados correctamente.";
             return RedirectToPage("Index");
         }
-
     }
 
-    // ViewModel para usuario asignado
     public class UsuarioViewModel
     {
         public int Id { get; set; }

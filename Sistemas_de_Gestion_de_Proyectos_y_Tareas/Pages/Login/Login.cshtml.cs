@@ -12,10 +12,12 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages
     public class LoginModel : PageModel
     {
         private readonly UsuarioApiClient _usuarioApi;
+        private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(UsuarioApiClient usuarioApi)
+        public LoginModel(UsuarioApiClient usuarioApi, ILogger<LoginModel> logger)
         {
             _usuarioApi = usuarioApi;
+            _logger = logger;
         }
 
         [BindProperty]
@@ -36,6 +38,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages
         public void OnGet(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
+            _logger.LogInformation("Página de login cargada");
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -45,58 +48,70 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages
             if (!ModelState.IsValid)
                 return Page();
 
-            // 🔥 1. Obtener usuario por login desde API
-            UsuarioLoginDTO loginDto = new UsuarioLoginDTO
+            try
             {
-                EmailOrUser = Input.EmailOrUsername,
-                Password = Input.Password
-            };
+                UsuarioLoginDTO loginDto = new UsuarioLoginDTO
+                {
+                    EmailOrUser = Input.EmailOrUsername,
+                    Password = Input.Password
+                };
 
-            UsuarioDTO usuario = await _usuarioApi.LoginAsync(loginDto);
+                _logger.LogInformation($"Intentando login para: {Input.EmailOrUsername}");
 
-            if (usuario == null)
+                LoginResponseDTO? loginResponse = await _usuarioApi.LoginAsync(loginDto);
+
+                if (loginResponse == null || loginResponse.Error)
+                {
+                    _logger.LogWarning($"Login fallido para: {Input.EmailOrUsername}");
+                    TempData["ErrorMessage"] = "Email/usuario o contraseña incorrectos.";
+                    return Page();
+                }
+
+                _logger.LogInformation($"Login exitoso para: {loginResponse.NombreUsuario}");
+
+                HttpContext.Session.SetString("JwtToken", loginResponse.Token);
+                _logger.LogInformation($"Token JWT almacenado en sesión para: {loginResponse.NombreUsuario}");
+
+                string normalizedRole = loginResponse.Rol switch
+                {
+                    var r when r.Contains("super", StringComparison.OrdinalIgnoreCase) => Roles.SuperAdmin,
+                    var r when r.Contains("jefe", StringComparison.OrdinalIgnoreCase) => Roles.JefeDeProyecto,
+                    _ => Roles.Empleado
+                };
+
+                string fullName = $"{loginResponse.Nombres} {loginResponse.PrimerApellido} {loginResponse.SegundoApellido}".Trim();
+                string requiereCambioString = loginResponse.RequiereCambioContraseña ? "True" : "False";
+
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, loginResponse.Id_Usuario.ToString()),
+                    new Claim(ClaimTypes.Name, loginResponse.Email ?? loginResponse.NombreUsuario),
+                    new Claim("Username", loginResponse.NombreUsuario ?? loginResponse.Email),
+                    new Claim("FullName", fullName),
+                    new Claim(ClaimTypes.Role, normalizedRole),
+                    new Claim("RequiereCambioContraseña", requiereCambioString)
+                };
+
+                var identity = new ClaimsIdentity(claims, "MyCookieAuth");
+                await HttpContext.SignInAsync("MyCookieAuth", new ClaimsPrincipal(identity));
+
+                if (loginResponse.RequiereCambioContraseña)
+                {
+                    return RedirectToPage("/Configuracion/CambiarPassword");
+                }
+
+                return normalizedRole switch
+                {
+                    Roles.SuperAdmin => RedirectToPage("/Usuarios/Index"),
+                    _ => LocalRedirect(returnUrl)
+                };
+            }
+            catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, "Email/usuario o contraseña incorrectos.");
+                _logger.LogError(ex, "Error en proceso de login");
+                TempData["ErrorMessage"] = "Ocurrió un error al iniciar sesión. Por favor, intente nuevamente.";
                 return Page();
             }
-
-            // 🔥 2. Normalizar rol
-            string normalizedRole = usuario.Rol switch
-            {
-                var r when r.Contains("super", StringComparison.OrdinalIgnoreCase) => Roles.SuperAdmin,
-                var r when r.Contains("jefe", StringComparison.OrdinalIgnoreCase) => Roles.JefeDeProyecto,
-                _ => Roles.Empleado
-            };
-
-            string fullName = $"{usuario.Nombres} {usuario.PrimerApellido} {usuario.SegundoApellido}".Trim();
-
-            // 🔥 3. Crear claims de autenticación
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
-                new Claim(ClaimTypes.Name, usuario.Email ?? usuario.NombreUsuario),
-                new Claim("Username", usuario.NombreUsuario ?? usuario.Email),
-                new Claim("FullName", fullName),
-                new Claim(ClaimTypes.Role, normalizedRole),
-                new Claim("RequiereCambioContraseña", usuario.RequiereCambioContraseña.ToString())
-            };
-
-            var identity = new ClaimsIdentity(claims, "MyCookieAuth");
-            await HttpContext.SignInAsync("MyCookieAuth", new ClaimsPrincipal(identity));
-
-            // 🔥 4. Si requiere cambiar contraseña → redirigir
-            if (usuario.RequiereCambioContraseña)
-            {
-                TempData["RequiereCambioContraseña"] = "Por seguridad, debes cambiar tu contraseña temporal.";
-                return RedirectToPage("/Configuracion/CambiarContraseña");
-            }
-
-            // 🔥 5. Redirigir según rol
-            return normalizedRole switch
-            {
-                Roles.SuperAdmin => RedirectToPage("/Usuarios/Index"),
-                _ => LocalRedirect(returnUrl)
-            };
         }
     }
 }

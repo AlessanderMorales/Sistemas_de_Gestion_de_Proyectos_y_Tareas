@@ -1,4 +1,4 @@
-@page
+﻿@page
 @model Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Usuarios.EditModel
 @{
     ViewData["Title"] = "Editar Usuario";
@@ -29,18 +29,19 @@
         border-radius: 8px;
         padding: 0.75rem 1rem;
     }
-    .form-control:focus, .form-select:focus {
-        background-color: #4a4a50;
-        color: var(--text-primary);
-        border-color: var(--accent-orange);
-        box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
-    }
-    
+
+        .form-control:focus, .form-select:focus {
+            background-color: #4a4a50;
+            color: var(--text-primary);
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
+        }
+
     .form-label {
         color: var(--text-primary);
         font-weight: 500;
     }
-    
+
     .form-text {
         font-size: 0.875em;
         color: #a0a0a5;
@@ -50,11 +51,11 @@
         color: #ff5252 !important;
         font-weight: 500;
     }
-    
+
     .form-container {
         max-width: 700px;
     }
-    
+
     .btn-volcanic-primary {
         background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
         border: none;
@@ -64,10 +65,11 @@
         border-radius: 8px;
         transition: all 0.3s ease;
     }
-    .btn-volcanic-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
-    }
+
+        .btn-volcanic-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
+        }
 
     .btn-volcanic-secondary {
         background-color: transparent;
@@ -78,26 +80,22 @@
         border-radius: 8px;
         transition: all 0.3s ease;
     }
-    .btn-volcanic-secondary:hover {
-        background-color: #6c757d;
-        color: white;
-        border-color: #6c757d;
-    }
+
+        .btn-volcanic-secondary:hover {
+            background-color: #6c757d;
+            color: white;
+            border-color: #6c757d;
+        }
 </style>
 
 <h1 class="title-volcanic">@ViewData["Title"]</h1>
 
 <div class="row">
     <div class="col-md-8 form-container">
-        <form method="post">
-            <p style="color:yellow; font-weight:bold;">
-                DEBUG ID: @Model.Usuario.Id
-            </p>
-            <input type="hidden" asp-for="Usuario.Id" />
-
+        <form method="post" id="editUserForm">
             <input type="hidden" asp-for="Usuario.Id" />
             <input type="hidden" asp-for="Usuario.NombreUsuario" />
-            <input type="hidden" asp-for="Usuario.RequiereCambioContrase�a" />
+            <input type="hidden" asp-for="Usuario.RequiereCambioContraseña" />
             <input type="hidden" asp-for="Usuario.Estado" />
 
             <div class="mb-3">
@@ -135,11 +133,14 @@
 
             <button class="btn btn-volcanic-primary">Guardar Cambios</button>
             <a asp-page="Index" class="btn btn-volcanic-secondary ms-2">Cancelar</a>
-
         </form>
     </div>
 </div>
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        setupFormConfirmation('editUserForm', 'confirmEdit');
+    </script>
 }
+

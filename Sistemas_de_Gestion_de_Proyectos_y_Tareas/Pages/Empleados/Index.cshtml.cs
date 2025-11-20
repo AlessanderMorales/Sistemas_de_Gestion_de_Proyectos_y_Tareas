@@ -37,7 +37,6 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Empleados
 
         public async Task OnGetAsync()
         {
-            // Obtener todos los usuarios excepto SuperAdmin
             var usuarios = (await _usuarioApi.GetAllAsync())
                 .Where(u => u.Rol != "SuperAdmin")
                 .OrderBy(u => u.Rol)
@@ -48,16 +47,10 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Empleados
             {
                 var info = new EmpleadoInfo { Usuario = u };
 
-                // ---------------------------
-                // PROYECTOS ASIGNADOS
-                // ---------------------------
                 var proyectos = await _proyectoApi.GetByUsuarioAsync(u.Id);
                 info.ProyectosAsignados = proyectos.Select(p => p.Nombre).ToList();
                 info.TotalProyectos = proyectos.Count;
 
-                // ---------------------------
-                // TAREAS ASIGNADAS
-                // ---------------------------
                 var tareas = await _tareaApi.GetByUsuarioAsync(u.Id);
                 info.TareasAsignadas = tareas.Select(t => t.Titulo).ToList();
                 info.TotalTareas = tareas.Count;

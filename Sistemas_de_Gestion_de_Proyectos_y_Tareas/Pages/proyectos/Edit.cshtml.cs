@@ -39,7 +39,6 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Proyectos
             if (!ModelState.IsValid)
                 return Page();
 
-            // Trim automático
             if (!string.IsNullOrEmpty(Proyecto.Nombre))
                 Proyecto.Nombre = TrimExtraSpaces(Proyecto.Nombre);
 

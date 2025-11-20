@@ -1,4 +1,4 @@
-@page "{id:int}"
+﻿@page "{id:int}"
 @model Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas.CambiarEstadoModel
 @{
     ViewData["Title"] = "Cambiar Estado de Tarea";
@@ -7,155 +7,173 @@
 <style>
     :root {
         --accent-red: #D32F2F;
-      --accent-orange: #FF5722;
+        --accent-orange: #FF5722;
         --accent-gold: #FFD700;
         --text-primary: #f5f5f7;
     }
 
     .title-volcanic {
-  background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
--webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
- font-weight: 700;
+        background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 700;
         border-bottom: 2px solid rgba(255,255,255,0.1);
         padding-bottom: 0.5rem;
-  margin-bottom: 2rem;
+        margin-bottom: 2rem;
     }
 
-.form-control, .form-select {
-   background-color: #3a3a40;
-   color: var(--text-primary);
+    .form-control, .form-select {
+        background-color: #3a3a40;
+        color: var(--text-primary);
         border: 1px solid #555;
- border-radius: 8px;
+        border-radius: 8px;
         padding: 0.75rem 1rem;
     }
-    .form-control:focus, .form-select:focus {
-    background-color: #4a4a50;
-    color: var(--text-primary);
-   border-color: var(--accent-orange);
-   box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
-    }
+
+        .form-control:focus, .form-select:focus {
+            background-color: #4a4a50;
+            color: var(--text-primary);
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
+        }
 
     .form-label {
-  color: var(--text-primary);
-  font-weight: 500;
+        color: var(--text-primary);
+        font-weight: 500;
     }
 
     .info-box {
         background-color: #3a3a40;
-    padding: 1.5rem;
-   border-radius: 10px;
+        padding: 1.5rem;
+        border-radius: 10px;
         border-left: 4px solid var(--accent-gold);
         margin-bottom: 2rem;
     }
 
- .info-box h5 {
-      color: var(--accent-gold);
-margin-bottom: 0.5rem;
-  }
+        .info-box h5 {
+            color: var(--accent-gold);
+            margin-bottom: 0.5rem;
+        }
 
-    .info-box p {
-        color: #e0e0e0;
-        margin-bottom: 0.25rem;
-    }
+        .info-box p {
+            color: #e0e0e0;
+            margin-bottom: 0.25rem;
+        }
 
     .btn-volcanic-primary {
-   background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
+        background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
         border: none;
-     color: white;
-    font-weight: bold;
+        color: white;
+        font-weight: bold;
         padding: 12px 25px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-    }
-    .btn-volcanic-primary:hover {
-   transform: translateY(-2px);
- box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
+        border-radius: 8px;
+        transition: all 0.3s ease;
     }
 
-  .btn-volcanic-secondary {
-    background-color: transparent;
-    border: 2px solid #6c757d;
+        .btn-volcanic-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
+        }
+
+    .btn-volcanic-secondary {
+        background-color: transparent;
+        border: 2px solid #6c757d;
         color: #ced4da;
-     font-weight: bold;
+        font-weight: bold;
         padding: 10px 25px;
-   border-radius: 8px;
+        border-radius: 8px;
         transition: all 0.3s ease;
-  }
-    .btn-volcanic-secondary:hover {
-  background-color: #6c757d;
-        color: white;
-        border-color: #6c757d;
     }
+
+        .btn-volcanic-secondary:hover {
+            background-color: #6c757d;
+            color: white;
+            border-color: #6c757d;
+        }
 
     .status-badge {
         display: inline-block;
-    padding: 6px 15px;
+        padding: 6px 15px;
         border-radius: 20px;
-font-weight: bold;
-  font-size: 0.9rem;
+        font-weight: bold;
+        font-size: 0.9rem;
     }
-    .status-sin-iniciar { background-color: #6c757d; color: white; }
-    .status-en-progreso { background-color: #ffc107; color: #212529; }
-    .status-completada { background-color: #28a745; color: white; }
+
+    .status-sin-iniciar {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .status-en-progreso {
+        background-color: #ffc107;
+        color: #212529;
+    }
+
+    .status-completada {
+        background-color: #28a745;
+        color: white;
+    }
 </style>
 
 <h2 class="title-volcanic">@ViewData["Title"]</h2>
 
 @if (Model.Tarea != null)
 {
-    <div class="info-box">
- <h5>Informacion de la Tarea</h5>
-        <p><strong>Titulo:</strong> @Model.Tarea.Titulo</p>
-   <p><strong>Descripcion:</strong> @Model.Tarea.Descripcion</p>
-  <p><strong>Prioridad:</strong> @Model.Tarea.Prioridad</p>
-        <p>
-   <strong>Estado Actual:</strong> 
-       @if (Model.Tarea.Status == "SinIniciar")
-        {
-          <span class="status-badge status-sin-iniciar">Sin Iniciar</span>
-   }
-   else if (Model.Tarea.Status == "EnProgreso")
-{
-      <span class="status-badge status-en-progreso">En Progreso</span>
-            }
-       else if (Model.Tarea.Status == "Completada")
+<div class="info-box">
+    <h5>Información de la Tarea</h5>
+    <p><strong>Título:</strong> @Model.Tarea.Titulo</p>
+    <p><strong>Descripción:</strong> @Model.Tarea.Descripcion</p>
+    <p><strong>Prioridad:</strong> @Model.Tarea.Prioridad</p>
+    <p>
+        <strong>Estado Actual:</strong>
+        @if (Model.Tarea.Status == "SinIniciar")
             {
-          <span class="status-badge status-completada">Completada</span>
+        <span class="status-badge status-sin-iniciar">Sin Iniciar</span>
             }
- </p>
- </div>
+            else if (Model.Tarea.Status == "EnProgreso")
+            {
+        <span class="status-badge status-en-progreso">En Progreso</span>
+            }
+            else if (Model.Tarea.Status == "Completada")
+            {
+        <span class="status-badge status-completada">Completada</span>
+            }
+    </p>
+</div>
 
-    <div class="row">
-        <div class="col-md-6">
-     <form method="post">
-    <input type="hidden" asp-for="TareaId" />
-    
-      <div class="form-group mb-3">
-       <label asp-for="NuevoStatus" class="form-label">Nuevo Estado</label>
-              <select asp-for="NuevoStatus" class="form-select" asp-items="Model.StatusDisponibles">
-       </select>
-       <span asp-validation-for="NuevoStatus" class="text-danger"></span>
-      </div>
+<div class="row">
+    <div class="col-md-6">
+        <form method="post" id="cambiarEstadoForm">
+            <input type="hidden" asp-for="TareaId" />
 
-  <div class="mt-4">
-         <button type="submit" class="btn btn-volcanic-primary">Actualizar Estado</button>
-   <a asp-page="Index" class="btn btn-volcanic-secondary ms-2">Cancelar</a>
-              </div>
-     </form>
-     </div>
+            <div class="form-group mb-3">
+                <label asp-for="NuevoStatus" class="form-label">Nuevo Estado</label>
+                <select asp-for="NuevoStatus" class="form-select" asp-items="Model.StatusDisponibles"></select>
+                <span asp-validation-for="NuevoStatus" class="text-danger"></span>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-volcanic-primary">Actualizar Estado</button>
+                <a asp-page="Index" class="btn btn-volcanic-secondary ms-2">Cancelar</a>
+            </div>
+        </form>
     </div>
+</div>
 }
 else
 {
-    <div class="alert alert-danger" role="alert">
+<div class="alert alert-danger" role="alert">
     <h4 class="alert-heading">Tarea no encontrada</h4>
-   <p>La tarea que buscas no existe o fue eliminada.</p>
- <hr>
-        <a asp-page="Index" class="btn btn-primary">Volver a la Lista</a>
-    </div>
+    <p>La tarea que buscas no existe o fue eliminada.</p>
+    <hr>
+    <a asp-page="Index" class="btn btn-primary">Volver a la Lista</a>
+</div>
 }
 
 @section Scripts {
+    <script>
+      setupFormConfirmation('cambiarEstadoForm', 'confirmEdit');
+    </script>
     <partial name="_ValidationScriptsPartial" />
 }
+
