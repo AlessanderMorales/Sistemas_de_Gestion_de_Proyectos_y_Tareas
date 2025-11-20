@@ -34,7 +34,6 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Proyectos
         {
             if (!ModelState.IsValid)
             {
-                TempData["ErrorMessage"] = "? Por favor corrija los errores en el formulario antes de continuar.";
                 return Page();
             }
 
@@ -48,8 +47,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Proyectos
                     // Validación básica de patrones peligrosos
                     if (ContienePatroneseligrosos(Proyecto.Nombre))
                     {
-                        ModelState.AddModelError("Proyecto.Nombre", "?? El nombre contiene caracteres no permitidos. Evite usar: < > ' \" -- ; SELECT DROP EXEC");
-                        TempData["ErrorMessage"] = "El nombre del proyecto contiene caracteres o patrones no permitidos.";
+                        ModelState.AddModelError("Proyecto.Nombre", "?? El nombre contiene caracteres no permitidos. Evite usar: $ % ^ & * ( ) { } [ ] \\ | < > ' \" ; etc.");
                         return Page();
                     }
                 }
@@ -61,8 +59,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Proyectos
 
                     if (ContienePatroneseligrosos(Proyecto.Descripcion))
                     {
-                        ModelState.AddModelError("Proyecto.Descripcion", "?? La descripción contiene caracteres no permitidos.");
-                        TempData["ErrorMessage"] = "La descripción contiene caracteres o patrones no permitidos.";
+                        ModelState.AddModelError("Proyecto.Descripcion", "?? La descripción contiene caracteres no permitidos. Evite usar: $ % ^ & * ( ) { } [ ] \\ | < > ' \" ; etc.");
                         return Page();
                     }
                 }
@@ -72,39 +69,37 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Proyectos
                 {
                     if (Proyecto.FechaInicio.Value.Date < DateTime.Now.Date)
                     {
-                        ModelState.AddModelError("Proyecto.FechaInicio", "? La fecha de inicio no puede ser anterior a hoy.");
-                        TempData["ErrorMessage"] = "La fecha de inicio no puede ser anterior a la fecha actual.";
+                        ModelState.AddModelError("Proyecto.FechaInicio", "?? La fecha de inicio no puede ser anterior a hoy.");
                         return Page();
                     }
 
                     if (Proyecto.FechaFin.Value.Date < DateTime.Now.Date)
                     {
-                        ModelState.AddModelError("Proyecto.FechaFin", "? La fecha de finalización no puede ser anterior a hoy.");
-                        TempData["ErrorMessage"] = "La fecha de finalización no puede ser anterior a la fecha actual.";
+                        ModelState.AddModelError("Proyecto.FechaFin", "?? La fecha de finalización no puede ser anterior a hoy.");
                         return Page();
                     }
 
                     if (Proyecto.FechaFin.Value.Date < Proyecto.FechaInicio.Value.Date)
                     {
-                        ModelState.AddModelError("Proyecto.FechaFin", "? La fecha de finalización debe ser posterior a la fecha de inicio.");
-                        TempData["ErrorMessage"] = "La fecha de finalización no puede ser anterior a la fecha de inicio.";
+                        ModelState.AddModelError("Proyecto.FechaFin", "?? La fecha de finalización debe ser posterior a la fecha de inicio.");
                         return Page();
                     }
 
                     if (Proyecto.FechaFin.Value.Date == Proyecto.FechaInicio.Value.Date)
                     {
-                        ModelState.AddModelError("Proyecto.FechaFin", "? Las fechas de inicio y fin no pueden ser iguales.");
-                        TempData["ErrorMessage"] = "La fecha de finalización debe ser diferente a la fecha de inicio.";
+                        ModelState.AddModelError("Proyecto.FechaFin", "?? Las fechas de inicio y fin no pueden ser iguales.");
                         return Page();
                     }
                 }
 
-                var ok = await _proyectoApi.CreateAsync(Proyecto);
+                // Llamar a la API con el nuevo método que retorna errores específicos
+                var (success, errorMessage) = await _proyectoApi.CreateAsync(Proyecto);
 
-                if (!ok)
+                if (!success)
                 {
-                    TempData["ErrorMessage"] = "? Error al comunicarse con el servidor. Por favor, intente nuevamente.";
-                    return Page();
+                    // Mostrar el error específico en la página
+                    ModelState.AddModelError(string.Empty, errorMessage ?? "? Error al crear el proyecto.");
+                    return Page(); // NO redirige, se queda en la página para mostrar el error
                 }
 
                 TempData["SuccessMessage"] = "? Proyecto creado exitosamente.";
@@ -112,23 +107,9 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Proyectos
             }
             catch (Exception ex)
             {
-                var errorMsg = ex.Message.ToLower();
-
-                // Mensajes más específicos según el tipo de error
-                if (errorMsg.Contains("fecha") || errorMsg.Contains("date"))
-                {
-                    TempData["ErrorMessage"] = $"? Error con las fechas: {ex.Message}";
-                }
-                else if (errorMsg.Contains("caracteres") || errorMsg.Contains("patrones") || errorMsg.Contains("sql") || errorMsg.Contains("injection"))
-                {
-                    TempData["ErrorMessage"] = $"?? Validación de seguridad: {ex.Message}";
-                }
-                else
-                {
-                    TempData["ErrorMessage"] = $"? Error al crear el proyecto: {ex.Message}";
-                }
-
-                return RedirectToPage("./Index");
+                // Capturar excepciones locales y mostrarlas en la UI
+                ModelState.AddModelError(string.Empty, $"? Error inesperado: {ex.Message}");
+                return Page();
             }
         }
 

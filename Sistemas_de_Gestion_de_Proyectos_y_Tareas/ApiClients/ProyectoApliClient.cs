@@ -2,6 +2,7 @@
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Tareas;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Usuarios;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.ApiClients
 {
@@ -21,14 +22,98 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.ApiClients
         public async Task<List<ProyectoDTO>> GetAllAsync()
             => await _http.GetFromJsonAsync<List<ProyectoDTO>>(BasePath) ?? new List<ProyectoDTO>();
 
-        public async Task<bool> CreateAsync(ProyectoDTO dto)
-            => (await _http.PostAsJsonAsync(BasePath, dto)).IsSuccessStatusCode;
+        public async Task<(bool success, string? errorMessage)> CreateAsync(ProyectoDTO dto)
+        {
+            try
+            {
+                var response = await _http.PostAsJsonAsync(BasePath, dto);
 
-        public async Task<bool> UpdateAsync(ProyectoDTO dto)
-            => (await _http.PutAsJsonAsync($"{BasePath}/{dto.IdProyecto}", dto)).IsSuccessStatusCode;
+                if (response.IsSuccessStatusCode)
+                    return (true, null);
 
-        public async Task<bool> UpdateAsync(int id, ProyectoDTO dto)
-            => (await _http.PutAsJsonAsync($"{BasePath}/{id}", dto)).IsSuccessStatusCode;
+                // Capturar el mensaje de error de la API
+                var errorContent = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    var errorObj = JsonSerializer.Deserialize<Dictionary<string, object>>(errorContent);
+                    if (errorObj != null && errorObj.ContainsKey("message"))
+                    {
+                        return (false, errorObj["message"].ToString());
+                    }
+                }
+                catch
+                {
+                }
+
+                return (false, $"Error al crear proyecto: {errorContent}");
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Error de conexión: {ex.Message}");
+            }
+        }
+
+        public async Task<(bool success, string? errorMessage)> UpdateAsync(ProyectoDTO dto)
+        {
+            try
+            {
+                var response = await _http.PutAsJsonAsync($"{BasePath}/{dto.IdProyecto}", dto);
+
+                if (response.IsSuccessStatusCode)
+                    return (true, null);
+
+                // Capturar el mensaje de error de la API
+                var errorContent = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    var errorObj = JsonSerializer.Deserialize<Dictionary<string, object>>(errorContent);
+                    if (errorObj != null && errorObj.ContainsKey("message"))
+                    {
+                        return (false, errorObj["message"].ToString());
+                    }
+                }
+                catch
+                {
+                }
+
+                return (false, $"Error al actualizar proyecto: {errorContent}");
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Error de conexión: {ex.Message}");
+            }
+        }
+
+        public async Task<(bool success, string? errorMessage)> UpdateAsync(int id, ProyectoDTO dto)
+        {
+            try
+            {
+                var response = await _http.PutAsJsonAsync($"{BasePath}/{id}", dto);
+
+                if (response.IsSuccessStatusCode)
+                    return (true, null);
+
+                // Capturar el mensaje de error de la API
+                var errorContent = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    var errorObj = JsonSerializer.Deserialize<Dictionary<string, object>>(errorContent);
+                    if (errorObj != null && errorObj.ContainsKey("message"))
+                    {
+                        return (false, errorObj["message"].ToString());
+                    }
+                }
+                catch
+                {
+                }
+
+                return (false, $"Error al actualizar proyecto: {errorContent}");
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Error de conexión: {ex.Message}");
+            }
+        }
 
         public async Task<bool> DeleteAsync(int id)
             => (await _http.DeleteAsync($"{BasePath}/{id}")).IsSuccessStatusCode;

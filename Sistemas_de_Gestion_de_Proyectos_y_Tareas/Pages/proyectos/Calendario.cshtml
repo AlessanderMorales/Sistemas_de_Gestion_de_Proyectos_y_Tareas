@@ -1,0 +1,387 @@
+@page
+@model Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Proyectos.CalendarioModel
+@{
+    ViewData["Title"] = "Calendario de Proyectos";
+}
+
+<style>
+    :root {
+        --accent-red: #D32F2F;
+        --accent-orange: #FF5722;
+     --accent-gold: #FFD700;
+        --accent-blue: #2196F3;
+        --accent-green: #4CAF50;
+    }
+
+    .title-volcanic {
+ background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+        font-weight: 700;
+     border-bottom: 2px solid rgba(255,255,255,0.1);
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .calendar-container {
+        background-color: #2c2c31;
+        border-radius: 12px;
+     padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .timeline {
+position: relative;
+   padding: 2rem 0;
+    }
+
+    .timeline-item {
+        position: relative;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        background: linear-gradient(135deg, #3a3a40 0%, #2c2c31 100%);
+        border-left: 4px solid var(--accent-orange);
+        border-radius: 8px;
+    transition: all 0.3s ease;
+    }
+
+    .timeline-item:hover {
+    transform: translateX(10px);
+        box-shadow: 0 8px 25px rgba(255, 87, 34, 0.3);
+        border-left-color: var(--accent-gold);
+    }
+
+    .timeline-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      flex-wrap: wrap;
+  gap: 1rem;
+    }
+
+    .timeline-title {
+        color: var(--accent-gold);
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0;
+  }
+
+    .timeline-dates {
+  display: flex;
+        gap: 2rem;
+  flex-wrap: wrap;
+    }
+
+    .date-box {
+      text-align: center;
+        padding: 0.5rem 1rem;
+        background-color: #4a4a50;
+        border-radius: 8px;
+    }
+
+    .date-label {
+        font-size: 0.75rem;
+  color: #888;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .date-value {
+        font-size: 1.1rem;
+        color: var(--accent-orange);
+ font-weight: 600;
+        margin-top: 0.25rem;
+    }
+
+    .timeline-description {
+     color: #e0e0e0;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+
+    .timeline-progress {
+        margin-top: 1rem;
+    }
+
+ .progress {
+        height: 8px;
+        background-color: #4a4a50;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+        transition: width 0.5s ease;
+    }
+
+    .progress-info {
+        display: flex;
+        justify-content: space-between;
+     margin-top: 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    .progress-label {
+        color: #888;
+  }
+
+ .progress-value {
+        color: var(--accent-green);
+        font-weight: 600;
+    }
+
+    .timeline-actions {
+     margin-top: 1rem;
+     display: flex;
+        gap: 0.5rem;
+    flex-wrap: wrap;
+    }
+
+    .btn-timeline {
+        padding: 0.5rem 1rem;
+border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .btn-view {
+        background-color: var(--accent-blue);
+        border-color: var(--accent-blue);
+        color: white;
+    }
+
+    .btn-view:hover {
+        background-color: #1976D2;
+    transform: translateY(-2px);
+    }
+
+  .btn-edit {
+   background-color: var(--accent-gold);
+        border-color: var(--accent-gold);
+        color: #212529;
+    }
+
+    .btn-edit:hover {
+    background-color: #FFA000;
+        transform: translateY(-2px);
+    }
+
+    .filter-section {
+ background-color: #2c2c31;
+        border-radius: 12px;
+        padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .filter-title {
+  color: var(--accent-orange);
+        font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .btn-volcanic-secondary {
+        background-color: transparent;
+        border: 2px solid #6c757d;
+        color: #ced4da;
+        font-weight: bold;
+      padding: 10px 25px;
+        border-radius: 8px;
+ transition: all 0.3s ease;
+    }
+
+    .btn-volcanic-secondary:hover {
+    background-color: #6c757d;
+  color: white;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #888;
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-activo {
+        background-color: rgba(76, 175, 80, 0.2);
+        color: #4CAF50;
+        border: 1px solid #4CAF50;
+    }
+
+    .status-completado {
+  background-color: rgba(33, 150, 243, 0.2);
+  color: #2196F3;
+        border: 1px solid #2196F3;
+    }
+
+    .status-pendiente {
+        background-color: rgba(255, 193, 7, 0.2);
+        color: #FFC107;
+        border: 1px solid #FFC107;
+}
+
+    .duration-info {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #888;
+    font-size: 0.9rem;
+        margin-top: 0.5rem;
+    }
+
+    .duration-info i {
+    color: var(--accent-orange);
+    }
+</style>
+
+<h1 class="title-volcanic">@ViewData["Title"]</h1>
+
+<div class="filter-section">
+    <div class="filter-title">?? Vista de Cronología de Proyectos</div>
+    <p style="color: #888; margin: 0;">Visualiza todos los proyectos ordenados por fecha de inicio</p>
+</div>
+
+@if (Model.Proyectos != null && Model.Proyectos.Any())
+{
+    <div class="calendar-container">
+  <div class="timeline">
+    @foreach (var proyecto in Model.Proyectos)
+        {
+            var diasRestantes = 0;
+  var progreso = 0;
+  var estadoTexto = "Pendiente";
+      var estadoClase = "status-pendiente";
+
+            if (proyecto.FechaInicio.HasValue && proyecto.FechaFin.HasValue)
+ {
+             var totalDias = (proyecto.FechaFin.Value - proyecto.FechaInicio.Value).Days;
+          var diasTranscurridos = (DateTime.Now - proyecto.FechaInicio.Value).Days;
+diasRestantes = (proyecto.FechaFin.Value - DateTime.Now).Days;
+
+                if (totalDias > 0)
+         {
+              progreso = Math.Min(100, Math.Max(0, (int)((double)diasTranscurridos / totalDias * 100)));
+        }
+
+if (DateTime.Now < proyecto.FechaInicio.Value)
+  {
+            estadoTexto = "Pendiente";
+  estadoClase = "status-pendiente";
+ }
+       else if (DateTime.Now > proyecto.FechaFin.Value)
+           {
+     estadoTexto = "Completado";
+           estadoClase = "status-completado";
+     progreso = 100;
+     }
+    else
+      {
+  estadoTexto = "En Progreso";
+     estadoClase = "status-activo";
+        }
+      }
+
+         <div class="timeline-item">
+             <div class="timeline-header">
+         <div>
+              <h3 class="timeline-title">@proyecto.Nombre</h3>
+  <span class="status-badge @estadoClase">@estadoTexto</span>
+ </div>
+    <div class="timeline-dates">
+           @if (proyecto.FechaInicio.HasValue)
+      {
+      <div class="date-box">
+   <div class="date-label">Inicio</div>
+           <div class="date-value">@proyecto.FechaInicio.Value.ToString("dd/MM/yyyy")</div>
+      </div>
+   }
+             @if (proyecto.FechaFin.HasValue)
+          {
+       <div class="date-box">
+ <div class="date-label">Fin</div>
+ <div class="date-value">@proyecto.FechaFin.Value.ToString("dd/MM/yyyy")</div>
+      </div>
+          }
+             </div>
+                 </div>
+
+       @if (!string.IsNullOrWhiteSpace(proyecto.Descripcion))
+        {
+        <div class="timeline-description">
+      @proyecto.Descripcion
+             </div>
+        }
+
+@if (proyecto.FechaInicio.HasValue && proyecto.FechaFin.HasValue)
+        {
+       var totalDias = (proyecto.FechaFin.Value - proyecto.FechaInicio.Value).Days;
+          <div class="duration-info">
+  <i class="bi bi-calendar-range"></i>
+           <span>Duración: @totalDias días</span>
+ @if (diasRestantes > 0 && estadoTexto == "En Progreso")
+         {
+        <span> | @diasRestantes días restantes</span>
+     }
+         </div>
+
+  <div class="timeline-progress">
+         <div class="progress">
+    <div class="progress-bar" role="progressbar" style="width: @progreso%" aria-valuenow="@progreso" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+       <div class="progress-info">
+       <span class="progress-label">Progreso del proyecto</span>
+ <span class="progress-value">@progreso%</span>
+          </div>
+     </div>
+        }
+
+           <div class="timeline-actions">
+    <a class="btn btn-timeline btn-view" asp-page="./Mostrar" asp-route-id="@proyecto.IdProyecto">
+   <i class="bi bi-eye"></i> Ver Detalles
+     </a>
+    @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
+            {
+  <a class="btn btn-timeline btn-edit" asp-page="./Edit" asp-route-id="@proyecto.IdProyecto">
+          <i class="bi bi-pencil"></i> Editar
+          </a>
+}
+         </div>
+                </div>
+            }
+        </div>
+</div>
+}
+else
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">??</div>
+        <h3>No hay proyectos registrados</h3>
+        <p>Comienza creando tu primer proyecto</p>
+    @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
+   {
+       <a asp-page="Create" class="btn btn-volcanic-primary mt-3">Crear Proyecto</a>
+   }
+    </div>
+}
+
+<div class="mt-4">
+    <a asp-page="./Index" class="btn btn-volcanic-secondary">
+        <i class="bi bi-arrow-left"></i> Volver a la Lista
+    </a>
+</div>

@@ -1,6 +1,7 @@
 ﻿using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Usuarios;
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.ApiClients
 {
@@ -24,11 +25,66 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.ApiClients
             return await response.Content.ReadFromJsonAsync<UsuarioDTO>();
         }
 
-        public async Task<bool> CrearUsuarioAsync(UsuarioCrearDTO dto)
-            => (await _http.PostAsJsonAsync(BasePath, dto)).IsSuccessStatusCode;
+        public async Task<(bool success, string? errorMessage)> CrearUsuarioAsync(UsuarioCrearDTO dto)
+        {
+            try
+            {
+                var response = await _http.PostAsJsonAsync(BasePath, dto);
 
-        public async Task<bool> UpdateAsync(UsuarioDTO dto)
-            => (await _http.PutAsJsonAsync($"{BasePath}/{dto.Id}", dto)).IsSuccessStatusCode;
+                if (response.IsSuccessStatusCode)
+                    return (true, null);
+
+                // Capturar el mensaje de error de la API
+                var errorContent = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    var errorObj = JsonSerializer.Deserialize<Dictionary<string, object>>(errorContent);
+                    if (errorObj != null && errorObj.ContainsKey("message"))
+                    {
+                        return (false, errorObj["message"].ToString());
+                    }
+                }
+                catch
+                {
+                }
+
+                return (false, $"Error al crear usuario: {errorContent}");
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Error de conexión: {ex.Message}");
+            }
+        }
+
+        public async Task<(bool success, string? errorMessage)> UpdateAsync(int id, UsuarioActualizarDTO dto)
+        {
+            try
+            {
+                var response = await _http.PutAsJsonAsync($"{BasePath}/{id}", dto);
+
+                if (response.IsSuccessStatusCode)
+                    return (true, null);
+
+                var errorContent = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    var errorObj = JsonSerializer.Deserialize<Dictionary<string, object>>(errorContent);
+                    if (errorObj != null && errorObj.ContainsKey("message"))
+                    {
+                        return (false, errorObj["message"].ToString());
+                    }
+                }
+                catch
+                {
+                }
+
+                return (false, $"Error al actualizar: {errorContent}");
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Error de conexión: {ex.Message}");
+            }
+        }
 
         public async Task<bool> DeleteAsync(int id)
         {

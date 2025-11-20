@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.ApiClients;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Usuarios;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.Service;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Usuarios
 {
@@ -43,15 +45,18 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Usuarios
             if (!ModelState.IsValid)
                 return Page();
 
-            Usuario.NombreUsuario = Usuario.Email.Split('@')[0];
+            // Generar nombre de usuario basado en nombre y apellido
+            Usuario.NombreUsuario = await GenerarNombreUsuarioUnicoAsync(Usuario.Nombres, Usuario.PrimerApellido);
             Usuario.Contraseña = GenerarContraseñaSegura();
 
-            bool creado = await _api.CrearUsuarioAsync(Usuario);
+            // Llamar a la API con el nuevo método que retorna errores específicos
+            var (success, errorMessage) = await _api.CrearUsuarioAsync(Usuario);
 
-            if (!creado)
+            if (!success)
             {
-                MensajeError = "Error al crear el usuario.";
-                return RedirectToPage("./Index");
+                // Mostrar el error específico en la página
+                ModelState.AddModelError(string.Empty, errorMessage ?? "Error al crear el usuario.");
+                return Page(); // NO redirige, se queda en la página para mostrar el error
             }
 
             try
@@ -83,6 +88,73 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Usuarios
             }
 
             return RedirectToPage("./Index");
+        }
+
+        /// <summary>
+        /// Genera un nombre de usuario único en formato NombreApellido
+        /// Si ya existe, agrega un número incremental (NombreApellido2, NombreApellido3, etc.)
+        /// </summary>
+        private async Task<string> GenerarNombreUsuarioUnicoAsync(string nombres, string primerApellido)
+        {
+            // Tomar el primer nombre (si hay varios nombres separados por espacio)
+            var primerNombre = nombres.Split(' ')[0].Trim();
+
+            // Remover acentos y caracteres especiales
+            var nombreLimpio = RemoverAcentos(primerNombre);
+            var apellidoLimpio = RemoverAcentos(primerApellido);
+
+            // Generar nombre de usuario base: NombreApellido
+            var nombreUsuarioBase = $"{nombreLimpio}{apellidoLimpio}";
+
+            // Obtener todos los usuarios existentes
+            var usuariosExistentes = await _api.GetAllAsync();
+            var nombresUsuarioExistentes = usuariosExistentes
+                .Select(u => u.NombreUsuario.ToLower())
+                .ToHashSet();
+
+            // Si no existe, retornar el nombre base
+            var nombreUsuarioFinal = nombreUsuarioBase;
+            if (!nombresUsuarioExistentes.Contains(nombreUsuarioFinal.ToLower()))
+            {
+                return nombreUsuarioFinal;
+            }
+
+            // Si existe, agregar números incrementales hasta encontrar uno disponible
+            int contador = 2;
+            while (nombresUsuarioExistentes.Contains($"{nombreUsuarioBase}{contador}".ToLower()))
+            {
+                contador++;
+            }
+
+            nombreUsuarioFinal = $"{nombreUsuarioBase}{contador}";
+
+            _logger.LogInformation($"Nombre de usuario generado: {nombreUsuarioFinal} (había {contador - 1} duplicados)");
+
+            return nombreUsuarioFinal;
+        }
+
+        /// <summary>
+        /// Remueve acentos y caracteres especiales de un texto
+        /// </summary>
+        private string RemoverAcentos(string texto)
+        {
+            if (string.IsNullOrWhiteSpace(texto))
+                return string.Empty;
+
+            // Normalizar y remover acentos
+            var textoNormalizado = texto.Normalize(NormalizationForm.FormD);
+            var sb = new StringBuilder();
+
+            foreach (var c in textoNormalizado)
+            {
+                // Solo mantener letras y números
+                if (char.IsLetterOrDigit(c))
+                {
+                    sb.Append(c);
+                }
+            }
+
+            return sb.ToString().Normalize(NormalizationForm.FormC);
         }
 
         private string GenerarContraseñaSegura()
