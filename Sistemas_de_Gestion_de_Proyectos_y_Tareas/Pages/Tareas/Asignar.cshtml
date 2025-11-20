@@ -1,4 +1,4 @@
-@page "{id:int}"
+﻿@page "{id:int}"
 @model Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas.AsignarModel
 @{
     ViewData["Title"] = "Asignar Tarea a Usuarios";
@@ -198,7 +198,7 @@
      </div>
     }
 
-    <form method="post" id="assignForm">
+    <form method="post" id="asignarTareaForm" id="asignarTareaForm">
     <input type="hidden" asp-for="TareaId" />
         
     <div class="mb-3">
@@ -256,6 +256,8 @@
 
 @section Scripts {
     <script>
+     setupFormConfirmation('asignarTareaForm', 'confirmEdit');
+
             function toggleUser(element, userId) {
                     const checkbox = element.querySelector('input[type="checkbox"]');
                     checkbox.checked = !checkbox.checked;
@@ -317,3 +319,4 @@
              });
     </script>
 }
+

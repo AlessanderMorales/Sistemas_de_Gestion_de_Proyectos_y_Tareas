@@ -31,13 +31,12 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
         {
             _tareaApiClient = tareaApi;
             _usuarioApiClient = usuarioApi;
-            _proyectoApiClient = proyectoApi; // Asignación corregida
+            _proyectoApiClient = proyectoApi;
             _comentarioService = comentarioApi;
         }
 
         public List<ComentarioDTO> Comentarios { get; set; } = new();
         public int UsuarioActualId { get; set; }
-
 
         public async Task OnGetAsync()
         {
@@ -45,63 +44,41 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
             if (int.TryParse(idClaimValue, out var userId))
                 UsuarioActualId = userId;
 
-            // 1. Obtener todos los comentarios (inicialmente sin enriquecer, solo IDs)
-            var allComentarios = (await _comentarioService.GetAllAsync())?.ToList(); // <-- ¡CORREGIDO!
+            var allComentarios = (await _comentarioService.GetAllAsync())?.ToList();
             if (allComentarios == null || !allComentarios.Any())
             {
                 Comentarios = new List<ComentarioDTO>();
                 return;
             }
 
-            // 2. Obtener *todos* los usuarios y tareas básicas para el proceso de enriquecimiento
-            var allUsuarios = (await _usuarioApiClient.GetAllAsync())?.ToList(); // <-- ¡CORREGIDO!
+            var allUsuarios = (await _usuarioApiClient.GetAllAsync())?.ToList();
             if (allUsuarios == null || !allUsuarios.Any())
-            {
-                // Si no hay usuarios, inicializa allUsuarios como una lista vacía para evitar NREs más adelante
                 allUsuarios = new List<UsuarioDTO>();
-            }
 
-            var allTareas = (await _tareaApiClient.GetAllAsync())?.ToList(); // <-- ¡CORREGIDO!
+            var allTareas = (await _tareaApiClient.GetAllAsync())?.ToList();
             if (allTareas == null || !allTareas.Any())
-            {
-                // Si no hay tareas, inicializa allTareas como una lista vacía
                 allTareas = new List<TareaDTO>();
-            }
 
-            // 3. Enriquecer las tareas, esto incluye nombres de proyectos y usuarios asignados
-            // ¡¡CRÍTICO!! PASAR allUsuarios a EnriquecerTareas
             TareasEnriquecidas = await EnriquecerTareas(allTareas, allUsuarios);
-            if (!TareasEnriquecidas.Any())
-            {
-                // Manejar escenario: no se pudieron enriquecer tareas.
-            }
 
-            // ===================================================================
-            // 4. ¡¡CRÍTICO!! Iterar sobre CADA COMENTARIO Y ENRIQUECERLO
-            // ===================================================================
             foreach (var comentario in allComentarios)
             {
-                // Enriquecer el autor del comentario
-                if (comentario.IdUsuario > 0 && allUsuarios.Any()) // Verifica que allUsuarios no esté vacío
+                if (comentario.IdUsuario > 0 && allUsuarios.Any())
                 {
                     comentario.Usuario = allUsuarios.FirstOrDefault(u => u.Id == comentario.IdUsuario);
                 }
 
-                // Enriquecer la tarea relacionada al comentario
                 if (comentario.IdTarea.HasValue && comentario.IdTarea.Value > 0 && TareasEnriquecidas.Any())
                 {
                     comentario.Tarea = TareasEnriquecidas.FirstOrDefault(t => t.Id == comentario.IdTarea.Value);
                 }
 
-                // Enriquecer el destinatario directo del comentario (si aplica)
                 if (comentario.IdDestinatario.HasValue && comentario.IdDestinatario.Value > 0 && allUsuarios.Any())
                 {
                     comentario.Destinatario = allUsuarios.FirstOrDefault(u => u.Id == comentario.IdDestinatario.Value);
                 }
             }
 
-
-            // 5. Aplicar el filtro de roles DESPUÉS de enriquecer los comentarios
             if (User.IsInRole("Empleado"))
             {
                 allComentarios = allComentarios
@@ -118,8 +95,6 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
 
         public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
-            Console.WriteLine("=== ELIMINAR COMENTARIO ID = " + id);
-
             if (User.IsInRole("Empleado"))
             {
                 TempData["ErrorMessage"] = "No estás autorizado para eliminar comentarios.";
@@ -138,16 +113,11 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
             return RedirectToPage();
         }
 
-        // =========================================================================
-        // MÉTODO ENRIQUECERTAREAS MODIFICADO PARA RECIBIR allUsuarios
-        // =========================================================================
         private async Task<List<TareaExtendidaDTO>> EnriquecerTareas(List<TareaDTO> tareas, List<UsuarioDTO> allUsuarios)
         {
-            var proyectos = (await _proyectoApiClient.GetAllAsync())?.ToList(); // <-- ¡CORREGIDO!
+            var proyectos = (await _proyectoApiClient.GetAllAsync())?.ToList();
             if (proyectos == null || !proyectos.Any())
-            {
-                proyectos = new List<ProyectoDTO>(); // Inicializa como lista vacía si no hay proyectos
-            }
+                proyectos = new List<ProyectoDTO>();
 
             var lista = new List<TareaExtendidaDTO>();
 
@@ -166,13 +136,11 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
                     UltimaModificacion = t.UltimaModificacion
                 };
 
-                // nombre del proyecto
                 if (t.IdProyecto.HasValue && t.IdProyecto.Value > 0 && proyectos.Any())
                 {
                     tarea.ProyectoNombre = proyectos.FirstOrDefault(p => p.IdProyecto == t.IdProyecto.Value)?.Nombre;
                 }
 
-                // usuario asignado a la tarea
                 if (tarea.IdUsuarioAsignado.HasValue && tarea.IdUsuarioAsignado.Value > 0 && allUsuarios.Any())
                 {
                     var u = allUsuarios.FirstOrDefault(us => us.Id == tarea.IdUsuarioAsignado.Value);

@@ -27,14 +27,12 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            // 1. Obtener tarea desde API
-            var t = await _tareaApi.GetAsync(id);
+            var t = await _tareaApi.GetByIdAsync(id);
             if (t == null)
                 return RedirectToPage("Index");
 
             Tarea = t;
 
-            // 2. Obtener proyectos desde API
             var proyectos = await _proyectoApi.GetAllAsync();
             ProyectosDisponibles = proyectos
                 .Select(p => new SelectListItem
@@ -65,7 +63,6 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
                 return Page();
             }
 
-            // limpiar espacios
             Tarea.Titulo = Trim(Tarea.Titulo);
             Tarea.Descripcion = Trim(Tarea.Descripcion);
 

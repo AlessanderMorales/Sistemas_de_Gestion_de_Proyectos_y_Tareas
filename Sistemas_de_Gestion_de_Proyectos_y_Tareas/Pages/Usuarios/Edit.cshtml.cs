@@ -24,7 +24,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Usuarios
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            var usuario = await _api.GetById(id);
+            var usuario = await _api.GetByIdAsync(id);
 
             if (usuario == null)
             {
@@ -38,24 +38,12 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Usuarios
 
         public async Task<IActionResult> OnPostAsync()
         {
-            Console.WriteLine("=== POST EDITAR ===");
-            Console.WriteLine("Id recibido: " + Usuario.Id);
-            Console.WriteLine("Nombres: " + Usuario.Nombres);
-            Console.WriteLine("Email: " + Usuario.Email);
-            Console.WriteLine("====================");
-
             if (!ModelState.IsValid)
             {
-                Console.WriteLine("MODEL STATE INVALIDO");
-                foreach (var err in ModelState)
-                {
-                    foreach (var e in err.Value.Errors)
-                        Console.WriteLine($"ERROR {err.Key}: {e.ErrorMessage}");
-                }
                 return Page();
             }
 
-            bool ok = await _api.Update(Usuario);
+            bool ok = await _api.UpdateAsync(Usuario);
 
             if (!ok)
             {

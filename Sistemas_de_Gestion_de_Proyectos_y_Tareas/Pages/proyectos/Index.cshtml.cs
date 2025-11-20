@@ -21,7 +21,6 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Proyectos
 
         public async Task OnGetAsync()
         {
-            // Caso 1: El usuario es empleado → solo ver proyectos asignados
             if (User.IsInRole("Empleado"))
             {
                 var idClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -33,7 +32,6 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Proyectos
                 }
             }
 
-            // Caso 2: Jefe o Admin → ver todos
             Proyectos = await _proyectoApi.GetAllAsync();
         }
 
@@ -45,16 +43,14 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Proyectos
                 return RedirectToPage("./Index");
             }
 
-            var ok = await _proyectoApi.DeleteAsync(id);
+            var success = await _proyectoApi.DeleteAsync(id);
 
-            TempData[ok ? "SuccessMessage" : "ErrorMessage"] =
-                ok ? "Proyecto eliminado correctamente."
-                   : "Error al eliminar el proyecto.";
+            TempData[success ? "SuccessMessage" : "ErrorMessage"] =
+                success ? "Proyecto eliminado correctamente."
+                        : "Error al eliminar el proyecto.";
 
             return RedirectToPage("./Index");
         }
 
-        // (Opcional) Si decides mover reportes al API:
-        // public async Task<IActionResult> OnPostGenerarReporte() {...}
     }
 }

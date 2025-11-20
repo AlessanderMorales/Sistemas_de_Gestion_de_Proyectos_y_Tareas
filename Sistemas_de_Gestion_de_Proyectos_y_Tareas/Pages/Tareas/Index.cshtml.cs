@@ -28,7 +28,6 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
 
         public async Task OnGetAsync()
         {
-            // Si es empleado → obtener tareas asignadas
             if (User.IsInRole("Empleado"))
             {
                 var idClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -36,14 +35,11 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
                 if (int.TryParse(idClaim, out var usuarioId))
                 {
                     var tareas = await _tareaApi.GetByUsuarioAsync(usuarioId);
-
-                    // completar info extendida
                     Tareas = await EnriquecerTareas(tareas);
                     return;
                 }
             }
 
-            // Si es jefe o admin → todas las tareas
             var todas = await _tareaApi.GetAllAsync();
             Tareas = await EnriquecerTareas(todas);
         }
@@ -72,7 +68,6 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
         {
             var usuarios = await _usuarioApi.GetAllAsync();
             var proyectos = await _proyectoApi.GetAllAsync();
-
             var lista = new List<TareaExtendidaDTO>();
 
             foreach (var t in tareas)
@@ -84,16 +79,11 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
                     Descripcion = t.Descripcion,
                     Prioridad = t.Prioridad,
                     Status = t.Status,
-                    IdProyecto = t.IdProyecto
+                    IdProyecto = t.IdProyecto,
+                    ProyectoNombre = proyectos.FirstOrDefault(p => p.IdProyecto == t.IdProyecto)?.Nombre
                 };
 
-                // nombre del proyecto
-                tarea.ProyectoNombre =
-                    proyectos.FirstOrDefault(p => p.IdProyecto == t.IdProyecto)?.Nombre;
-
-                // usuario asignado
                 var asignados = await _tareaApi.GetUsuariosAsignadosAsync(t.Id);
-
                 if (asignados.Any())
                 {
                     var u = usuarios.FirstOrDefault(us => us.Id == asignados.First());

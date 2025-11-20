@@ -21,13 +21,12 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Usuarios
         [TempData] public string? MensajeExito { get; set; }
         [TempData] public string? MensajeError { get; set; }
 
-        // 🔥 Este es el ID que Razor enviará desde el formulario Delete
         [BindProperty]
         public int DeleteId { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var lista = await _api.GetAll();
+            var lista = await _api.GetAllAsync();
 
             if (lista == null)
             {
@@ -38,10 +37,9 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Usuarios
             return Page();
         }
 
-        // 🔥 Ya NO debe recibir parámetros en la firma
         public async Task<IActionResult> OnPostDeleteAsync()
         {
-            bool ok = await _api.Delete(DeleteId);
+            bool ok = await _api.DeleteAsync(DeleteId);
 
             if (!ok)
                 MensajeError = "Error al eliminar el usuario.";

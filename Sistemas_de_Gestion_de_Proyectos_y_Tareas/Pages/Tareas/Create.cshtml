@@ -29,13 +29,14 @@
         border-radius: 8px;
         padding: 0.75rem 1rem;
     }
-    .form-control:focus, .form-select:focus {
-        background-color: #4a4a50;
-        color: var(--text-primary);
-        border-color: var(--accent-orange);
-        box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
-    }
-    
+
+        .form-control:focus, .form-select:focus {
+            background-color: #4a4a50;
+            color: var(--text-primary);
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
+        }
+
     .form-label {
         color: var(--text-primary);
         font-weight: 500;
@@ -45,7 +46,7 @@
         color: #ff5252 !important;
         font-weight: 500;
     }
-    
+
     .form-container {
         max-width: 700px;
     }
@@ -59,10 +60,11 @@
         border-radius: 8px;
         transition: all 0.3s ease;
     }
-    .btn-volcanic-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
-    }
+
+        .btn-volcanic-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
+        }
 
     .btn-volcanic-secondary {
         background-color: transparent;
@@ -73,13 +75,13 @@
         border-radius: 8px;
         transition: all 0.3s ease;
     }
-    .btn-volcanic-secondary:hover {
-        background-color: #6c757d;
-        color: white;
-        border-color: #6c757d;
-    }
 
-    /* ✅ NUEVO: Estilos para buscador de proyectos */
+        .btn-volcanic-secondary:hover {
+            background-color: #6c757d;
+            color: white;
+            border-color: #6c757d;
+        }
+
     .search-select-container {
         position: relative;
     }
@@ -94,12 +96,12 @@
         transition: all 0.3s ease;
     }
 
-    .search-input:focus {
-        background-color: #4a4a50;
-        border-color: var(--accent-orange);
-        box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
-        outline: none;
-    }
+        .search-input:focus {
+            background-color: #4a4a50;
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
+            outline: none;
+        }
 
     .search-icon {
         position: absolute;
@@ -117,13 +119,13 @@
         border-bottom: 1px solid #4a4a50;
     }
 
-    .proyecto-option:hover {
-        background-color: #4a4a50;
-    }
+        .proyecto-option:hover {
+            background-color: #4a4a50;
+        }
 
-    .proyecto-option.hidden {
-        display: none;
-    }
+        .proyecto-option.hidden {
+            display: none;
+        }
 
     .no-results {
         padding: 1rem;
@@ -142,73 +144,67 @@
 
 <div class="row">
     <div class="col-md-8 form-container">
-        <form method="post">
+        <form method="post" id="createTareaForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-       <div class="mb-3">
-            <label asp-for="Tarea.Titulo" class="form-label"></label>
-            <input asp-for="Tarea.Titulo" class="form-control" placeholder="Ej: Diseñar la interfaz de usuario"/>
-              <span asp-validation-for="Tarea.Titulo" class="text-danger"></span>
-       </div>
-          <div class="mb-3">
-       <label asp-for="Tarea.Descripcion" class="form-label"></label>
-    <textarea asp-for="Tarea.Descripcion" class="form-control" rows="3" placeholder="Añade detalles específicos sobre la tarea..."></textarea>
-     <span asp-validation-for="Tarea.Descripcion" class="text-danger"></span>
-</div>
- <div class="mb-3">
-     <label asp-for="Tarea.Prioridad" class="form-label"></label>
-      <select asp-for="Tarea.Prioridad" class="form-select">
-      <option value="Alta">Alta</option>
-        <option value="Media" selected>Media</option>
-       <option value="Baja">Baja</option>
-        </select>
-                <span asp-validation-for="Tarea.Prioridad" class="text-danger"></span>
-     </div>
 
- <!-- ✅ NUEVO: Buscador de proyectos con autocompletado -->
+            <div class="mb-3">
+                <label asp-for="Tarea.Titulo" class="form-label"></label>
+                <input asp-for="Tarea.Titulo" class="form-control" placeholder="Ej: Diseñar la interfaz de usuario" />
+                <span asp-validation-for="Tarea.Titulo" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Tarea.Descripcion" class="form-label"></label>
+                <textarea asp-for="Tarea.Descripcion" class="form-control" rows="3" placeholder="Añade detalles específicos sobre la tarea..."></textarea>
+                <span asp-validation-for="Tarea.Descripcion" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Tarea.Prioridad" class="form-label"></label>
+                <select asp-for="Tarea.Prioridad" class="form-select">
+                    <option value="Alta">Alta</option>
+                    <option value="Media" selected>Media</option>
+                    <option value="Baja">Baja</option>
+                </select>
+                <span asp-validation-for="Tarea.Prioridad" class="text-danger"></span>
+            </div>
+
             <div class="mb-3">
                 <label class="form-label">Proyecto</label>
                 <div class="search-select-container">
-                    <input type="text"
-                           id="proyectoSearch"
-                           class="search-input"
-                           placeholder="🔍 Buscar proyecto..."
-                           autocomplete="off">
-                    <span class="search-icon">🔍</span>
+                    <input type="text" id="proyectoSearch" class="search-input" placeholder="Buscar proyecto..." autocomplete="off" />
+                    <span class="search-icon">??</span>
                 </div>
+
                 <div id="proyectosList" class="mt-2" style="max-height: 300px; overflow-y: auto; background-color: #3a3a40; border-radius: 8px;">
                     @foreach (var proyecto in Model.ProyectosDisponibles)
                     {
-                        <div class="proyecto-option"
-                             data-id="@proyecto.IdProyecto"
-                             data-nombre="@proyecto.Nombre.ToLower()"
-                             onclick="selectProyecto(@proyecto.IdProyecto, @Html.Raw(System.Text.Json.JsonSerializer.Serialize(proyecto.Nombre)))">
-                            @proyecto.Nombre
-                        </div>
+                    <div class="proyecto-option" data-id="@proyecto.IdProyecto" data-nombre="@proyecto.Nombre.ToLower()" onclick="selectProyecto(@proyecto.IdProyecto, @Html.Raw(System.Text.Json.JsonSerializer.Serialize(proyecto.Nombre)))">
+                        @proyecto.Nombre
+                    </div>
                     }
                 </div>
-          <div id="noResultsProyecto" class="no-results" style="display: none;">
-      No se encontraron proyectos
-  </div>
-       
-  <!-- Hidden field para enviar el ID del proyecto -->
-       <input type="hidden" asp-for="Tarea.IdProyecto" id="proyectoIdInput" />
-            <span asp-validation-for="Tarea.IdProyecto" class="text-danger"></span>
-         
-       <small class="text-muted d-block mt-2">
-       Proyecto seleccionado: <span id="selectedProyectoName" class="text-warning">Ninguno</span>
+
+                <div id="noResultsProyecto" class="no-results" style="display: none;">No se encontraron proyectos</div>
+
+                <input type="hidden" asp-for="Tarea.IdProyecto" id="proyectoIdInput" />
+                <span asp-validation-for="Tarea.IdProyecto" class="text-danger"></span>
+
+                <small class="text-muted d-block mt-2">
+                    Proyecto seleccionado: <span id="selectedProyectoName" class="text-warning">Ninguno</span>
                 </small>
             </div>
-    
-<input type="hidden" asp-for="Tarea.Status" value="SinIniciar" />
-            
-          <div class="alert alert-info">
-       <strong>Nota:</strong> La tarea se creará con estado "Sin Iniciar" por defecto.
-          </div>
-        
- <div class="mt-4">
+
+            <input type="hidden" asp-for="Tarea.Status" value="SinIniciar" />
+
+            <div class="alert alert-info">
+                <strong>Nota:</strong> La tarea se creará con estado "Sin Iniciar" por defecto.
+            </div>
+
+            <div class="mt-4">
                 <button type="submit" class="btn btn-volcanic-primary">Guardar Tarea</button>
-  <a asp-page="Index" class="btn btn-volcanic-secondary ms-2">Cancelar</a>
-   </div>
+                <a asp-page="Index" class="btn btn-volcanic-secondary ms-2">Cancelar</a>
+            </div>
         </form>
     </div>
 </div>
@@ -219,59 +215,49 @@
     }
 
     <script>
-      // ✅ Funcionalidad de búsqueda de proyectos con autocompletado
-     const searchInput = document.getElementById('proyectoSearch');
-     const proyectoOptions = document.querySelectorAll('.proyecto-option');
-  const noResults = document.getElementById('noResultsProyecto');
+        setupFormConfirmation('createTareaForm', 'confirmCreate');
+
+        const searchInput = document.getElementById('proyectoSearch');
+        const proyectoOptions = document.querySelectorAll('.proyecto-option');
+        const noResults = document.getElementById('noResultsProyecto');
         const proyectoIdInput = document.getElementById('proyectoIdInput');
         const selectedProyectoName = document.getElementById('selectedProyectoName');
 
-      // Buscar proyectos en tiempo real
-     searchInput.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase().trim();
-     let visibleCount = 0;
+        searchInput.addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase().trim();
+            let visibleCount = 0;
 
-          proyectoOptions.forEach(function(option) {
-         const nombre = option.getAttribute('data-nombre');
-        
-     if (nombre.includes(searchTerm) || searchTerm === '') {
-option.classList.remove('hidden');
-       visibleCount++;
-       } else {
-         option.classList.add('hidden');
-     }
-    });
+            proyectoOptions.forEach(function (option) {
+                const nombre = option.getAttribute('data-nombre');
+                if (nombre.includes(searchTerm) || searchTerm === '') {
+                    option.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    option.classList.add('hidden');
+                }
+            });
 
-       // Mostrar mensaje si no hay resultados
-        if (visibleCount === 0 && searchTerm !== '') {
-                noResults.style.display = 'block';
-            } else {
- noResults.style.display = 'none';
-        }
+            noResults.style.display = (visibleCount === 0 && searchTerm !== '') ? 'block' : 'none';
         });
 
-        // Seleccionar proyecto
-  function selectProyecto(id, nombre) {
+        function selectProyecto(id, nombre) {
             proyectoIdInput.value = id;
             selectedProyectoName.textContent = nombre;
-  searchInput.value = '';
- 
-   // Resaltar selección
-         proyectoOptions.forEach(opt => opt.classList.remove('selected-proyecto'));
-    document.querySelector(`[data-id="${id}"]`).classList.add('selected-proyecto');
-   
-            // Mostrar todos los proyectos
+
+            proyectoOptions.forEach(opt => opt.classList.remove('selected-proyecto'));
+            document.querySelector(`[data-id="${id}"]`).classList.add('selected-proyecto');
             proyectoOptions.forEach(opt => opt.classList.remove('hidden'));
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            if (proyectoOptions.length > 0) {
+                const firstProyecto = proyectoOptions[0];
+                const id = firstProyecto.getAttribute('data-id');
+                const nombre = firstProyecto.textContent.trim();
+                selectProyecto(id, nombre);
+            }
+        });
+    </script>
 }
 
- // Seleccionar el primer proyecto por defecto
-        document.addEventListener('DOMContentLoaded', function() {
-            if (proyectoOptions.length > 0) {
-         const firstProyecto = proyectoOptions[0];
-          const id = firstProyecto.getAttribute('data-id');
-            const nombre = firstProyecto.textContent.trim();
-       selectProyecto(id, nombre);
-         }
-        });
-</script>
-}
+

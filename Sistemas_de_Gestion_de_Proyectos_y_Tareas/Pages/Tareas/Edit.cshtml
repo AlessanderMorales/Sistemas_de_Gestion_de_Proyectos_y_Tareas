@@ -17,25 +17,28 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         font-weight: 700;
-        border-bottom: 2px solid rgba(255,255,255,0.1);
+        border-bottom: 2px solid rgba(255, 255, 255, 0.1);
         padding-bottom: 0.5rem;
         margin-bottom: 2rem;
     }
 
-    .form-control, .form-select {
+    .form-control,
+    .form-select {
         background-color: #3a3a40;
         color: var(--text-primary);
         border: 1px solid #555;
         border-radius: 8px;
         padding: 0.75rem 1rem;
     }
-    .form-control:focus, .form-select:focus {
-        background-color: #4a4a50;
-        color: var(--text-primary);
-        border-color: var(--accent-orange);
-        box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
-    }
-    
+
+        .form-control:focus,
+        .form-select:focus {
+            background-color: #4a4a50;
+            color: var(--text-primary);
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
+        }
+
     .form-label {
         color: var(--text-primary);
         font-weight: 500;
@@ -45,7 +48,7 @@
         color: #ff5252 !important;
         font-weight: 500;
     }
-    
+
     .form-container {
         max-width: 700px;
     }
@@ -59,10 +62,11 @@
         border-radius: 8px;
         transition: all 0.3s ease;
     }
-    .btn-volcanic-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
-    }
+
+        .btn-volcanic-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
+        }
 
     .btn-volcanic-secondary {
         background-color: transparent;
@@ -73,28 +77,27 @@
         border-radius: 8px;
         transition: all 0.3s ease;
     }
-    .btn-volcanic-secondary:hover {
-        background-color: #6c757d;
-        color: white;
-        border-color: #6c757d;
-    }
+
+        .btn-volcanic-secondary:hover {
+            background-color: #6c757d;
+            color: white;
+            border-color: #6c757d;
+        }
 </style>
 
 <h1 class="title-volcanic">@ViewData["Title"]</h1>
 
 <div class="row">
     <div class="col-md-8 form-container">
-        <form method="post" asp-route-id="@Model.Tarea.Id">
+        <form method="post" id="editTareaForm" asp-route-id="@Model.Tarea.Id">
 
             <div asp-validation-summary="All" class="text-danger"></div>
 
-            <!-- Campos ocultos necesarios -->
             <input type="hidden" asp-for="Tarea.Id" />
             <input type="hidden" asp-for="Tarea.UsuarioAsignadoNombre" />
             <input type="hidden" asp-for="Tarea.IdUsuarioAsignado" />
             <input type="hidden" asp-for="Tarea.Estado" />
             <input type="hidden" asp-for="Tarea.Status" />
-           
 
             <div class="mb-3">
                 <label asp-for="Tarea.Titulo"></label>
@@ -125,7 +128,6 @@
             <button type="submit" class="btn btn-volcanic-primary">Actualizar Tarea</button>
             <a asp-page="Index" class="btn btn-volcanic-secondary ms-2">Cancelar</a>
         </form>
-
     </div>
 </div>
 
@@ -134,3 +136,4 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+

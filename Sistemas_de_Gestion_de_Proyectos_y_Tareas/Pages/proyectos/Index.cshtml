@@ -34,32 +34,31 @@
         gap: 10px;
     }
 
-    /* ✅ NUEVO: Estilos para el buscador */
     .search-container {
-      margin-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
         max-width: 500px;
     }
 
     .search-input {
         background-color: #3a3a40;
-color: #f5f5f7;
-      border: 1px solid #555;
+        color: #f5f5f7;
+        border: 1px solid #555;
         border-radius: 8px;
         padding: 0.75rem 1rem;
         width: 100%;
         transition: all 0.3s ease;
     }
 
-    .search-input:focus {
-        background-color: #4a4a50;
-        border-color: var(--accent-orange);
-        box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
-        outline: none;
-    }
+        .search-input:focus {
+            background-color: #4a4a50;
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
+            outline: none;
+        }
 
-    .search-input::placeholder {
-        color: #888;
-    }
+        .search-input::placeholder {
+            color: #888;
+        }
 
     .table-volcanic {
         background-color: transparent;
@@ -70,28 +69,28 @@ color: #f5f5f7;
 
         .table-volcanic > :not(caption) > * > * {
             background-color: #3a3a40;
-      padding: 1.25rem;
+            padding: 1.25rem;
             border-width: 0;
-         vertical-align: middle;
+            vertical-align: middle;
         }
 
         .table-volcanic thead th {
             background-color: transparent;
-         color: var(--accent-gold);
- font-size: 0.9rem;
+            color: var(--accent-gold);
+            font-size: 0.9rem;
             text-transform: uppercase;
-    letter-spacing: 1px;
+            letter-spacing: 1px;
             border-bottom: 2px solid var(--accent-orange);
-   }
+        }
 
-     .table-volcanic tbody tr {
+        .table-volcanic tbody tr {
             transition: all 0.2s ease-in-out;
         }
 
-    .table-volcanic tbody tr:hover {
-      transform: scale(1.02);
-   background-color: #4a4a50;
-box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            .table-volcanic tbody tr:hover {
+                transform: scale(1.02);
+                background-color: #4a4a50;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.4);
                 cursor: pointer;
             }
 
@@ -112,10 +111,10 @@ box-shadow: 0 10px 20px rgba(0,0,0,0.4);
         color: white;
     }
 
- .btn-edit {
+    .btn-edit {
         background-color: var(--accent-edit);
         border-color: var(--accent-edit);
-    color: #212529;
+        color: #212529;
     }
 
     .btn-delete {
@@ -126,37 +125,37 @@ box-shadow: 0 10px 20px rgba(0,0,0,0.4);
 
     .btn-volcanic-primary {
         background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
-   border: none;
-    color: white;
+        border: none;
+        color: white;
         font-weight: bold;
         padding: 10px 20px;
         border-radius: 8px;
-  transition: all 0.3s ease;
+        transition: all 0.3s ease;
     }
 
         .btn-volcanic-primary:hover {
-         transform: translateY(-2px);
+            transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
         }
 
     .modal-content.volcanic-modal {
-      background-color: #2c2c31;
+        background-color: #2c2c31;
         color: #f5f5f7;
-  border: 1px solid rgba(255,255,255,0.2);
+        border: 1px solid rgba(255,255,255,0.2);
         border-radius: 15px;
     }
 
     .volcanic-modal .modal-header {
         border-bottom: 1px solid var(--accent-orange);
- }
+    }
 
     .volcanic-modal .modal-footer {
         border-top: 1px solid rgba(255,255,255,0.1);
     }
 
- .btn-volcanic-delete {
+    .btn-volcanic-delete {
         background-color: var(--accent-red);
-    border: none;
+        border: none;
         color: white;
         font-weight: bold;
         padding: 10px 20px;
@@ -164,92 +163,73 @@ box-shadow: 0 10px 20px rgba(0,0,0,0.4);
     }
 
     .btn-volcanic-secondary-modal {
-      background-color: #4a4a50;
-      border: none;
+        background-color: #4a4a50;
+        border: none;
         color: white;
         font-weight: bold;
         padding: 10px 20px;
         border-radius: 8px;
     }
 
-    /* ✅ NUEVO: Estilos para filas ocultas */
     .hidden-row {
         display: none;
     }
 
     .no-results {
-    text-align: center;
+        text-align: center;
         padding: 2rem;
         color: #888;
-     font-style: italic;
+        font-style: italic;
     }
 </style>
 
 <div class="header-actions">
     <h1 class="title-volcanic m-0">@ViewData["Title"]</h1>
-
     <div class="header-buttons">
- @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
-        {
-      <form method="post" asp-page-handler="GenerarPdfGeneral">
-    <button type="submit" class="btn btn-volcanic-primary">
-         📄 Descargar Reporte PDF
-      </button>
-         </form>
-
-          <form method="post" asp-page-handler="GenerarExcelGeneral">
-       <button type="submit" class="btn btn-volcanic-primary">
-         📥 Descargar Reporte Excel
-          </button>
-            </form>
-    }
-
         @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
-  {
-            <a asp-page="Create" class="btn btn-volcanic-primary">Crear Nuevo Proyecto</a>
+        {
+        <form method="post" asp-page-handler="GenerarPdfGeneral">
+            <button type="submit" class="btn btn-volcanic-primary">📄 Descargar Reporte PDF</button>
+        </form>
+        <form method="post" asp-page-handler="GenerarExcelGeneral">
+            <button type="submit" class="btn btn-volcanic-primary">📥 Descargar Reporte Excel</button>
+        </form>
+        <a asp-page="Create" class="btn btn-volcanic-primary">Crear Nuevo Proyecto</a>
         }
     </div>
 </div>
 
-<!-- ✅ NUEVO: Buscador con autocompletado -->
 <div class="search-container">
-    <input type="text" 
-           id="searchInput" 
-    class="search-input" 
-           placeholder="🔍 Buscar por nombre, descripción o fechas..." 
-     autocomplete="off">
+    <input type="text" id="searchInput" class="search-input" placeholder="🔍 Buscar por nombre, descripción o fechas..." autocomplete="off">
 </div>
 
 <table class="table table-volcanic" id="proyectosTable">
     <thead>
         <tr>
-  <th>Nombre</th>
-      <th>Descripción</th>
-        <th>Inicio</th>
-      <th>Fin</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Inicio</th>
+            <th>Fin</th>
             <th class="text-center">Acciones</th>
-   </tr>
+        </tr>
     </thead>
     <tbody id="proyectosTableBody">
-  @foreach (var item in Model.Proyectos)
-{
-    <tr class="proyecto-row" 
-        data-nombre="@item.Nombre.ToLower()" 
-        data-descripcion="@(item.Descripcion?.ToLower() ?? "")" 
-        data-inicio="@(item.FechaInicio.HasValue ? item.FechaInicio.Value.ToString("dd/MM/yyyy") : "")"
-        data-fin="@(item.FechaFin.HasValue ? item.FechaFin.Value.ToString("dd/MM/yyyy") : "")"
-    >
-        <td>@item.Nombre</td>
-        <td>@item.Descripcion</td>
-        <td>@(item.FechaInicio.HasValue ? item.FechaInicio.Value.ToShortDateString() : "")</td>
-        <td>@(item.FechaFin.HasValue ? item.FechaFin.Value.ToShortDateString() : "")</td>
-        <td class="text-center">
-            <a class="btn btn-sm btn-action btn-view" asp-page="./Mostrar" asp-route-id="@item.IdProyecto">Ver</a>
-
-            @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
-            {
+        @foreach (var item in Model.Proyectos)
+        {
+        <tr class="proyecto-row"
+            data-nombre="@item.Nombre.ToLower()"
+            data-descripcion="@(item.Descripcion?.ToLower() ?? "")"
+            data-inicio="@(item.FechaInicio.HasValue ? item.FechaInicio.Value.ToString("dd/MM/yyyy") : "")"
+            data-fin="@(item.FechaFin.HasValue ? item.FechaFin.Value.ToString("dd/MM/yyyy") : "")">
+            <td>@item.Nombre</td>
+            <td>@item.Descripcion</td>
+            <td>@(item.FechaInicio.HasValue ? item.FechaInicio.Value.ToShortDateString() : "")</td>
+            <td>@(item.FechaFin.HasValue ? item.FechaFin.Value.ToShortDateString() : "")</td>
+            <td class="text-center">
+                <a class="btn btn-sm btn-action btn-view" asp-page="./Mostrar" asp-route-id="@item.IdProyecto">Ver</a>
+                @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
+                    {
                 <a class="btn btn-sm btn-action btn-edit" asp-page="./Edit" asp-route-id="@item.IdProyecto">Editar</a>
-
                 <form method="post" asp-route-id="@item.IdProyecto" style="display:inline" id="deleteForm-@item.IdProyecto">
                     <button type="button" class="btn btn-sm btn-action btn-delete"
                             data-bs-toggle="modal"
@@ -258,93 +238,58 @@ box-shadow: 0 10px 20px rgba(0,0,0,0.4);
                         Eliminar
                     </button>
                 </form>
-            }
-        </td>
-    </tr>
-}
+                    }
+            </td>
+        </tr>
+        }
     </tbody>
 </table>
 
-<!-- ✅ NUEVO: Mensaje cuando no hay resultados -->
-<div id="noResults" class="no-results hidden-row">
-    No se encontraron proyectos que coincidan con tu búsqueda.
-</div>
+<div id="noResults" class="no-results hidden-row">No se encontraron proyectos que coincidan con tu búsqueda.</div>
 
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content volcanic-modal">
-     <div class="modal-header">
-                <h5 class="modal-title" id="modalLabel">Confirmar Eliminación</h5>
-      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
- </div>
-     <div class="modal-body">
-     <p>¿Estás seguro de que deseas eliminar este proyecto? Esta acción no se puede deshacer.</p>
- </div>
-     <div class="modal-footer">
-       <button type="button" class="btn btn-volcanic-secondary-modal" data-bs-dismiss="modal">Cancelar</button>
-              <button type="button" class="btn btn-volcanic-delete" id="confirmDeleteButton">Sí, Eliminar</button>
-   </div>
-  </div>
-    </div>
+<!-- Modal de eliminación en _Modals.cshtml -->
 </div>
 
 @section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-  var confirmDeleteModal = document.getElementById('confirmDeleteModal');
-            var confirmDeleteButton = document.getElementById('confirmDeleteButton');
- var projectIdToDelete;
+            // Script de modal movido a modals.js
 
-    confirmDeleteModal.addEventListener('show.bs.modal', function (event) {
-                var button = event.relatedTarget;
-    projectIdToDelete = button.getAttribute('data-project-id');
-            });
-
-            confirmDeleteButton.addEventListener('click', function () {
-      if (projectIdToDelete) {
-     var form = document.getElementById('deleteForm-' + projectIdToDelete);
-                    if (form) {
-           form.submit();
-         }
-    }
-  });
-
-       // ✅ NUEVO: Funcionalidad de búsqueda con autocompletado
+            // Funcionalidad de búsqueda con autocompletado
             const searchInput = document.getElementById('searchInput');
- const proyectoRows = document.querySelectorAll('.proyecto-row');
-        const noResults = document.getElementById('noResults');
+            const proyectoRows = document.querySelectorAll('.proyecto-row');
+            const noResults = document.getElementById('noResults');
 
-            searchInput.addEventListener('input', function() {
-    const searchTerm = this.value.toLowerCase().trim();
-       let visibleCount = 0;
+            searchInput.addEventListener('input', function () {
+                const searchTerm = this.value.toLowerCase().trim();
+                let visibleCount = 0;
 
-     proyectoRows.forEach(function(row) {
-       const nombre = row.getAttribute('data-nombre');
-    const descripcion = row.getAttribute('data-descripcion');
-             const inicio = row.getAttribute('data-inicio');
-    const fin = row.getAttribute('data-fin');
+                proyectoRows.forEach(function (row) {
+                    const nombre = row.getAttribute('data-nombre');
+                    const descripcion = row.getAttribute('data-descripcion');
+                    const inicio = row.getAttribute('data-inicio');
+                    const fin = row.getAttribute('data-fin');
 
-          // Buscar en todos los campos
-        const matches = nombre.includes(searchTerm) || 
-                   descripcion.includes(searchTerm) || 
-               inicio.includes(searchTerm) || 
-       fin.includes(searchTerm);
+                    const matches = nombre.includes(searchTerm) ||
+                        descripcion.includes(searchTerm) ||
+                        inicio.includes(searchTerm) ||
+                        fin.includes(searchTerm);
 
-     if (matches || searchTerm === '') {
-     row.classList.remove('hidden-row');
-    visibleCount++;
-             } else {
-        row.classList.add('hidden-row');
-           }
-      });
+                    if (matches || searchTerm === '') {
+                        row.classList.remove('hidden-row');
+                        visibleCount++;
+                    } else {
+                        row.classList.add('hidden-row');
+                    }
+                });
 
-  // Mostrar mensaje si no hay resultados
                 if (visibleCount === 0 && searchTerm !== '') {
-              noResults.classList.remove('hidden-row');
-       } else {
-  noResults.classList.add('hidden-row');
-   }
-       });
+                    noResults.classList.remove('hidden-row');
+                } else {
+                    noResults.classList.add('hidden-row');
+                }
+            });
         });
     </script>
 }
+

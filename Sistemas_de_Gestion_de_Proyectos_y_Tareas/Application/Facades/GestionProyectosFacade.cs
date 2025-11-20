@@ -21,16 +21,13 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Application.Facades
             _usuarioApi = usuarioApi;
         }
 
-        // ---------------------------------------------------------
-        // 📌 ESTADÍSTICAS GENERALES
-        // ---------------------------------------------------------
         public async Task<EstadisticasGeneralesViewModel> ObtenerEstadisticasGeneralesAsync()
         {
             var proyectos = await _proyectoApi.GetAllAsync();
             var tareas = await _tareaApi.GetAllAsync();
-            var usuarios = await _usuarioApi.GetAllAsync();
-
-            usuarios = usuarios.Where(u => u.Rol != "SuperAdmin").ToList();
+            var usuarios = (await _usuarioApi.GetAllAsync())
+                            .Where(u => u.Rol != "SuperAdmin")
+                            .ToList();
 
             return new EstadisticasGeneralesViewModel
             {
@@ -46,9 +43,6 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Application.Facades
             };
         }
 
-        // ---------------------------------------------------------
-        // 📌 DASHBOARD DE USUARIO
-        // ---------------------------------------------------------
         public async Task<DashboardUsuarioViewModel?> ObtenerDashboardUsuarioAsync(int idUsuario)
         {
             var usuario = await _usuarioApi.GetByIdAsync(idUsuario);
@@ -67,14 +61,10 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Application.Facades
                 TareasCompletadas = tareas.Count(t => t.Status == "Completada"),
                 TareasEnProgreso = tareas.Count(t => t.Status == "EnProgreso"),
                 TareasPendientes = tareas.Count(t => t.Status == "SinIniciar"),
-                ProyectosActivos = proyectos.Count(p => p.Estado == 1),
+                ProyectosActivos = proyectos.Count(p => p.Estado == 1)
             };
         }
     }
-
-    // ======================================================
-    // VIEWMODELS LOS MISMOS QUE USABAS
-    // ======================================================
 
     public class EstadisticasGeneralesViewModel
     {
@@ -91,7 +81,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Application.Facades
 
     public class DashboardUsuarioViewModel
     {
-        public UsuarioDTO Usuario { get; set; }
+        public UsuarioDTO Usuario { get; set; } = default!;
         public List<ProyectoDTO> Proyectos { get; set; } = new();
         public int TotalProyectos { get; set; }
         public List<TareaDTO> Tareas { get; set; } = new();

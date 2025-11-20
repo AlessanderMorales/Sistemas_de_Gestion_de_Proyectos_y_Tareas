@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Comentarios;   // Usa tu namespace real
+using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Comentarios;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.ApiClients;
-using System.Text.RegularExpressions;
 
 namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
 {
@@ -34,12 +33,10 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
-            {
                 return Page();
-            }
+
             int id = Comentario.IdComentario;
 
-            // Obtener datos actuales
             var original = await _comentarioApi.GetByIdAsync(id);
 
             Comentario.IdUsuario = original.IdUsuario;
@@ -48,11 +45,9 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
             Comentario.Estado = original.Estado;
             Comentario.Fecha = original.Fecha;
 
-            var ok = await _comentarioApi.UpdateAsync(id, Comentario);
+            var result = await _comentarioApi.UpdateAsync(id, Comentario);
 
-            Console.WriteLine(">>> PUT ejecutado? " + ok);
-
-            if (!ok)
+            if (!result)
             {
                 TempData["ErrorMessage"] = "No se pudo actualizar el comentario.";
                 return Page();

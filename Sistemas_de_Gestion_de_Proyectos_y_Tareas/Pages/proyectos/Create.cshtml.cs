@@ -37,7 +37,6 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Proyectos
 
             try
             {
-                // Trims automáticos
                 if (!string.IsNullOrEmpty(Proyecto.Nombre))
                     Proyecto.Nombre = TrimExtraSpaces(Proyecto.Nombre);
 
@@ -65,9 +64,8 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Proyectos
         private string TrimExtraSpaces(string input)
         {
             if (string.IsNullOrEmpty(input)) return input;
-
             input = input.Trim();
-            return System.Text.RegularExpressions.Regex.Replace(input, @"\\s+", " ");
+            return System.Text.RegularExpressions.Regex.Replace(input, @"\s+", " ");
         }
     }
 }
