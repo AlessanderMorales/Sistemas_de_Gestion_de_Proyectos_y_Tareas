@@ -336,21 +336,28 @@
             destinatarioIdInput.value = id;
             selectedDestinatarioName.textContent = nombre;
             destinatarioSearch.value = nombre; 
+            
+            // Resaltar selección
             const options = document.querySelectorAll('.destinatario-option');
             options.forEach(opt => opt.classList.remove('selected'));
             const selectedOption = document.querySelector(`.destinatario-option[data-id="${id}"]`);
             if (selectedOption) {
                 selectedOption.classList.add('selected');
             }
+
+            // Ocultar la lista de destinatarios después de la selección
             destinatariosList.style.display = 'none';
         }
 
+        // Función para actualizar destinatarios según la tarea (¡CRÍTICO!)
         function actualizarDestinatarios() {
             var tareaId = tareaIdInput.value;
+            
+            // Limpiar opciones actuales y resetear la búsqueda
             destinatariosList.innerHTML = '';
             destinatarioSearch.value = '';
             selectedDestinatarioName.textContent = 'Ninguno';
-            destinatarioIdInput.value = ''; 
+            destinatarioIdInput.value = ''; // Resetear el ID oculto
 
             if (!tareaId || !tareaUsuariosMap[tareaId]) {
                 destinatariosList.innerHTML = '<div class="no-results">No hay usuarios disponibles para esta tarea</div>';
@@ -388,21 +395,49 @@
                 
                 destinatariosList.appendChild(div);
             });
+
+            // Después de agregar todos los usuarios, asegúrate de que la lista sea visible
             destinatariosList.style.display = 'block';
             noResultsDestinatario.style.display = 'none';
+
+            // Opcional: Si quieres que siempre haya un destinatario seleccionado por defecto al cargar la tarea,
+            // y no solo al hacer clic, puedes añadir esta lógica AQUÍ.
+            // Por ejemplo, seleccionar el primero:
+            // if (usuarios.length > 0 && destinatarioIdInput.value === '') {
+            //     var firstUser = usuarios[0];
+            //     var firstName = firstUser.Nombres + ' ' + firstUser.PrimerApellido;
+            //     var firstEtiquetaRol = '';
+            //     if (firstUser.Rol === 'JefeDeProyecto') { firstEtiquetaRol = ' (Jefe de Proyecto)'; }
+            //     else if (firstUser.Rol === 'Empleado') { firstEtiquetaRol = ' (Empleado)'; }
+            //     selectDestinatario(firstUser.Id, firstName + firstEtiquetaRol);
+            // }
         }
+
+        // Ejecutar al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
-            if (tareaOptions.length > 0) {
-                const firstTarea = tareaOptions[0];
-                const id = firstTarea.getAttribute('data-id');
-                const titulo = firstTarea.textContent.trim();
-                selectTarea(id, titulo); 
+            // Inicializar la lista de tareas y sus destinatarios
+            if (!tareaId || !tareaUsuariosMap[tareaId]) {
+                destinatariosList.innerHTML = '<div class="no-results">No hay usuarios disponibles para esta tarea</div>';
+                destinatariosList.style.display = 'block';
+                noResultsDestinatario.style.display = 'none';
+
+                     // 🔥 MUY IMPORTANTE – RESET TOTAL
+                destinatarioSearch.value = '';
+                destinatarioIdInput.value = '';
+                selectedDestinatarioName.textContent = 'Ninguno';
+
+                return;
             } else {
+                // Si no hay tareas, limpiar y mostrar mensaje en destinatarios
                 destinatariosList.innerHTML = '<div class="no-results">Selecciona una tarea primero</div>';
                 destinatariosList.style.display = 'block';
             }
+
+            // Ocultar las listas inicialmente (se mostrarán al hacer focus)
             tareasList.style.display = 'none';
             destinatariosList.style.display = 'none';
+            
+            // Eventos para mostrar/ocultar listas al enfocar/desenfocar los buscadores
             tareaSearch.addEventListener('focus', function() {
                 tareasList.style.display = 'block';
                 noResultsTarea.style.display = 'none';

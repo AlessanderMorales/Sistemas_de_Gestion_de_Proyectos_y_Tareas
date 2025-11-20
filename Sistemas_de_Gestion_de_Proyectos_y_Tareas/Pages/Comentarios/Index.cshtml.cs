@@ -6,9 +6,6 @@ using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Comentarios;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Proyectos;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Tareas;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Usuarios;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 
 namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
@@ -19,9 +16,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
         private readonly TareaApiClient _tareaApiClient;
         private readonly UsuarioApiClient _usuarioApiClient;
         private readonly ProyectoApiClient _proyectoApiClient;
-        private readonly ComentarioApiClient _comentarioService;
-
-        public List<TareaExtendidaDTO> TareasEnriquecidas { get; set; } = new();
+        private readonly ComentarioApiClient _comentarioApi;
 
         public ComentariosIndexModel(
             TareaApiClient tareaApi,
@@ -32,7 +27,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
             _tareaApiClient = tareaApi;
             _usuarioApiClient = usuarioApi;
             _proyectoApiClient = proyectoApi;
-            _comentarioService = comentarioApi;
+            _comentarioApi = comentarioApi;
         }
 
         public List<ComentarioDTO> Comentarios { get; set; } = new();
@@ -40,59 +35,81 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
 
         public async Task OnGetAsync()
         {
+            // 1. Obtener ID del usuario autenticado
             var idClaimValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (int.TryParse(idClaimValue, out var userId))
-                UsuarioActualId = userId;
+            int.TryParse(idClaimValue, out int userId);
+            UsuarioActualId = userId;
 
-            var allComentarios = (await _comentarioService.GetAllAsync())?.ToList();
-            if (allComentarios == null || !allComentarios.Any())
+            // 2. Obtener datos base
+            var comentarios = (await _comentarioApi.GetAllAsync())?.ToList() ?? new();
+            var usuarios = (await _usuarioApiClient.GetAllAsync())?.ToList() ?? new();
+            var tareas = (await _tareaApiClient.GetAllAsync())?.ToList() ?? new();
+            var proyectos = (await _proyectoApiClient.GetAllAsync())?.ToList() ?? new();
+
+            // 3. Enriquecer comentarios
+            foreach (var c in comentarios)
             {
-                Comentarios = new List<ComentarioDTO>();
-                return;
+                // Autor
+                c.Usuario = usuarios.FirstOrDefault(u => u.Id == c.IdUsuario);
+
+                // Tarea asociada
+                if (c.IdTarea.HasValue)
+                {
+                    var tarea = tareas.FirstOrDefault(t => t.Id == c.IdTarea.Value);
+                    if (tarea != null)
+                    {
+                        c.Tarea = new TareaExtendidaDTO
+                        {
+                            Id = tarea.Id,
+                            Titulo = tarea.Titulo,
+                            Descripcion = tarea.Descripcion,
+                            Prioridad = tarea.Prioridad,
+                            Status = tarea.Status,
+                            IdProyecto = tarea.IdProyecto,
+                            IdUsuarioAsignado = tarea.IdUsuarioAsignado,
+                            FechaRegistro = tarea.FechaRegistro,
+                            UltimaModificacion = tarea.UltimaModificacion
+                        };
+
+                        // Proyecto
+                        if (tarea.IdProyecto.HasValue)
+                        {
+                            c.Tarea.ProyectoNombre = proyectos
+                                .FirstOrDefault(p => p.IdProyecto == tarea.IdProyecto)?.Nombre;
+                        }
+
+                        // Usuario asignado
+                        if (tarea.IdUsuarioAsignado.HasValue)
+                        {
+                            var u = usuarios.FirstOrDefault(x => x.Id == tarea.IdUsuarioAsignado.Value);
+                            c.Tarea.UsuarioAsignadoNombre = $"{u?.Nombres} {u?.PrimerApellido}";
+                        }
+                    }
+                }
+
+                // Destinatario
+                if (c.IdDestinatario.HasValue)
+                {
+                    c.Destinatario = usuarios.FirstOrDefault(u => u.Id == c.IdDestinatario.Value);
+                }
             }
 
-            var allUsuarios = (await _usuarioApiClient.GetAllAsync())?.ToList();
-            if (allUsuarios == null || !allUsuarios.Any())
-                allUsuarios = new List<UsuarioDTO>();
-
-            var allTareas = (await _tareaApiClient.GetAllAsync())?.ToList();
-            if (allTareas == null || !allTareas.Any())
-                allTareas = new List<TareaDTO>();
-
-            TareasEnriquecidas = await EnriquecerTareas(allTareas, allUsuarios);
-
-            foreach (var comentario in allComentarios)
-            {
-                if (comentario.IdUsuario > 0 && allUsuarios.Any())
-                {
-                    comentario.Usuario = allUsuarios.FirstOrDefault(u => u.Id == comentario.IdUsuario);
-                }
-
-                if (comentario.IdTarea.HasValue && comentario.IdTarea.Value > 0 && TareasEnriquecidas.Any())
-                {
-                    comentario.Tarea = TareasEnriquecidas.FirstOrDefault(t => t.Id == comentario.IdTarea.Value);
-                }
-
-                if (comentario.IdDestinatario.HasValue && comentario.IdDestinatario.Value > 0 && allUsuarios.Any())
-                {
-                    comentario.Destinatario = allUsuarios.FirstOrDefault(u => u.Id == comentario.IdDestinatario.Value);
-                }
-            }
-
+            // 4. Filtrar según rol
             if (User.IsInRole("Empleado"))
             {
-                allComentarios = allComentarios
+                comentarios = comentarios
                     .Where(c =>
                         c.IdUsuario == UsuarioActualId ||
                         (c.IdDestinatario.HasValue && c.IdDestinatario.Value == UsuarioActualId) ||
-                        (c.Tarea != null && c.Tarea.IdUsuarioAsignado.HasValue && c.Tarea.IdUsuarioAsignado.Value == UsuarioActualId)
+                        (c.Tarea != null && c.Tarea.IdUsuarioAsignado == UsuarioActualId)
                     )
                     .ToList();
             }
 
-            Comentarios = allComentarios;
+            Comentarios = comentarios;
         }
 
+        // DELETE
         public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
             if (User.IsInRole("Empleado"))
@@ -101,7 +118,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
                 return RedirectToPage();
             }
 
-            var ok = await _comentarioService.DeleteAsync(id);
+            var ok = await _comentarioApi.DeleteAsync(id);
 
             if (!ok)
             {
@@ -113,11 +130,12 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
             return RedirectToPage();
         }
 
+        // ================================================================
+        // MÉTODO EXTRA (DE LA RAMA JWT) → LO CONSERVO POR SI ES ÚTIL
+        // ================================================================
         private async Task<List<TareaExtendidaDTO>> EnriquecerTareas(List<TareaDTO> tareas, List<UsuarioDTO> allUsuarios)
         {
-            var proyectos = (await _proyectoApiClient.GetAllAsync())?.ToList();
-            if (proyectos == null || !proyectos.Any())
-                proyectos = new List<ProyectoDTO>();
+            var proyectos = (await _proyectoApiClient.GetAllAsync())?.ToList() ?? new();
 
             var lista = new List<TareaExtendidaDTO>();
 
@@ -136,14 +154,15 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
                     UltimaModificacion = t.UltimaModificacion
                 };
 
-                if (t.IdProyecto.HasValue && t.IdProyecto.Value > 0 && proyectos.Any())
+                if (t.IdProyecto.HasValue)
                 {
-                    tarea.ProyectoNombre = proyectos.FirstOrDefault(p => p.IdProyecto == t.IdProyecto.Value)?.Nombre;
+                    tarea.ProyectoNombre = proyectos
+                        .FirstOrDefault(p => p.IdProyecto == t.IdProyecto.Value)?.Nombre;
                 }
 
-                if (tarea.IdUsuarioAsignado.HasValue && tarea.IdUsuarioAsignado.Value > 0 && allUsuarios.Any())
+                if (t.IdUsuarioAsignado.HasValue)
                 {
-                    var u = allUsuarios.FirstOrDefault(us => us.Id == tarea.IdUsuarioAsignado.Value);
+                    var u = allUsuarios.FirstOrDefault(us => us.Id == t.IdUsuarioAsignado.Value);
                     tarea.UsuarioAsignadoNombre = $"{u?.Nombres} {u?.PrimerApellido}";
                 }
 
