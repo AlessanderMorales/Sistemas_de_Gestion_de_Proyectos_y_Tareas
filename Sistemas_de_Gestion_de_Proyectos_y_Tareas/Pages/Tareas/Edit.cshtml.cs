@@ -50,6 +50,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
         {
             if (!ModelState.IsValid)
             {
+                TempData["ErrorMessage"] = "❌ Por favor corrija los errores en el formulario antes de continuar.";
                 var proyectos = await _proyectoApi.GetAllAsync();
                 ProyectosDisponibles = proyectos
                     .Select(p => new SelectListItem
@@ -59,23 +60,74 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
                         Selected = (p.IdProyecto == Tarea.IdProyecto)
                     })
                     .ToList();
-
                 return Page();
             }
 
-            Tarea.Titulo = Trim(Tarea.Titulo);
-            Tarea.Descripcion = Trim(Tarea.Descripcion);
-
-            var ok = await _tareaApi.UpdateAsync(Tarea.Id, Tarea);
-
-            if (!ok)
+            try
             {
-                TempData["ErrorMessage"] = "Error al actualizar la tarea.";
+                Tarea.Titulo = Trim(Tarea.Titulo);
+                Tarea.Descripcion = Trim(Tarea.Descripcion);
+
+                // Validar título
+                if (!string.IsNullOrEmpty(Tarea.Titulo) && ContienePatroneseligrosos(Tarea.Titulo))
+                {
+                    ModelState.AddModelError("Tarea.Titulo", "⚠️ El título contiene caracteres no permitidos.");
+                    TempData["ErrorMessage"] = "El título contiene caracteres o patrones no permitidos.";
+                    var proyectos = await _proyectoApi.GetAllAsync();
+                    ProyectosDisponibles = proyectos
+                        .Select(p => new SelectListItem
+                        {
+                            Value = p.IdProyecto.ToString(),
+                            Text = p.Nombre,
+                            Selected = (p.IdProyecto == Tarea.IdProyecto)
+                        })
+                        .ToList();
+                    return Page();
+                }
+
+                // Validar descripción
+                if (!string.IsNullOrEmpty(Tarea.Descripcion) && ContienePatroneseligrosos(Tarea.Descripcion))
+                {
+                    ModelState.AddModelError("Tarea.Descripcion", "⚠️ La descripción contiene caracteres no permitidos.");
+                    TempData["ErrorMessage"] = "La descripción contiene caracteres o patrones no permitidos.";
+                    var proyectos = await _proyectoApi.GetAllAsync();
+                    ProyectosDisponibles = proyectos
+                        .Select(p => new SelectListItem
+                        {
+                            Value = p.IdProyecto.ToString(),
+                            Text = p.Nombre,
+                            Selected = (p.IdProyecto == Tarea.IdProyecto)
+                        })
+                        .ToList();
+                    return Page();
+                }
+
+                var ok = await _tareaApi.UpdateAsync(Tarea.Id, Tarea);
+
+                if (!ok)
+                {
+                    TempData["ErrorMessage"] = "❌ Error al actualizar la tarea.";
+                    return RedirectToPage("Index");
+                }
+
+                TempData["SuccessMessage"] = "✅ Tarea actualizada correctamente.";
                 return RedirectToPage("Index");
             }
+            catch (Exception ex)
+            {
+                var errorMsg = ex.Message.ToLower();
 
-            TempData["SuccessMessage"] = "Tarea actualizada correctamente.";
-            return RedirectToPage("Index");
+                if (errorMsg.Contains("caracteres") || errorMsg.Contains("patrones") || errorMsg.Contains("sql"))
+                {
+                    TempData["ErrorMessage"] = $"⚠️ Validación de seguridad: {ex.Message}";
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = $"❌ Error al actualizar la tarea: {ex.Message}";
+                }
+
+                return RedirectToPage("Index");
+            }
         }
 
         private string Trim(string input)
@@ -85,6 +137,34 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
 
             input = input.Trim();
             return System.Text.RegularExpressions.Regex.Replace(input, @"\s+", " ");
+        }
+
+        private bool ContienePatroneseligrosos(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input)) return false;
+            
+            var patronesPeligrosos = new[]
+            {
+                @"(\bOR\b|\bAND\b).*=",
+                @"['""`;]|--|\/\*|\*\/",
+                @"\b(EXEC|EXECUTE|DROP|DELETE|UPDATE|INSERT|SELECT.*FROM|UNION.*SELECT)\b",
+                @"<script",
+                @"javascript:",
+                @"onerror\s*=",
+                @"onload\s*=",
+                @"<iframe",
+                @"[$%^&*(){}[\]\\|]"  // Caracteres especiales peligrosos
+            };
+
+            foreach (var patron in patronesPeligrosos)
+            {
+                if (System.Text.RegularExpressions.Regex.IsMatch(input, patron, System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

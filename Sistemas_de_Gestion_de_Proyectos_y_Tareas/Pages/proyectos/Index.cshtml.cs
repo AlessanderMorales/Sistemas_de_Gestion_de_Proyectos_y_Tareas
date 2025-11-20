@@ -37,11 +37,15 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Proyectos
                 if (int.TryParse(idClaim, out var usuarioId))
                 {
                     Proyectos = await _proyectoApi.GetByUsuarioAsync(usuarioId);
+                    // Ordenar por IdProyecto descendente (más nuevos primero)
+                    Proyectos = Proyectos.OrderByDescending(p => p.IdProyecto).ToList();
                     return;
                 }
             }
 
             Proyectos = await _proyectoApi.GetAllAsync();
+            // Ordenar por IdProyecto descendente (más nuevos primero)
+            Proyectos = Proyectos.OrderByDescending(p => p.IdProyecto).ToList();
         }
 
         public async Task<IActionResult> OnPostAsync(int id)

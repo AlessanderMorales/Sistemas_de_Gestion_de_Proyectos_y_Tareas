@@ -95,6 +95,25 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
 
             UsuarioActualId = id;
 
+            // Validar contenido del comentario
+            if (string.IsNullOrWhiteSpace(Comentario.Contenido))
+            {
+                TempData["ErrorMessage"] = "❌ El contenido del comentario es requerido.";
+                await OnGetAsync();
+                return Page();
+            }
+
+            // Validar y sanitizar contenido
+            Comentario.Contenido = TrimExtraSpaces(Comentario.Contenido);
+
+            if (ContienePatroneseligrosos(Comentario.Contenido))
+            {
+                ModelState.AddModelError("Comentario.Contenido", "⚠️ El comentario contiene caracteres no permitidos.");
+                TempData["ErrorMessage"] = "El comentario contiene caracteres o patrones no permitidos (evite: <script>, SQL, etc.).";
+                await OnGetAsync();
+                return Page();
+            }
+
             if (!Comentario.IdTarea.HasValue || Comentario.IdTarea.Value <= 0)
             {
                 TempData["ErrorMessage"] = "Debes seleccionar una tarea válida.";
@@ -144,18 +163,71 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
             Comentario.Estado = 1;
             Comentario.Fecha = DateTime.Now;
 
-            var ok = await _comentarioApi.CreateAsync(Comentario);
-
-            if (!ok)
+            try
             {
-                TempData["ErrorMessage"] = "No se pudo guardar el comentario.";
+                var ok = await _comentarioApi.CreateAsync(Comentario);
+
+                if (!ok)
+                {
+                    TempData["ErrorMessage"] = "No se pudo guardar el comentario.";
+                    await OnGetAsync();
+                    return Page();
+                }
+
+                TempData["MensajeExito"] = $"✅ Comentario enviado a {destinatario.Nombres} {destinatario.PrimerApellido}.";
+                return RedirectToPage("Index");
+            }
+            catch (Exception ex)
+            {
+                var errorMsg = ex.Message.ToLower();
+
+                if (errorMsg.Contains("caracteres") || errorMsg.Contains("patrones") || errorMsg.Contains("sql"))
+                {
+                    TempData["ErrorMessage"] = $"⚠️ Validación de seguridad: {ex.Message}";
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = $"❌ Error al crear el comentario: {ex.Message}";
+                }
+
                 await OnGetAsync();
                 return Page();
             }
+        }
 
-            TempData["MensajeExito"] = $"Comentario enviado a {destinatario.Nombres} {destinatario.PrimerApellido}.";
+        private string TrimExtraSpaces(string input)
+        {
+            if (string.IsNullOrEmpty(input)) return input;
+            input = input.Trim();
+            return System.Text.RegularExpressions.Regex.Replace(input, @"\s+", " ");
+        }
 
-            return RedirectToPage("Index");
+        private bool ContienePatroneseligrosos(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input)) return false;
+
+            var patronesPeligrosos = new[]
+            {
+                @"(\bOR\b|\bAND\b).*=",
+                @"['""`;]|--|\/\*|\*\/",
+                @"\b(EXEC|EXECUTE|DROP|DELETE|UPDATE|INSERT|SELECT.*FROM|UNION.*SELECT)\b",
+                @"<script",
+                @"javascript:",
+                @"onerror\s*=",
+                @"onload\s*=",
+                @"<iframe",
+                @"[$%^&*(){}[\]\\|]"  // Caracteres especiales peligrosos
+            };
+
+            foreach (var patron in patronesPeligrosos)
+            {
+                if (System.Text.RegularExpressions.Regex.IsMatch(input, patron, System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

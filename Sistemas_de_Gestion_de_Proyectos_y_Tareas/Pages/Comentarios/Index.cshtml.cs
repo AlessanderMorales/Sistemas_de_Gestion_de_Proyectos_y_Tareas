@@ -106,7 +106,8 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios
                     .ToList();
             }
 
-            Comentarios = comentarios;
+            // 5. Ordenar por ID descendente (más nuevos primero)
+            Comentarios = comentarios.OrderByDescending(c => c.IdComentario).ToList();
         }
 
         // DELETE

@@ -43,6 +43,8 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
                 {
                     var tareas = await _tareaApi.GetByUsuarioAsync(usuarioId);
                     Tareas = await EnriquecerTareas(tareas);
+                    // Ordenar por ID descendente (más nuevas primero)
+                    Tareas = Tareas.OrderByDescending(t => t.Id).ToList();
                     return;
                 }
             }
@@ -50,6 +52,8 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
             // Si es jefe/admin → ver todas las tareas
             var todas = await _tareaApi.GetAllAsync();
             Tareas = await EnriquecerTareas(todas);
+            // Ordenar por ID descendente (más nuevas primero)
+            Tareas = Tareas.OrderByDescending(t => t.Id).ToList();
         }
 
         // ============================================================

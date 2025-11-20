@@ -48,22 +48,106 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
         {
             if (!ModelState.IsValid)
             {
+                TempData["ErrorMessage"] = "❌ Por favor corrija los errores en el formulario antes de continuar.";
                 ProyectosDisponibles = await _proyectoApi.GetAllAsync();
                 return Page();
             }
 
-            Tarea.Status = "SinIniciar";
-
-            var ok = await _tareaApi.CreateAsync(Tarea);
-
-            if (!ok)
+            try
             {
-                TempData["ErrorMessage"] = "Error al crear la tarea.";
+                // Validar y sanitizar título
+                if (!string.IsNullOrEmpty(Tarea.Titulo))
+                {
+                    Tarea.Titulo = TrimExtraSpaces(Tarea.Titulo);
+
+                    if (ContienePatroneseligrosos(Tarea.Titulo))
+                    {
+                        ModelState.AddModelError("Tarea.Titulo", "⚠️ El título contiene caracteres no permitidos.");
+                        TempData["ErrorMessage"] = "El título contiene caracteres o patrones no permitidos.";
+                        ProyectosDisponibles = await _proyectoApi.GetAllAsync();
+                        return Page();
+                    }
+                }
+
+                // Validar y sanitizar descripción
+                if (!string.IsNullOrEmpty(Tarea.Descripcion))
+                {
+                    Tarea.Descripcion = TrimExtraSpaces(Tarea.Descripcion);
+
+                    if (ContienePatroneseligrosos(Tarea.Descripcion))
+                    {
+                        ModelState.AddModelError("Tarea.Descripcion", "⚠️ La descripción contiene caracteres no permitidos.");
+                        TempData["ErrorMessage"] = "La descripción contiene caracteres o patrones no permitidos.";
+                        ProyectosDisponibles = await _proyectoApi.GetAllAsync();
+                        return Page();
+                    }
+                }
+
+                Tarea.Status = "SinIniciar";
+
+                var ok = await _tareaApi.CreateAsync(Tarea);
+
+                if (!ok)
+                {
+                    TempData["ErrorMessage"] = "❌ Error al comunicarse con el servidor. Por favor, intente nuevamente.";
+                    ProyectosDisponibles = await _proyectoApi.GetAllAsync();
+                    return Page();
+                }
+
+                TempData["SuccessMessage"] = "✅ Tarea creada exitosamente.";
                 return RedirectToPage("Index");
             }
+            catch (Exception ex)
+            {
+                var errorMsg = ex.Message.ToLower();
 
-            TempData["SuccessMessage"] = "Tarea creada exitosamente.";
-            return RedirectToPage("Index");
+                if (errorMsg.Contains("caracteres") || errorMsg.Contains("patrones") || errorMsg.Contains("sql"))
+                {
+                    TempData["ErrorMessage"] = $"⚠️ Validación de seguridad: {ex.Message}";
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = $"❌ Error al crear la tarea: {ex.Message}";
+                }
+
+                ProyectosDisponibles = await _proyectoApi.GetAllAsync();
+                return Page();
+            }
+        }
+
+        private string TrimExtraSpaces(string input)
+        {
+            if (string.IsNullOrEmpty(input)) return input;
+            input = input.Trim();
+            return System.Text.RegularExpressions.Regex.Replace(input, @"\s+", " ");
+        }
+
+        private bool ContienePatroneseligrosos(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input)) return false;
+
+            var patronesPeligrosos = new[]
+            {
+                @"(\bOR\b|\bAND\b).*=",
+                @"['""`;]|--|\/\*|\*\/",
+                @"\b(EXEC|EXECUTE|DROP|DELETE|UPDATE|INSERT|SELECT.*FROM|UNION.*SELECT)\b",
+                @"<script",
+                @"javascript:",
+                @"onerror\s*=",
+                @"onload\s*=",
+                @"<iframe",
+                @"[$%^&*(){}[\]\\|]"  // Caracteres especiales peligrosos
+            };
+
+            foreach (var patron in patronesPeligrosos)
+            {
+                if (System.Text.RegularExpressions.Regex.IsMatch(input, patron, System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
