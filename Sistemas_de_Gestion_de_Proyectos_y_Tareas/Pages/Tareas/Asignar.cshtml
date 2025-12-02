@@ -206,35 +206,32 @@
                 Seleccionar Usuarios (Haz clic para asignar/desasignar)
             </label>
 
-            <div class="users-list">
-                @if (Model.UsuariosDisponibles != null && Model.UsuariosDisponibles.Any())
+            <label class="form-label">Seleccionar Usuario</label>
+
+            <input type="text"
+                   id="usuarioSearch"
+                   class="search-input"
+                   placeholder="🔍 Buscar usuario..."
+                   autocomplete="off">
+
+            <div id="usuariosList" class="options-list">
+                @foreach (var u in Model.UsuariosDisponibles)
                 {
-                    @foreach (var usuario in Model.UsuariosDisponibles)
-                    {
-                        var isSelected = Model.UsuariosActualmenteAsignados?
-                        .Any(u => u.Id == usuario.Id) ?? false;
-
-                        <div class="user-checkbox-item @(isSelected ? "selected" : "")"
-                             data-user-id="@usuario.Id"
-                             onclick="toggleUser(this, '@usuario.Id')">
-
-                            <input type="checkbox"
-                                   name="UsuariosIds"
-                                   value="@usuario.Id"
-                                   id="user-@usuario.Id"
-                                   @(isSelected ? "checked" : "")
-                                   onclick="event.stopPropagation();"
-                                   onchange="updateSelection(this)" />
-
-                            <label for="user-@usuario.Id">@usuario.Nombres @usuario.PrimerApellido</label>
-                        </div>
-                    }
-                }
-                else
-                {
-                    <p class="text-muted">No hay usuarios disponibles.</p>
+                    <div class="option-item usuario-option"
+                         data-id="@u.Id"
+                         data-nombre="@($"{u.Nombres} {u.PrimerApellido}".ToLower())"
+                         onclick="selectUsuario(@u.Id, '@u.Nombres @u.PrimerApellido')">
+                        @u.Nombres @u.PrimerApellido
+                    </div>
                 }
             </div>
+
+            <input type="hidden" asp-for="UsuarioId" id="usuarioIdInput" />
+
+            <small class="text-muted d-block mt-2">
+                Usuario seleccionado: <span id="selectedUsuarioName" class="selected-info">Ninguno</span>
+            </small>
+
             <div class="help-text">
                 <i class="bi bi-info-circle"></i>
                 Haz clic en un usuario para asignarlo. Haz clic nuevamente para desasignarlo.
@@ -256,66 +253,46 @@
 
 @section Scripts {
     <script>
-        setupFormConfirmation('asignarTareaForm', 'confirmEdit');
+        const usuarioSearch = document.getElementById('usuarioSearch');
+        const usuariosList = document.getElementById('usuariosList');
+        const usuarioIdInput = document.getElementById('usuarioIdInput');
+        const selectedUsuarioName = document.getElementById('selectedUsuarioName');
 
-        function toggleUser(element, userId) {
-            const checkbox = element.querySelector('input[type="checkbox"]');
-            checkbox.checked = !checkbox.checked;
-            updateSelection(checkbox);
-        }
+        usuarioSearch.addEventListener('input', function () {
+            const search = this.value.toLowerCase().trim();
+            const options = document.querySelectorAll('.usuario-option');
+            let visible = 0;
 
-        function updateSelection(checkbox) {
-            const container = checkbox.closest('.user-checkbox-item');
-
-            if (checkbox.checked) {
-                container.classList.add('selected');
-            } else {
-                container.classList.remove('selected');
-            }
-
-            updateCounter();
-            updateSubmitButton();
-        }
-
-        function updateCounter() {
-            const selectedCount = document.querySelectorAll('.user-checkbox-item input:checked').length;
-            const counterElement = document.getElementById('selectedCount');
-
-            if (selectedCount === 0) {
-                counterElement.textContent = '0 usuarios seleccionados';
-                counterElement.style.backgroundColor = '#6c757d';
-            } else {
-                counterElement.textContent = `${selectedCount} usuario(s) seleccionado(s)`;
-                counterElement.style.backgroundColor = 'var(--accent-orange)';
-            }
-        }
-
-        function updateSubmitButton() {
-            const selectedCount = document.querySelectorAll('.user-checkbox-item input:checked').length;
-            const submitBtn = document.getElementById('submitBtn');
-
-            if (selectedCount === 0) {
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Selecciona al menos un usuario';
-            } else {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Guardar Asignaciones';
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            updateCounter();
-            updateSubmitButton();
-
-            document.getElementById('asignarTareaForm').addEventListener('submit', function(e) {
-                const selectedCount = document.querySelectorAll('.user-checkbox-item input:checked').length;
-
-                if (selectedCount === 0) {
-                    e.preventDefault();
-                    alert('Debe seleccionar al menos un usuario.');
-                    return false;
+            options.forEach(o => {
+                const name = o.getAttribute('data-nombre');
+                if (name.includes(search) || search === '') {
+                    o.classList.remove('hidden');
+                    visible++;
+                } else {
+                    o.classList.add('hidden');
                 }
             });
+
+            if (visible === 0) usuariosList.style.display = 'none';
+            else usuariosList.style.display = 'block';
         });
+
+        function selectUsuario(id, nombre) {
+            usuarioIdInput.value = id;
+            selectedUsuarioName.textContent = nombre;
+            usuarioSearch.value = nombre;
+
+            document.querySelectorAll('.usuario-option').forEach(o =>
+                o.classList.remove('selected')
+            );
+
+            const selected = document.querySelector(`.usuario-option[data-id="${id}"]`);
+            if (selected) selected.classList.add('selected');
+
+            usuariosList.style.display = 'none';
+        }
+
+        window.selectUsuario = selectUsuario;
     </script>
+
 }
