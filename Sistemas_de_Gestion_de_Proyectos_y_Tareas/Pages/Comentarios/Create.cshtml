@@ -161,23 +161,23 @@
                        autocomplete="off">
 
                 <div id="tareasList" class="options-list">
-                    @if (Model.Tareas != null && Model.Tareas.Any())
-                    {
-                        @foreach (var tarea in Model.Tareas)
-                        {
-                            <div class="option-item tarea-option"
-                                 data-id="@tarea.Id"
-                                 data-titulo="@tarea.Titulo.ToLower()"
-                                 onclick="selectTarea(@tarea.Id, '@tarea.Titulo')">
-                                @tarea.Titulo
-                            </div>
-                        }
-                    }
-                    else
-                    {
-                        <div class="no-results">No hay tareas disponibles</div>
-                    }
-                </div>
+    @if (Model.Tareas != null && Model.Tareas.Any())
+    {
+        @foreach (var tarea in Model.Tareas)
+        {
+            <div class="option-item tarea-option"
+                 data-id="@tarea.Id"
+                 data-titulo="@tarea.Titulo.ToLower()"
+                 onclick="selectTareaFromElement(this)">
+                @tarea.Titulo
+            </div>
+        }
+    }
+    else
+    {
+        <div class="no-results">No hay tareas disponibles</div>
+    }
+</div>
                 <div id="noResultsTarea" class="no-results" style="display: none;">
                     No se encontraron tareas
                 </div>
@@ -257,29 +257,29 @@
         const selectedTareaName = document.getElementById('selectedTareaName');
         const tareasList = document.getElementById('tareasList');
 
-        tareaSearch.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase().trim();
-            let visibleCount = 0;
+    tareaSearch.addEventListener('input', function () {
+        const searchTerm = this.value.toLowerCase().trim();
+        let visibleCount = 0;
 
-            tareaOptions.forEach(function(option) {
-                const titulo = option.getAttribute('data-titulo');
+        tareaOptions.forEach(function (option) {
+            const titulo = option.getAttribute('data-titulo');
 
-                if (titulo.includes(searchTerm) || searchTerm === '') {
-                    option.classList.remove('hidden');
-                    visibleCount++;
-                } else {
-                    option.classList.add('hidden');
-                }
-            });
-
-            if (visibleCount === 0 && searchTerm !== '') {
-                tareasList.style.display = 'none';
-                noResultsTarea.style.display = 'block';
+            if (titulo.includes(searchTerm) || searchTerm === '') {
+                option.classList.remove('hidden');
+                visibleCount++;
             } else {
-                tareasList.style.display = 'block';
-                noResultsTarea.style.display = 'none';
+                option.classList.add('hidden');
             }
         });
+
+        if (visibleCount === 0 && searchTerm !== '') {
+            tareasList.style.display = 'none';
+            noResultsTarea.style.display = 'block';
+        } else {
+            tareasList.style.display = 'block';
+            noResultsTarea.style.display = 'none';
+        }
+    });
 
         function selectTarea(id, titulo) {
             tareaIdInput.value = id;
@@ -307,30 +307,30 @@
         const destinatarioIdInput = document.getElementById('destinatarioIdInput');
         const selectedDestinatarioName = document.getElementById('selectedDestinatarioName');
 
-        destinatarioSearch.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase().trim();
-            const options = document.querySelectorAll('.destinatario-option');
-            let visibleCount = 0;
+    destinatarioSearch.addEventListener('input', function () {
+        const searchTerm = this.value.toLowerCase().trim();
+        const options = document.querySelectorAll('.destinatario-option');
+        let visibleCount = 0;
 
-            options.forEach(function(option) {
-                const nombre = option.getAttribute('data-nombre');
+        options.forEach(function (option) {
+            const nombre = option.getAttribute('data-nombre');
 
-                if (nombre.includes(searchTerm) || searchTerm === '') {
-                    option.classList.remove('hidden');
-                    visibleCount++;
-                } else {
-                    option.classList.add('hidden');
-                }
-            });
-
-            if (visibleCount === 0 && searchTerm !== '') {
-                destinatariosList.style.display = 'none';
-                noResultsDestinatario.style.display = 'block';
+            if (nombre.includes(searchTerm) || searchTerm === '') {
+                option.classList.remove('hidden');
+                visibleCount++;
             } else {
-                destinatariosList.style.display = 'block';
-                noResultsDestinatario.style.display = 'none';
+                option.classList.add('hidden');
             }
         });
+
+        if (visibleCount === 0 && searchTerm !== '') {
+            destinatariosList.style.display = 'none';
+            noResultsDestinatario.style.display = 'block';
+        } else {
+            destinatariosList.style.display = 'block';
+            noResultsDestinatario.style.display = 'none';
+        }
+    });
 
         function selectDestinatario(id, nombre) {
             destinatarioIdInput.value = id;
@@ -352,21 +352,21 @@
             selectedDestinatarioName.textContent = 'Ninguno';
             destinatarioIdInput.value = ''; 
 
-            if (!tareaId || !tareaUsuariosMap[tareaId]) {
-                destinatariosList.innerHTML = '<div class="no-results">No hay usuarios disponibles para esta tarea</div>';
-                destinatariosList.style.display = 'block';
-                noResultsDestinatario.style.display = 'none';
-                return;
-            }
+        if (!tareaId || !tareaUsuariosMap[tareaId]) {
+            destinatariosList.innerHTML = '<div class="no-results">No hay usuarios disponibles para esta tarea</div>';
+            destinatariosList.style.display = 'block';
+            noResultsDestinatario.style.display = 'none';
+            return;
+        }
 
-            var usuarios = tareaUsuariosMap[tareaId];
+        var usuarios = tareaUsuariosMap[tareaId];
 
-            if (!usuarios || usuarios.length === 0) {
-                destinatariosList.innerHTML = '<div class="no-results">No hay usuarios asignados a esta tarea</div>';
-                destinatariosList.style.display = 'block';
-                noResultsDestinatario.style.display = 'none';
-                return;
-            }
+        if (!usuarios || usuarios.length === 0) {
+            destinatariosList.innerHTML = '<div class="no-results">No hay usuarios asignados a esta tarea</div>';
+            destinatariosList.style.display = 'block';
+            noResultsDestinatario.style.display = 'none';
+            return;
+        }
 
             // Agregar usuarios disponibles a la lista de opciones
             usuarios.forEach(function(usuario) { 
