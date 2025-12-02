@@ -1,6 +1,7 @@
 ﻿using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Usuarios;
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.ApiClients
 {
@@ -9,86 +10,94 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.ApiClients
         private readonly HttpClient _http;
         private const string BasePath = "api/usuario";
 
-        // 🔹 Constructor correcto para Typed HttpClient
         public UsuarioApiClient(HttpClient http)
         {
             _http = http;
         }
 
-        // =========================================================
-        //  MÉTODOS PRINCIPALES ASYNC
-        // =========================================================
-
         public async Task<List<UsuarioDTO>> GetAllAsync()
-        {
-            var result = await _http.GetFromJsonAsync<List<UsuarioDTO>>(BasePath);
-            return result ?? new List<UsuarioDTO>();
-        }
+            => await _http.GetFromJsonAsync<List<UsuarioDTO>>(BasePath) ?? new List<UsuarioDTO>();
 
         public async Task<UsuarioDTO?> GetByIdAsync(int id)
         {
             var response = await _http.GetAsync($"{BasePath}/{id}");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                Console.WriteLine($"[WARN] Usuario {id} no encontrado. Status: {response.StatusCode}");
-                return null;
-            }
-
+            if (!response.IsSuccessStatusCode) return null;
             return await response.Content.ReadFromJsonAsync<UsuarioDTO>();
         }
 
-        public async Task<bool> UpdateAsync(UsuarioDTO dto)
+        public async Task<(bool success, string? errorMessage)> CrearUsuarioAsync(UsuarioCrearDTO dto)
         {
-            var response = await _http.PutAsJsonAsync($"{BasePath}/{dto.Id}", dto);
-            return response.IsSuccessStatusCode;
+            try
+            {
+                var response = await _http.PostAsJsonAsync(BasePath, dto);
+
+                if (response.IsSuccessStatusCode)
+                    return (true, null);
+
+                // Capturar el mensaje de error de la API
+                var errorContent = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    var errorObj = JsonSerializer.Deserialize<Dictionary<string, object>>(errorContent);
+                    if (errorObj != null && errorObj.ContainsKey("message"))
+                    {
+                        return (false, errorObj["message"].ToString());
+                    }
+                }
+                catch
+                {
+                }
+
+                return (false, $"Error al crear usuario: {errorContent}");
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Error de conexión: {ex.Message}");
+            }
+        }
+
+        public async Task<(bool success, string? errorMessage)> UpdateAsync(int id, UsuarioActualizarDTO dto)
+        {
+            try
+            {
+                var response = await _http.PutAsJsonAsync($"{BasePath}/{id}", dto);
+
+                if (response.IsSuccessStatusCode)
+                    return (true, null);
+
+                var errorContent = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    var errorObj = JsonSerializer.Deserialize<Dictionary<string, object>>(errorContent);
+                    if (errorObj != null && errorObj.ContainsKey("message"))
+                    {
+                        return (false, errorObj["message"].ToString());
+                    }
+                }
+                catch
+                {
+                }
+
+                return (false, $"Error al actualizar: {errorContent}");
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Error de conexión: {ex.Message}");
+            }
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
             var response = await _http.DeleteAsync($"{BasePath}/{id}");
-            var raw = await response.Content.ReadAsStringAsync();
             return response.StatusCode == HttpStatusCode.OK
                 || response.StatusCode == HttpStatusCode.NoContent;
         }
 
-        // =========================================================
-        //  WRAPPERS COMPATIBLES CON TU CÓDIGO EXISTENTE
-        //  (para que no den error tus Pages)
-        // =========================================================
-
-        // Index.cshtml.cs -> _usuarioApi.GetAll()
-        public Task<List<UsuarioDTO>> GetAll() => GetAllAsync();
-
-        // Edit.cshtml.cs -> _usuarioApi.GetById(id)
-        public Task<UsuarioDTO?> GetById(int id) => GetByIdAsync(id);
-
-        // Create.cshtml.cs -> _usuarioApi.CrearUsuario(dto)
-        public Task<bool> CrearUsuario(UsuarioCrearDTO dto) => CrearUsuarioAsync(dto);
-
-        // Edit.cshtml.cs -> _usuarioApi.Update(dto)
-        public Task<bool> Update(UsuarioDTO dto) => UpdateAsync(dto);
-
-        // Index.cshtml.cs -> _usuarioApi.Delete(id)
-        public Task<bool> Delete(int id) => DeleteAsync(id);
-
-        // Comentarios/Create.cshtml.cs -> _usuarioApi.GetAsync(id)
-        public Task<UsuarioDTO?> GetAsync(int id) => GetByIdAsync(id);
-        public async Task<UsuarioDTO?> LoginAsync(UsuarioLoginDTO dto)
+        public async Task<LoginResponseDTO?> LoginAsync(UsuarioLoginDTO dto)
         {
-            var response = await _http.PostAsJsonAsync("/api/usuario/login", dto);
-
-            if (!response.IsSuccessStatusCode)
-                return null;
-
-            return await response.Content.ReadFromJsonAsync<UsuarioDTO>();
-        }
-        public async Task<bool> CrearUsuarioAsync(UsuarioCrearDTO dto)
-        {
-            var response = await _http.PostAsJsonAsync("api/usuario", dto);
-
-            string log = await response.Content.ReadAsStringAsync();
-            return response.IsSuccessStatusCode;
+            var response = await _http.PostAsJsonAsync($"{BasePath}/login", dto);
+            if (!response.IsSuccessStatusCode) return null;
+            return await response.Content.ReadFromJsonAsync<LoginResponseDTO>();
         }
 
         public async Task<bool> CambiarContraseñaAsync(int id, string actual, string nueva)
@@ -98,12 +107,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.ApiClients
                 ContraseñaActual = actual,
                 NuevaContraseña = nueva
             };
-
-            var response = await _http.PutAsJsonAsync($"api/usuario/cambiar-contraseña/{id}", payload);
-
-            return response.IsSuccessStatusCode;
+            return (await _http.PutAsJsonAsync($"{BasePath}/cambiar-contraseña/{id}", payload)).IsSuccessStatusCode;
         }
-
-
     }
 }

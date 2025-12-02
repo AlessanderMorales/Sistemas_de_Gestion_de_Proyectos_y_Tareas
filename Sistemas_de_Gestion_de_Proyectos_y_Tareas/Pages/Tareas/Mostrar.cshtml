@@ -27,28 +27,70 @@
         font-weight: 600;
         margin-bottom: 0.5rem;
     }
+
     .details-list dd {
         color: #e0e0e0;
         margin-left: 0;
         margin-bottom: 1.5rem;
     }
 
-    .priority-badge { padding: 6px 12px; border-radius: 15px; font-weight: bold; color: #212529; font-size: 0.85rem; }
-    .priority-alta { background-color: #dc3545; color: white; }
-    .priority-media { background-color: #ffc107; }
-    .priority-baja { background-color: #28a745; color: white; }
+    .priority-badge {
+        padding: 6px 12px;
+        border-radius: 15px;
+        font-weight: bold;
+        color: #212529;
+        font-size: 0.85rem;
+    }
 
-    .btn-edit { background-color: var(--accent-edit); border-color: var(--accent-edit); color: #212529; font-weight: bold; padding: 10px 25px; border-radius: 8px; transition: all 0.3s ease; }
-    .btn-edit:hover { transform: translateY(-2px); }
-    .btn-volcanic-secondary { background-color: transparent; border: 2px solid #6c757d; color: #ced4da; font-weight: bold; padding: 8px 25px; border-radius: 8px; transition: all 0.3s ease; }
-    .btn-volcanic-secondary:hover { background-color: #6c757d; color: white; }
+    .priority-alta {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .priority-media {
+        background-color: #ffc107;
+    }
+
+    .priority-baja {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-edit {
+        background-color: var(--accent-edit);
+        border-color: var(--accent-edit);
+        color: #212529;
+        font-weight: bold;
+        padding: 10px 25px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-edit:hover {
+            transform: translateY(-2px);
+        }
+
+    .btn-volcanic-secondary {
+        background-color: transparent;
+        border: 2px solid #6c757d;
+        color: #ced4da;
+        font-weight: bold;
+        padding: 8px 25px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-volcanic-secondary:hover {
+            background-color: #6c757d;
+            color: white;
+        }
 </style>
 
 <h1 class="title-volcanic">@ViewData["Title"]</h1>
 
 @if (Model.Tarea != null)
 {
-    <div>
+    <div class="container-fluid px-0">
         <dl class="row details-list">
             <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Tarea.Titulo)</dt>
             <dd class="col-sm-9">@Html.DisplayFor(model => model.Tarea.Titulo)</dd>

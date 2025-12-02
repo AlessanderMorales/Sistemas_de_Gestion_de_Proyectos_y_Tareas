@@ -1,8 +1,6 @@
-﻿// EN TU PROYECTO RAZOR PAGES: Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Tareas/TareaDTO.cs
-using System;
+﻿using System;
 using System.Text.Json.Serialization;
 
-// NO LO PONGAS FUERA DE UN NAMESPACE. DEBERÍA ESTAR DENTRO DE Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Tareas
 namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Tareas
 {
     public class TareaDTO
@@ -19,20 +17,20 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Tareas
         [JsonPropertyName("estado")]
         public int Estado { get; set; }
 
-        [JsonPropertyName("fechaRegistro")] // <-- ¡CRÍTICO! Cambiado para coincidir con el JSON y evitar el error de compilación
+        [JsonPropertyName("fechaRegistro")]
         public DateTime FechaRegistro { get; set; }
 
-        [JsonPropertyName("ultimaModificacion")] // <-- ¡CRÍTICO! Añadida para coincidir con el JSON
+        [JsonPropertyName("ultimaModificacion")]
         public DateTime UltimaModificacion { get; set; }
 
         [JsonPropertyName("idProyecto")]
-        public int? IdProyecto { get; set; } // <-- ¡CRÍTICO! Hecho nullable para mayor seguridad y evitar errores de conversión 'int?' a 'int'
+        public int? IdProyecto { get; set; }
 
         [JsonPropertyName("proyectoNombre")]
         public string? ProyectoNombre { get; set; }
 
         [JsonPropertyName("prioridad")]
-        public string? Prioridad { get; set; } = ""; // Nullable por consistencia
+        public string? Prioridad { get; set; } = "";
 
         [JsonPropertyName("status")]
         public string Status { get; set; } = "";
@@ -41,6 +39,6 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Tareas
         public string? UsuarioAsignadoNombre { get; set; }
 
         [JsonPropertyName("idUsuarioAsignado")]
-        public int? IdUsuarioAsignado { get; set; } // Ya era nullable, ¡excelente!
+        public int? IdUsuarioAsignado { get; set; }
     }
 }

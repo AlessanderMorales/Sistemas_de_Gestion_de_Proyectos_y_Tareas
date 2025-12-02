@@ -19,7 +19,6 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Middleware
         {
             var path = context.Request.Path.Value?.ToLower() ?? "";
 
-            // 🛑 NO validar en rutas públicas para evitar loops infinitos
             if (path.StartsWith("/login") ||
                 path.StartsWith("/logout") ||
                 path.StartsWith("/accessdenied") ||
@@ -35,7 +34,6 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Middleware
                 return;
             }
 
-            // Usuario no autenticado → no validar
             if (!context.User.Identity?.IsAuthenticated ?? true)
             {
                 await _next(context);
@@ -52,13 +50,11 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Middleware
 
             try
             {
-                // 🟢 Validación real usando la API
                 var usuario = await usuarioApi.GetByIdAsync(userId);
 
                 if (usuario == null)
                 {
-                    _logger.LogWarning($"Usuario con ID {userId} no existe en el microservicio. Cerrando sesión.");
-
+                    _logger.LogWarning($"Usuario con ID {userId} no existe. Cerrando sesión.");
                     await context.SignOutAsync("MyCookieAuth");
                     context.Response.Redirect("/Login/Login");
                     return;

@@ -17,14 +17,17 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Usuarios
         }
 
         [BindProperty]
-        public UsuarioDTO Usuario { get; set; } = new();
+        public UsuarioActualizarDTO UsuarioActualizar { get; set; } = new();
+
+        public int UsuarioId { get; set; }
+        public string NombreUsuario { get; set; } = string.Empty;
 
         [TempData] public string? SuccessMessage { get; set; }
         [TempData] public string? ErrorMessage { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            var usuario = await _api.GetById(id);
+            var usuario = await _api.GetByIdAsync(id);
 
             if (usuario == null)
             {
@@ -32,35 +35,35 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Usuarios
                 return RedirectToPage("./Index");
             }
 
-            Usuario = usuario;
+            UsuarioId = usuario.Id;
+            NombreUsuario = usuario.NombreUsuario;
+            UsuarioActualizar = new UsuarioActualizarDTO
+            {
+                Nombres = usuario.Nombres,
+                PrimerApellido = usuario.PrimerApellido,
+                SegundoApellido = usuario.SegundoApellido,
+                Email = usuario.Email,
+                Rol = usuario.Rol
+            };
+
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(int id)
         {
-            Console.WriteLine("=== POST EDITAR ===");
-            Console.WriteLine("Id recibido: " + Usuario.Id);
-            Console.WriteLine("Nombres: " + Usuario.Nombres);
-            Console.WriteLine("Email: " + Usuario.Email);
-            Console.WriteLine("====================");
+            UsuarioId = id;
 
             if (!ModelState.IsValid)
             {
-                Console.WriteLine("MODEL STATE INVALIDO");
-                foreach (var err in ModelState)
-                {
-                    foreach (var e in err.Value.Errors)
-                        Console.WriteLine($"ERROR {err.Key}: {e.ErrorMessage}");
-                }
                 return Page();
             }
 
-            bool ok = await _api.Update(Usuario);
+            var (success, errorMessage) = await _api.UpdateAsync(id, UsuarioActualizar);
 
-            if (!ok)
+            if (!success)
             {
-                ErrorMessage = "Error al actualizar usuario.";
-                return RedirectToPage("./Index");
+                ModelState.AddModelError(string.Empty, errorMessage ?? "Error al actualizar usuario.");
+                return Page();
             }
 
             SuccessMessage = "Usuario actualizado correctamente.";

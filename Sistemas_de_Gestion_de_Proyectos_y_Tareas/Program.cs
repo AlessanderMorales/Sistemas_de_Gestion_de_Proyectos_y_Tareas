@@ -3,16 +3,21 @@ using Microsoft.AspNetCore.Localization;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.ApiClients;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.Application.Facades;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.Middleware;
+using Sistema_de_Gestion_de_Proyectos_y_Tareas.Filters;
+using Sistema_de_Gestion_de_Proyectos_y_Tareas.Handlers;
+using Sistema_de_Gestion_de_Proyectos_y_Tareas.Service;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// =========================================================
-// 🌎 CONFIGURACIÓN DE CULTURA
-// =========================================================
-var cultureInfo = new CultureInfo("es-ES");
-cultureInfo.DateTimeFormat.ShortDatePattern = "dd/MM/yyyy";
-cultureInfo.DateTimeFormat.DateSeparator = "/";
+var cultureInfo = new CultureInfo("es-ES")
+{
+    DateTimeFormat =
+    {
+        ShortDatePattern = "dd/MM/yyyy",
+        DateSeparator = "/"
+    }
+};
 
 CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
 CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
@@ -24,9 +29,6 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     options.SupportedUICultures = new[] { cultureInfo };
 });
 
-// =========================================================
-// 🔐 AUTENTICACIÓN Y AUTORIZACIÓN
-// =========================================================
 builder.Services.AddAuthentication("MyCookieAuth")
     .AddCookie("MyCookieAuth", options =>
     {
@@ -39,8 +41,7 @@ builder.Services.AddAuthentication("MyCookieAuth")
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("SoloAdmin", policy =>
-        policy.RequireRole("SuperAdmin"));
+    options.AddPolicy("SoloAdmin", policy => policy.RequireRole("SuperAdmin"));
 
     options.AddPolicy("OnlyJefeOrEmpleado", policy =>
         policy.RequireAssertion(ctx =>
@@ -48,49 +49,47 @@ builder.Services.AddAuthorization(options =>
             ctx.User.IsInRole("Empleado") ||
             ctx.User.IsInRole("SuperAdmin")));
 
-    options.AddPolicy("OnlyJefe", policy =>
-        policy.RequireRole("JefeDeProyecto"));
+    options.AddPolicy("OnlyJefe", policy => policy.RequireRole("JefeDeProyecto"));
 
     options.FallbackPolicy = new AuthorizationPolicyBuilder()
         .RequireAuthenticatedUser()
         .Build();
 });
 
-// =========================================================
-// 📡 REGISTRO DE API CLIENTS (NUEVA ARQUITECTURA)
-// =========================================================
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<EmailService>();
+builder.Services.AddTransient<JwtAuthenticationHandler>();
+
 builder.Services.AddHttpClient<UsuarioApiClient>(client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["ApiUrls:UsuarioApi"]);
-});
+}).AddHttpMessageHandler<JwtAuthenticationHandler>();
 
 builder.Services.AddHttpClient<ProyectoApiClient>(client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["ApiUrls:ProyectoApi"]);
-});
+}).AddHttpMessageHandler<JwtAuthenticationHandler>();
 
 builder.Services.AddHttpClient<TareaApiClient>(client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["ApiUrls:TareaApi"]);
-});
+}).AddHttpMessageHandler<JwtAuthenticationHandler>();
 
 builder.Services.AddHttpClient<ComentarioApiClient>(client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["ApiUrls:ComentarioApi"]);
-});
+}).AddHttpMessageHandler<JwtAuthenticationHandler>();
 
-// =========================================================
-// 🏢 FACADE NUEVO
-// =========================================================
 builder.Services.AddScoped<GestionProyectosFacade>();
 
-// =========================================================
-// 📄 SERVICIOS DE REPORTES (SIGUEN INTERNOS)
-// =========================================================
-
-// =========================================================
-// 📘 RAZOR PAGES + POLÍTICAS DE ACCESO
-// =========================================================
 builder.Services.AddRazorPages(options =>
 {
     options.Conventions.AuthorizeFolder("/Usuarios", "SoloAdmin");
@@ -98,20 +97,26 @@ builder.Services.AddRazorPages(options =>
     options.Conventions.AuthorizeFolder("/Tareas", "OnlyJefeOrEmpleado");
     options.Conventions.AuthorizeFolder("/Comentarios", "OnlyJefeOrEmpleado");
     options.Conventions.AuthorizePage("/Index", "OnlyJefeOrEmpleado");
-
+    options.Conventions.AuthorizeFolder("/Configuracion");
     options.Conventions.AllowAnonymousToPage("/Login/Login");
     options.Conventions.AllowAnonymousToPage("/AccessDenied");
     options.Conventions.AllowAnonymousToPage("/Error");
     options.Conventions.AllowAnonymousToPage("/Privacy");
     options.Conventions.AllowAnonymousToPage("/Logout");
+})
+.AddMvcOptions(options =>
+{
+    options.Filters.Add<RequirePasswordChangeFilter>();
 });
 
 var app = builder.Build();
 
-// =========================================================
-// 🚀 MIDDLEWARES
-// =========================================================
-if (!app.Environment.IsDevelopment())
+// Configurar HTTPS Redirection con puerto específico
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+else
 {
     app.UseExceptionHandler("/Error");
     app.UseHsts();
@@ -120,13 +125,12 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRequestLocalization();
-
 app.UseRouting();
+app.UseSession();
 app.UseAuthentication();
 app.UseValidateUserExists();
 app.UseAuthorization();
 
-// Redirigir 403 automáticamente
 app.Use(async (context, next) =>
 {
     await next();
@@ -137,5 +141,4 @@ app.Use(async (context, next) =>
 });
 
 app.MapRazorPages();
-
 app.Run();

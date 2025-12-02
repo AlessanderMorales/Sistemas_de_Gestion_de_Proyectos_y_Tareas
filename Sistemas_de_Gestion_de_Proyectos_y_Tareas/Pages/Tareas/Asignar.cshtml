@@ -1,4 +1,4 @@
-@page "{id:int}"
+﻿@page "{id:int}"
 @model Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas.AsignarModel
 @{
     ViewData["Title"] = "Asignar Tarea a Usuarios";
@@ -17,14 +17,14 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         font-weight: 700;
-  border-bottom: 2px solid rgba(255,255,255,0.1);
+        border-bottom: 2px solid rgba(255,255,255,0.1);
         padding-bottom: 0.5rem;
         margin-bottom: 2rem;
     }
 
     .form-container {
-      max-width: 700px;
-   background-color: #2c2c31;
+        max-width: 700px;
+        background-color: #2c2c31;
         padding: 2rem;
         border-radius: 12px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.5);
@@ -32,36 +32,36 @@
 
     .form-label {
         color: var(--text-primary);
-   font-weight: 500;
-    margin-bottom: 0.5rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
     }
 
     .current-assignments {
         background-color: #3a3a40;
-    padding: 1rem;
+        padding: 1rem;
         border-radius: 8px;
         margin-bottom: 1.5rem;
         border-left: 4px solid var(--accent-gold);
     }
 
-    .current-assignments h6 {
-     color: var(--accent-gold);
-      margin-bottom: 0.75rem;
-    }
+        .current-assignments h6 {
+            color: var(--accent-gold);
+            margin-bottom: 0.75rem;
+        }
 
     .user-badge {
         background-color: #4a4a50;
         color: var(--text-primary);
         padding: 0.4rem 0.8rem;
         border-radius: 20px;
-   display: inline-block;
-      margin: 0.25rem;
-    font-size: 0.9rem;
+        display: inline-block;
+        margin: 0.25rem;
+        font-size: 0.9rem;
     }
 
     .users-list {
         background-color: #3a3a40;
-      border: 1px solid #555;
+        border: 1px solid #555;
         border-radius: 8px;
         padding: 1rem;
         max-height: 400px;
@@ -73,45 +73,45 @@
         padding: 0.75rem 1rem;
         margin-bottom: 0.5rem;
         border-radius: 6px;
- cursor: pointer;
+        cursor: pointer;
         transition: all 0.2s ease;
-     display: flex;
+        display: flex;
         align-items: center;
         border: 2px solid transparent;
     }
 
-    .user-checkbox-item:hover {
-        background-color: #4a4a50;
-        border-color: var(--accent-orange);
-    }
+        .user-checkbox-item:hover {
+            background-color: #4a4a50;
+            border-color: var(--accent-orange);
+        }
 
-    .user-checkbox-item.selected {
-        background-color: #4a4a50;
-   border-color: var(--accent-gold);
- box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
- }
+        .user-checkbox-item.selected {
+            background-color: #4a4a50;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
 
-    .user-checkbox-item input[type="checkbox"] {
-        width: 20px;
-        height: 20px;
-        margin-right: 1rem;
-        cursor: pointer;
-        accent-color: var(--accent-orange);
-    }
+        .user-checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 1rem;
+            cursor: pointer;
+            accent-color: var(--accent-orange);
+        }
 
-    .user-checkbox-item label {
-        color: var(--text-primary);
-   margin: 0;
-        cursor: pointer;
-    flex: 1;
-        font-weight: 500;
-    }
+        .user-checkbox-item label {
+            color: var(--text-primary);
+            margin: 0;
+            cursor: pointer;
+            flex: 1;
+            font-weight: 500;
+        }
 
     .selected-count {
         background-color: var(--accent-orange);
-   color: white;
+        color: white;
         padding: 0.5rem 1rem;
-    border-radius: 20px;
+        border-radius: 20px;
         font-weight: bold;
         display: inline-block;
         margin-top: 0.5rem;
@@ -120,33 +120,33 @@
     .help-text {
         color: #ced4da;
         font-size: 0.9rem;
-    margin-top: 0.5rem;
+        margin-top: 0.5rem;
     }
 
     .btn-volcanic-primary {
-      background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
-   border: none;
+        background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
+        border: none;
         color: white;
         font-weight: bold;
         padding: 12px 25px;
         border-radius: 8px;
-    transition: all 0.3s ease;
+        transition: all 0.3s ease;
     }
 
-    .btn-volcanic-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
-    }
+        .btn-volcanic-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
+        }
 
-    .btn-volcanic-primary:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    transform: none;
-    }
+        .btn-volcanic-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
 
     .btn-volcanic-secondary {
         background-color: transparent;
-      border: 2px solid #6c757d;
+        border: 2px solid #6c757d;
         color: #ced4da;
         font-weight: bold;
         padding: 10px 25px;
@@ -154,12 +154,12 @@
         transition: all 0.3s ease;
     }
 
-    .btn-volcanic-secondary:hover {
-        background-color: #6c757d;
-    color: white;
-    }
+        .btn-volcanic-secondary:hover {
+            background-color: #6c757d;
+            color: white;
+        }
 
- .users-list::-webkit-scrollbar {
+    .users-list::-webkit-scrollbar {
         width: 8px;
     }
 
@@ -173,40 +173,40 @@
         border-radius: 4px;
     }
 
-    .users-list::-webkit-scrollbar-thumb:hover {
-      background: var(--accent-gold);
-    }
+        .users-list::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-gold);
+        }
 </style>
 
 <h1 class="title-volcanic">@ViewData["Title"]</h1>
 
 <div class="form-container">
     <h5 class="text-white mb-3">Tarea: @Model.NombreTarea</h5>
-  
+
     @if (Model.UsuariosActualmenteAsignados != null && Model.UsuariosActualmenteAsignados.Any())
-{
-      <div class="current-assignments">
+    {
+        <div class="current-assignments">
             <h6>Usuarios Actualmente Asignados:</h6>
             <div>
-         @foreach (var usuario in Model.UsuariosActualmenteAsignados)
-        {
-   <span class="user-badge">
-            @usuario.Nombres @usuario.PrimerApellido
-   </span>
+                @foreach (var usuario in Model.UsuariosActualmenteAsignados)
+                {
+                    <span class="user-badge">
+                        @usuario.Nombres @usuario.PrimerApellido
+                    </span>
                 }
- </div>
-     </div>
+            </div>
+        </div>
     }
 
-    <form method="post" id="assignForm">
-    <input type="hidden" asp-for="TareaId" />
-        
-    <div class="mb-3">
- <label class="form-label">
+    <form method="post" id="asignarTareaForm">
+        <input type="hidden" asp-for="TareaId" />
+
+        <div class="mb-3">
+            <label class="form-label">
                 Seleccionar Usuarios (Haz clic para asignar/desasignar)
-  </label>
-       
-  <div class="users-list">
+            </label>
+
+            <div class="users-list">
                 @if (Model.UsuariosDisponibles != null && Model.UsuariosDisponibles.Any())
                 {
                     @foreach (var usuario in Model.UsuariosDisponibles)
@@ -226,7 +226,7 @@
                                    onclick="event.stopPropagation();"
                                    onchange="updateSelection(this)" />
 
-                            <label for="user-@usuario.Id">@usuario.Nombres</label>
+                            <label for="user-@usuario.Id">@usuario.Nombres @usuario.PrimerApellido</label>
                         </div>
                     }
                 }
@@ -234,86 +234,88 @@
                 {
                     <p class="text-muted">No hay usuarios disponibles.</p>
                 }
-
-                <div class="help-text">
-                    <i class="bi bi-info-circle"></i>
-                    Haz clic en un usuario para asignarlo. Haz clic nuevamente para desasignarlo.
-                    <br>
-                    <span class="selected-count" id="selectedCount">0 usuario(s) seleccionado(s)</span>
-                </div>
             </div>
-
-            <div class="mt-4">
-                <button type="submit" class="btn btn-volcanic-primary" id="submitBtn">
-                    Guardar Asignaciones
-                </button>
-                <a asp-page="/Tareas/Index" class="btn btn-volcanic-secondary ms-2">
-                    Cancelar
-                </a>
+            <div class="help-text">
+                <i class="bi bi-info-circle"></i>
+                Haz clic en un usuario para asignarlo. Haz clic nuevamente para desasignarlo.
+                <br>
+                <span class="selected-count" id="selectedCount">0 usuario(s) seleccionado(s)</span>
             </div>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-volcanic-primary" id="submitBtn">
+                Guardar Asignaciones
+            </button>
+            <a asp-page="/Tareas/Index" class="btn btn-volcanic-secondary ms-2">
+                Cancelar
+            </a>
+        </div>
     </form>
 </div>
 
 @section Scripts {
     <script>
-            function toggleUser(element, userId) {
-                    const checkbox = element.querySelector('input[type="checkbox"]');
-                    checkbox.checked = !checkbox.checked;
-              updateSelection(checkbox);
-             }
+        setupFormConfirmation('asignarTareaForm', 'confirmEdit');
 
-                function updateSelection(checkbox) {
-             const container = checkbox.closest('.user-checkbox-item');
+        function toggleUser(element, userId) {
+            const checkbox = element.querySelector('input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+            updateSelection(checkbox);
+        }
 
-                    if (checkbox.checked) {
-                  container.classList.add('selected');
-                    } else {
-                        container.classList.remove('selected');
-                }
+        function updateSelection(checkbox) {
+            const container = checkbox.closest('.user-checkbox-item');
 
-           updateCounter();
-               updateSubmitButton();
-                }
+            if (checkbox.checked) {
+                container.classList.add('selected');
+            } else {
+                container.classList.remove('selected');
+            }
+
+            updateCounter();
+            updateSubmitButton();
+        }
 
         function updateCounter() {
             const selectedCount = document.querySelectorAll('.user-checkbox-item input:checked').length;
-                    const counterElement = document.getElementById('selectedCount');
+            const counterElement = document.getElementById('selectedCount');
+
+            if (selectedCount === 0) {
+                counterElement.textContent = '0 usuarios seleccionados';
+                counterElement.style.backgroundColor = '#6c757d';
+            } else {
+                counterElement.textContent = `${selectedCount} usuario(s) seleccionado(s)`;
+                counterElement.style.backgroundColor = 'var(--accent-orange)';
+            }
+        }
+
+        function updateSubmitButton() {
+            const selectedCount = document.querySelectorAll('.user-checkbox-item input:checked').length;
+            const submitBtn = document.getElementById('submitBtn');
+
+            if (selectedCount === 0) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Selecciona al menos un usuario';
+            } else {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Guardar Asignaciones';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCounter();
+            updateSubmitButton();
+
+            document.getElementById('asignarTareaForm').addEventListener('submit', function(e) {
+                const selectedCount = document.querySelectorAll('.user-checkbox-item input:checked').length;
 
                 if (selectedCount === 0) {
-                        counterElement.textContent = '0 usuarios seleccionados';
-         counterElement.style.backgroundColor = '#6c757d';
-                    } else {
-              counterElement.textContent = `${selectedCount} usuario(s) seleccionado(s)`;
-                      counterElement.style.backgroundColor = 'var(--accent-orange)';
-          }
+                    e.preventDefault();
+                    alert('Debe seleccionar al menos un usuario.');
+                    return false;
                 }
-
-                function updateSubmitButton() {
-         const selectedCount = document.querySelectorAll('.user-checkbox-item input:checked').length;
-         const submitBtn = document.getElementById('submitBtn');
-
-               if (selectedCount === 0) {
-               submitBtn.disabled = true;
-                      submitBtn.textContent = 'Selecciona al menos un usuario';
-           } else {
-            submitBtn.disabled = false;
-              submitBtn.textContent = 'Guardar Asignaciones';
-                    }
-                }
-
-              document.addEventListener('DOMContentLoaded', function() {
-                    updateCounter();
-                    updateSubmitButton();
-
-                    document.getElementById('assignForm').addEventListener('submit', function(e) {
-                   const selectedCount = document.querySelectorAll('.user-checkbox-item input:checked').length;
-
-               if (selectedCount === 0) {
-                  e.preventDefault();
-                 alert('Debe seleccionar al menos un usuario.');
-                  return false;
-                }
-                    });
-             });
+            });
+        });
     </script>
 }

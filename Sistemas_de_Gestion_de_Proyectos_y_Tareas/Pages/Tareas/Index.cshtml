@@ -7,126 +7,221 @@
 <style>
     :root {
         --accent-red: #D32F2F;
-     --accent-orange: #FF5722;
+        --accent-orange: #FF5722;
         --accent-gold: #FFD700;
-      --accent-edit: #ffc107;
+        --accent-edit: #ffc107;
     }
 
     .title-volcanic {
-      background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
+        background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-   font-weight: 700;
+        font-weight: 700;
     }
 
-  .header-actions {
-display: flex;
- justify-content: space-between;
- align-items: center;
+    .header-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
         margin-bottom: 2rem;
-   border-bottom: 2px solid rgba(255,255,255,0.1);
+        border-bottom: 2px solid rgba(255,255,255,0.1);
         padding-bottom: 1rem;
+        gap: 1rem;
     }
 
-    /* ✅ NUEVO: Estilos para el buscador */
     .search-container {
-margin-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
         max-width: 500px;
-  }
+        width: 100%;
+    }
 
     .search-input {
-   background-color: #3a3a40;
-      color: #f5f5f7;
-    border: 1px solid #555;
+        background-color: #3a3a40;
+        color: #f5f5f7;
+        border: 1px solid #555;
         border-radius: 8px;
-      padding: 0.75rem 1rem;
-    width: 100%;
+        padding: 0.75rem 1rem;
+        width: 100%;
         transition: all 0.3s ease;
     }
 
-    .search-input:focus {
-        background-color: #4a4a50;
-        border-color: var(--accent-orange);
-box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
-    outline: none;
-    }
+        .search-input:focus {
+            background-color: #4a4a50;
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
+            outline: none;
+        }
 
-    .search-input::placeholder {
-        color: #888;
-    }
+        .search-input::placeholder {
+            color: #888;
+        }
 
     .table-volcanic {
-  background-color: transparent;
-   color: #e0e0e0;
-   border-collapse: separate;
+        background-color: transparent;
+        color: #e0e0e0;
+        border-collapse: separate;
         border-spacing: 0 10px;
- }
-  .table-volcanic > :not(caption) > * > * {
-     background-color: #3a3a40;
-padding: 1.25rem;
- border-width: 0;
-    vertical-align: middle;
+        width: 100%;
     }
-    .table-volcanic thead th {
-background-color: transparent;
-   color: var(--accent-gold);
-        font-size: 0.9rem;
-      text-transform: uppercase;
-  letter-spacing: 1px;
-border-bottom: 2px solid var(--accent-orange);
+
+        .table-volcanic > :not(caption) > * > * {
+            background-color: #3a3a40;
+            padding: 1.25rem;
+            border-width: 0;
+            vertical-align: middle;
+        }
+
+        .table-volcanic thead th {
+            background-color: transparent;
+            color: var(--accent-gold);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid var(--accent-orange);
+            white-space: nowrap;
+        }
+
+        .table-volcanic tbody tr:hover {
+            background-color: #4a4a50;
+        }
+
+    .priority-badge {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 15px;
+        font-weight: bold;
+        color: #212529;
+        font-size: 0.85rem;
     }
-    .table-volcanic tbody tr:hover { background-color: #4a4a50; }
 
-    .priority-badge { 
-      display: inline-block;
-  padding: 6px 12px; 
-        border-radius: 15px; 
-        font-weight: bold; 
-  color: #212529; 
-   font-size: 0.85rem; 
+    .priority-alta {
+        background-color: #dc3545;
+        color: white;
     }
-    .priority-alta { background-color: #dc3545; color: white; }
-    .priority-media { background-color: #ffc107; }
-    .priority-baja { background-color: #28a745; color: white; }
 
-    .project-link { color: var(--accent-orange); text-decoration: none; font-weight: 500; }
-    .project-link:hover { color: var(--accent-gold); }
+    .priority-media {
+        background-color: #ffc107;
+    }
 
- .btn-action { border-radius: 6px; font-weight: 500; padding: 5px 12px; transition: all 0.2s ease; }
-    .btn-action:hover { transform: translateY(-1px); }
-    .btn-edit { background-color: var(--accent-edit); border-color: var(--accent-edit); color: #212529; }
-    .btn-delete { background-color: #6c757d; border-color: #6c757d; color: white; }
+    .priority-baja {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .project-link {
+        color: var(--accent-orange);
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+        .project-link:hover {
+            color: var(--accent-gold);
+        }
+
+    .btn-action {
+        border-radius: 6px;
+        font-weight: 500;
+        padding: 5px 12px;
+        transition: all 0.2s ease;
+    }
+
+        .btn-action:hover {
+            transform: translateY(-1px);
+        }
+
+    .btn-edit {
+        background-color: var(--accent-edit);
+        border-color: var(--accent-edit);
+        color: #212529;
+    }
+
+    .btn-delete {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: white;
+    }
 
     .btn-volcanic-primary {
- background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
-  border: none; color: white; font-weight: bold; padding: 10px 20px; border-radius: 8px;
+        background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
+        border: none;
+        color: white;
+        font-weight: bold;
+        padding: 10px 20px;
+        border-radius: 8px;
         transition: all 0.3s ease;
     }
-    .btn-volcanic-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4); }
- 
-    .modal-content.volcanic-modal { background-color: #2c2c31; color: #f5f5f7; border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; }
-    .volcanic-modal .modal-header { border-bottom: 1px solid var(--accent-orange); }
-    .volcanic-modal .modal-footer { border-top: 1px solid rgba(255,255,255,0.1); }
-    .btn-volcanic-delete { background-color: var(--accent-red); border: none; color: white; font-weight: bold; padding: 10px 20px; border-radius: 8px; }
-    .btn-volcanic-secondary-modal { background-color: #4a4a50; border: none; color: white; font-weight: bold; padding: 10px 20px; border-radius: 8px; }
-    
-    .status-badge {
- display: inline-block;
-  padding: 5px 10px;
- border-radius: 15px;
-     font-weight: bold;
-        font-size: 0.8rem;
-   white-space: nowrap;
-  }
-    .status-sin-iniciar { background-color: #6c757d; color: white; }
-    .status-en-progreso { background-color: #ffc107; color: #212529; }
-    .status-completada { background-color: #28a745; color: white; }
-    
-    .btn-status { background-color: #17a2b8; border-color: #17a2b8; color: white; }
 
-    /* ✅ NUEVO: Estilos para filas ocultas */
+        .btn-volcanic-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
+        }
+
+    .modal-content.volcanic-modal {
+        background-color: #2c2c31;
+        color: #f5f5f7;
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 15px;
+    }
+
+    .volcanic-modal .modal-header {
+        border-bottom: 1px solid var(--accent-orange);
+    }
+
+    .volcanic-modal .modal-footer {
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .btn-volcanic-delete {
+        background-color: var(--accent-red);
+        border: none;
+        color: white;
+        font-weight: bold;
+        padding: 10px 20px;
+        border-radius: 8px;
+    }
+
+    .btn-volcanic-secondary-modal {
+        background-color: #4a4a50;
+        border: none;
+        color: white;
+        font-weight: bold;
+        padding: 10px 20px;
+        border-radius: 8px;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-weight: bold;
+        font-size: 0.8rem;
+        white-space: nowrap;
+    }
+
+    .status-sin-iniciar {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .status-en-progreso {
+        background-color: #ffc107;
+        color: #212529;
+    }
+
+    .status-completada {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-status {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+        color: white;
+    }
+
     .hidden-row {
-    display: none;
+        display: none;
     }
 
     .no-results {
@@ -141,208 +236,174 @@ border-bottom: 2px solid var(--accent-orange);
     <h1 class="title-volcanic m-0">@ViewData["Title"]</h1>
     @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
     {
-      <a asp-page="Create" class="btn btn-volcanic-primary">Crear Nueva Tarea</a>
+        <a asp-page="Create" class="btn btn-volcanic-primary">Crear Nueva Tarea</a>
     }
 </div>
 
-<!-- ✅ NUEVO: Buscador con autocompletado -->
 <div class="search-container">
-<input type="text" 
-         id="searchInput" 
-    class="search-input" 
-           placeholder="🔍 Buscar por título, descripción, prioridad, estado o proyecto..." 
-    autocomplete="off">
+    <input type="text" id="searchInput" class="search-input" placeholder="Buscar por título, descripción, prioridad, estado o proyecto..." autocomplete="off">
 </div>
 
-<table class="table table-volcanic">
-<thead>
-  <tr>
-  <th>Título</th>
-    <th>Descripción</th>
-    <th class="text-center">Prioridad</th>
-        <th class="text-center">Estado</th>
-  <th>Proyecto Asignado</th>
-   @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
-    {
-   <th>Asignado a</th>
-  }
-    <th class="text-center">Acciones</th>
-   </tr>
-    </thead>
-    <tbody id="tareasTableBody">
-        @foreach (var item in Model.Tareas)
- {
-  <tr class="tarea-row"
-      data-titulo="@item.Titulo.ToLower()"
-      data-descripcion="@(item.Descripcion?.ToLower() ?? "")"
-       data-prioridad="@item.Prioridad.ToLower()"
-data-status="@item.Status.ToLower()"
-         data-proyecto="@(item.ProyectoNombre?.ToLower() ?? "")"
-   data-usuario="@(item.UsuarioAsignadoNombre?.ToLower() ?? "")">
-        <td>@item.Titulo</td>
- <td>@item.Descripcion</td>
-<td class="text-center">
-     <span class="priority-badge priority-@(item.Prioridad.ToLower())">@item.Prioridad</span>
-   </td>
-    <td class="text-center">
-       @if (item.Status == "SinIniciar")
-   {
-          <span class="status-badge status-sin-iniciar">Sin Iniciar</span>
-}
-    else if (item.Status == "EnProgreso")
-  {
-    <span class="status-badge status-en-progreso">En Progreso</span>
-     }
-       else if (item.Status == "Completada")
-     {
- <span class="status-badge status-completada">Completada</span>
-     }
-</td>
-   <td>
-        @if (!string.IsNullOrEmpty(item.ProyectoNombre))
-    {
-   <a class="project-link" asp-page="/Proyectos/Mostrar" asp-route-id="@item.IdProyecto">@item.ProyectoNombre</a>
-}
- else
-   {
- <span class="text-muted">No asignado</span>
-   }
-  </td>
+<div class="table-responsive">
+    <table class="table table-volcanic">
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Descripción</th>
+                <th class="text-center">Prioridad</th>
+                <th class="text-center">Estado</th>
+                <th>Proyecto Asignado</th>
+                @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
+                {
+                    <th>Asignado a</th>
+                }
+                <th class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tareasTableBody">
+            @foreach (var item in Model.Tareas)
+            {
+                <tr class="tarea-row"
+                    data-titulo="@item.Titulo.ToLower()"
+                    data-descripcion="@(item.Descripcion?.ToLower() ?? "")"
+                    data-prioridad="@item.Prioridad.ToLower()"
+                    data-status="@item.Status.ToLower()"
+                    data-proyecto="@(item.ProyectoNombre?.ToLower() ?? "")"
+                    data-usuario="@(item.UsuarioAsignadoNombre?.ToLower() ?? "")">
+                    <td>@item.Titulo</td>
+                    <td>@item.Descripcion</td>
+                    <td class="text-center">
+                        <span class="priority-badge priority-@(item.Prioridad.ToLower())">@item.Prioridad</span>
+                    </td>
+                    <td class="text-center">
+                        @if (item.Status == "SinIniciar")
+                        {
+                            <span class="status-badge status-sin-iniciar">Sin Iniciar</span>
+                        }
+                        else if (item.Status == "EnProgreso")
+                        {
+                            <span class="status-badge status-en-progreso">En Progreso</span>
+                        }
+                        else if (item.Status == "Completada")
+                        {
+                            <span class="status-badge status-completada">Completada</span>
+                        }
+                    </td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.ProyectoNombre))
+                        {
+                            <a class="project-link" asp-page="/Proyectos/Mostrar" asp-route-id="@item.IdProyecto">@item.ProyectoNombre</a>
+                        }
+                        else
+                        {
+                            <span class="text-muted">No asignado</span>
+                        }
+                    </td>
 
-        @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
-{
- <td>
-     @if (!string.IsNullOrEmpty(item.UsuarioAsignadoNombre))
-       {
-<span class="text-info">@item.UsuarioAsignadoNombre</span>
-     }
-    else
-       {
-       <span class="text-muted">Sin asignar</span>
-         }
-  </td>
-    }
+                    @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
+                    {
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.UsuarioAsignadoNombre))
+                            {
+                                <span class="text-info">@item.UsuarioAsignadoNombre</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Sin asignar</span>
+                            }
+                        </td>
+                    }
 
- <td class="text-center">
-      @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
-    {
- <div class="d-flex justify-content-center gap-1 flex-wrap">
-       <a class="btn btn-sm btn-info" asp-page="Edit" asp-route-id="@item.Id">Editar</a>
-     <a class="btn btn-sm btn-status" asp-page="CambiarEstado" asp-route-id="@item.Id">Estado</a>
-     <a class="btn btn-sm btn-warning" asp-page="Asignar" asp-route-id="@item.Id">Asignar</a>
-      <button type="button" class="btn btn-sm btn-secondary"
-      data-bs-toggle="modal"
-        data-bs-target="#confirmDeleteModal"
-      data-item-id="@item.Id">
-  Eliminar
-    </button>
-       </div>
-        }
-      else if (User.IsInRole("Empleado"))
-      {
-     <a class="btn btn-sm btn-status" asp-page="CambiarEstado" asp-route-id="@item.Id">Cambiar Estado</a>
-    }
-</td>
-       </tr>
- }
-</tbody>
-</table>
+                    <td class="text-center">
+                        <div class="d-flex justify-content-center gap-1 flex-wrap">
+                            @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
+                            {
+                                <a class="btn btn-sm btn-info" asp-page="Edit" asp-route-id="@item.Id">Editar</a>
+                                <a class="btn btn-sm btn-status" asp-page="CambiarEstado" asp-route-id="@item.Id">Estado</a>
+                                <a class="btn btn-sm btn-warning" asp-page="Asignar" asp-route-id="@item.Id">Asignar</a>
+                                <button type="button"
+                                        class="btn btn-sm btn-secondary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#confirmDeleteModal"
+                                        data-item-id="@item.Id">
+                                    Eliminar
+                                </button>
+                            }
+                            else if (User.IsInRole("Empleado"))
+                            {
+                                <a class="btn btn-sm btn-status" asp-page="CambiarEstado" asp-route-id="@item.Id">Cambiar Estado</a>
+                            }
+                        </div>
+                        <form method="post" style="display:none" id="deleteForm-@item.Id" asp-page-handler="Delete" asp-route-id="@item.Id"></form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
-<!-- ✅ NUEVO: Mensaje cuando no hay resultados -->
 <div id="noResults" class="no-results hidden-row">
-No se encontraron tareas que coincidan con tu búsqueda.
-</div>
-
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content volcanic-modal">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalLabel">Confirmar Eliminación</h5>
-  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-    <div class="modal-body">
-   <p>¿Estás seguro de que deseas eliminar esta tarea?</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-volcanic-secondary-modal" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn-volcanic-delete" id="confirmDeleteButton">Sí, Eliminar</button>
-      </div>
-  </div>
-</div>
+    No se encontraron tareas que coincidan con tu búsqueda.
 </div>
 
 @section Scripts {
- <script>
+    <script>
         document.addEventListener('DOMContentLoaded', function () {
-          var confirmDeleteModal = document.getElementById('confirmDeleteModal');
-        var confirmDeleteButton = document.getElementById('confirmDeleteButton');
-   var itemIdToDelete;
+            const searchInput = document.getElementById('searchInput');
+            const tareaRows = document.querySelectorAll('.tarea-row');
+            const noResults = document.getElementById('noResults');
 
-            confirmDeleteModal.addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget;
-      itemIdToDelete = button.getAttribute('data-item-id');
-       });
+            var confirmDeleteModal = document.getElementById('confirmDeleteModal');
+            var confirmDeleteButton = document.getElementById('confirmDeleteButton');
+            var itemIdToDelete;
 
-   confirmDeleteButton.addEventListener('click', function () {
-    if (itemIdToDelete) {
-     var form = document.createElement('form');
-      form.method = 'post';
-         form.action = '?id=' + itemIdToDelete;
-            
-    var token = document.querySelector('input[name="__RequestVerificationToken"]');
-      if (token) {
-       var hiddenToken = document.createElement('input');
-                  hiddenToken.type = 'hidden';
-    hiddenToken.name = '__RequestVerificationToken';
-         hiddenToken.value = token.value;
-         form.appendChild(hiddenToken);
-   }
-  
-document.body.appendChild(form);
-      form.submit();
-       }
-      });
+            if (confirmDeleteModal) {
+                confirmDeleteModal.addEventListener('show.bs.modal', function (event) {
+                    var button = event.relatedTarget;
+                    itemIdToDelete = button.getAttribute('data-item-id');
+                });
 
-      // ✅ NUEVO: Funcionalidad de búsqueda con autocompletado
-  const searchInput = document.getElementById('searchInput');
-         const tareaRows = document.querySelectorAll('.tarea-row');
-       const noResults = document.getElementById('noResults');
+                confirmDeleteButton.addEventListener('click', function () {
+                    var form = document.getElementById('deleteForm-' + itemIdToDelete);
+                    if (form) {
+                        form.submit();
+                    }
+                });
+            }
 
-            searchInput.addEventListener('input', function() {
-       const searchTerm = this.value.toLowerCase().trim();
-    let visibleCount = 0;
+            searchInput.addEventListener('input', function () {
+                const searchTerm = this.value.toLowerCase().trim();
+                let visibleCount = 0;
 
-            tareaRows.forEach(function(row) {
-               const titulo = row.getAttribute('data-titulo');
-          const descripcion = row.getAttribute('data-descripcion');
-          const prioridad = row.getAttribute('data-prioridad');
-      const status = row.getAttribute('data-status');
-          const proyecto = row.getAttribute('data-proyecto');
-          const usuario = row.getAttribute('data-usuario');
+                tareaRows.forEach(function (row) {
+                    const titulo = row.getAttribute('data-titulo');
+                    const descripcion = row.getAttribute('data-descripcion');
+                    const prioridad = row.getAttribute('data-prioridad');
+                    const status = row.getAttribute('data-status');
+                    const proyecto = row.getAttribute('data-proyecto');
+                    const usuario = row.getAttribute('data-usuario');
 
-        // Buscar en todos los campos
-         const matches = titulo.includes(searchTerm) || 
-      descripcion.includes(searchTerm) || 
-     prioridad.includes(searchTerm) || 
-       status.includes(searchTerm) ||
- proyecto.includes(searchTerm) ||
-       usuario.includes(searchTerm);
+                    const matches = titulo.includes(searchTerm) ||
+                        descripcion.includes(searchTerm) ||
+                        prioridad.includes(searchTerm) ||
+                        status.includes(searchTerm) ||
+                        proyecto.includes(searchTerm) ||
+                        usuario.includes(searchTerm);
 
-   if (matches || searchTerm === '') {
-       row.classList.remove('hidden-row');
- visibleCount++;
-  } else {
-               row.classList.add('hidden-row');
-             }
-          });
+                    if (matches || searchTerm === '') {
+                        row.classList.remove('hidden-row');
+                        visibleCount++;
+                    } else {
+                        row.classList.add('hidden-row');
+                    }
+                });
 
-// Mostrar mensaje si no hay resultados
-       if (visibleCount === 0 && searchTerm !== '') {
-               noResults.classList.remove('hidden-row');
-         } else {
-     noResults.classList.add('hidden-row');
-    }
-       });
+                if (visibleCount === 0 && searchTerm !== '') {
+                    noResults.classList.remove('hidden-row');
+                } else {
+                    noResults.classList.add('hidden-row');
+                }
+            });
         });
     </script>
 }

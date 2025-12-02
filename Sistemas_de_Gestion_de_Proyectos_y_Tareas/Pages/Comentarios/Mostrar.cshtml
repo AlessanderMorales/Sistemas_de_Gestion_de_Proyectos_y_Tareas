@@ -1,99 +1,100 @@
 ﻿@page "{id:int}"
 @model Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Comentarios.MostrarModel
 @{
-  ViewData["Title"] = "Detalle del Comentario";
+    ViewData["Title"] = "Detalle del Comentario";
 }
 
 <style>
     :root {
-    --accent-red: #D32F2F;
-   --accent-orange: #FF5722;
-  --accent-gold: #FFD700;
+        --accent-red: #D32F2F;
+        --accent-orange: #FF5722;
+        --accent-gold: #FFD700;
     }
 
     .title-volcanic {
         background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
-  -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
         font-weight: 700;
- border-bottom: 2px solid rgba(255,255,255,0.1);
-     padding-bottom: 1rem;
+        border-bottom: 2px solid rgba(255,255,255,0.1);
+        padding-bottom: 1rem;
         margin-bottom: 2rem;
     }
 
     .details-list dt {
         color: var(--accent-gold);
-   font-weight: 600;
+        font-weight: 600;
     }
+
     .details-list dd {
         color: #e0e0e0;
         margin-left: 0;
+        margin-bottom: 1rem;
     }
 
     .btn-volcanic-secondary {
-  background-color: transparent;
+        background-color: transparent;
         border: 2px solid #6c757d;
-   color: #ced4da;
+        color: #ced4da;
         font-weight: bold;
         padding: 8px 25px;
         border-radius: 8px;
-transition: all 0.3s ease;
+        transition: all 0.3s ease;
     }
-    .btn-volcanic-secondary:hover {
-  background-color: #6c757d;
-     color: white;
-    }
+
+        .btn-volcanic-secondary:hover {
+            background-color: #6c757d;
+            color: white;
+        }
 </style>
 
 <h2 class="title-volcanic">@ViewData["Title"]</h2>
 
 @if (Model.Comentario != null)
 {
-    <div>
-  <dl class="row details-list">
-      <dt class="col-sm-3 col-md-2">Contenido</dt>
-       <dd class="col-sm-9 col-md-10">@Model.Comentario.Contenido</dd>
+    <div class="container-fluid px-0">
+        <dl class="row details-list">
+            <dt class="col-sm-3 col-md-2">Contenido</dt>
+            <dd class="col-sm-9 col-md-10">@Model.Comentario.Contenido</dd>
 
-       <dt class="col-sm-3 col-md-2">Fecha de Creación</dt>
+            <dt class="col-sm-3 col-md-2">Fecha de Creación</dt>
             <dd class="col-sm-9 col-md-10">@Model.Comentario.Fecha.ToString("F")</dd>
 
-   @if (Model.Comentario.Tarea != null)
-     {
-       <dt class="col-sm-3 col-md-2">Tarea</dt>
- <dd class="col-sm-9 col-md-10">@Model.Comentario.Tarea.Titulo</dd>
+            @if (Model.Comentario.Tarea != null)
+            {
+                <dt class="col-sm-3 col-md-2">Tarea</dt>
+                <dd class="col-sm-9 col-md-10">@Model.Comentario.Tarea.Titulo</dd>
 
- @if (!string.IsNullOrEmpty(Model.Comentario.Tarea.ProyectoNombre))
-       {
-<dt class="col-sm-3 col-md-2">Proyecto</dt>
-<dd class="col-sm-9 col-md-10">@Model.Comentario.Tarea.ProyectoNombre</dd>
-   }
-     }
+                @if (!string.IsNullOrEmpty(Model.Comentario.Tarea.ProyectoNombre))
+                {
+                    <dt class="col-sm-3 col-md-2">Proyecto</dt>
+                    <dd class="col-sm-9 col-md-10">@Model.Comentario.Tarea.ProyectoNombre</dd>
+                }
+            }
 
- @if (Model.Comentario.Usuario != null)
-        {
-         <dt class="col-sm-3 col-md-2">Autor</dt>
-    <dd class="col-sm-9 col-md-10">@($"{Model.Comentario.Usuario.Nombres} {Model.Comentario.Usuario.PrimerApellido}")</dd>
-          }
+            @if (Model.Comentario.Usuario != null)
+            {
+                <dt class="col-sm-3 col-md-2">Autor</dt>
+                <dd class="col-sm-9 col-md-10">@($"{Model.Comentario.Usuario.Nombres} {Model.Comentario.Usuario.PrimerApellido}")</dd>
+            }
 
-@* Solo el Jefe ve a quién está dirigido *@
-@if ((User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin")) && 
-     Model.Comentario.Tarea != null && !string.IsNullOrEmpty(Model.Comentario.Tarea.UsuarioAsignadoNombre))
-{
-    <dt class="col-sm-3 col-md-2">Dirigido a</dt>
-    <dd class="col-sm-9 col-md-10"><span class="text-warning">@Model.Comentario.Tarea.UsuarioAsignadoNombre</span></dd>
-}
-
+            @if ((User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin")) &&
+                    Model.Comentario.Tarea != null && !string.IsNullOrEmpty(Model.Comentario.Tarea.UsuarioAsignadoNombre))
+            {
+                <dt class="col-sm-3 col-md-2">Dirigido a</dt>
+                <dd class="col-sm-9 col-md-10"><span class="text-warning">@Model.Comentario.Tarea.UsuarioAsignadoNombre</span></dd>
+            }
         </dl>
     </div>
 
     <div class="mt-4">
         <a asp-page="Index" class="btn btn-volcanic-secondary">Volver a la Lista</a>
- </div>
+    </div>
 }
 else
 {
     <div class="alert alert-danger" role="alert">
-     <h4 class="alert-heading">Comentario no encontrado</h4>
+        <h4 class="alert-heading">Comentario no encontrado</h4>
         <p>El comentario que buscas no existe o fue eliminado.</p>
     </div>
 }

@@ -2,8 +2,7 @@
 @model Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.LoginModel
 @{
     ViewData["Title"] = "Iniciar Sesión";
-  Layout = null;
-// ✅ Obtener mensaje de cookie
+    Layout = null;
     var sessionExpiredMessage = HttpContext.Request.Cookies["SessionExpiredMessage"];
 }
 
@@ -21,6 +20,7 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -28,9 +28,17 @@
         }
 
         @@keyframes moltenGradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         html, body {
@@ -60,16 +68,16 @@
             animation: fadeInSlideUp 0.8s ease-out forwards;
         }
 
-        .login-container h1 {
-            background: linear-gradient(45deg, #FFD700, #FF8C00);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 2rem;
-            font-weight: 800; 
-            text-align: center;
-        }
-        
+            .login-container h1 {
+                background: linear-gradient(45deg, #FFD700, #FF8C00);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                margin-bottom: 2rem;
+                font-weight: 800;
+                text-align: center;
+            }
+
         .form-label {
             color: #555;
         }
@@ -83,14 +91,14 @@
             border-radius: 8px;
         }
 
-        .form-control:focus {
-            background-color: #ffffff;
-            border-color: #FF8C00; 
-            box-shadow: 0 0 0 0.25rem rgba(255, 140, 0, 0.3);
-        }
+            .form-control:focus {
+                background-color: #ffffff;
+                border-color: #FF8C00;
+                box-shadow: 0 0 0 0.25rem rgba(255, 140, 0, 0.3);
+            }
 
         #login-submit {
-            background: linear-gradient(45deg, #D32F2F, #FF5722); 
+            background: linear-gradient(45deg, #D32F2F, #FF5722);
             border: none;
             padding: 14px;
             font-size: 1.1rem;
@@ -103,14 +111,13 @@
             cursor: pointer;
         }
 
-        #login-submit:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(255, 87, 34, 0.5); 
-            background: linear-gradient(45deg, #FF5722, #FF7043); 
-            background-size: 150% 150%; 
-        }
+            #login-submit:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 25px rgba(255, 87, 34, 0.5);
+                background: linear-gradient(45deg, #FF5722, #FF7043);
+                background-size: 150% 150%;
+            }
 
-        /* ✅ Estilos para la alerta de sesión expirada */
         .session-expired-alert {
             background-color: #fff3cd;
             border: 2px solid #ffc107;
@@ -124,61 +131,59 @@
             animation: fadeInSlideUp 0.6s ease-out forwards;
         }
 
-        .session-expired-alert strong {
-            color: #D32F2F;
-            display: block;
-            margin-bottom: 5px;
-            font-size: 1.05rem;
-        }
+            .session-expired-alert strong {
+                color: #D32F2F;
+                display: block;
+                margin-bottom: 5px;
+                font-size: 1.05rem;
+            }
     </style>
 </head>
 <body>
-  <main class="login-container">
-  <h1>@ViewData["Title"]</h1>
-      
-        <!-- ✅ Mostrar mensaje de sesión expirada si existe -->
-     @if (!string.IsNullOrEmpty(sessionExpiredMessage))
-    {
-   <div class="session-expired-alert">
-       <strong>⚠️ Sesión Expirada</strong>
-       @sessionExpiredMessage
-    </div>
-   }
+    <main class="login-container">
+        <h1>@ViewData["Title"]</h1>
 
-     <div class="row">
-     <div class="col-md-12">
-        <section>
-    <form id="account" method="post">
-       <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+        @if (!string.IsNullOrEmpty(sessionExpiredMessage))
+        {
+            <div class="session-expired-alert">
+                <strong>Sesión Expirada</strong>
+                @sessionExpiredMessage
+            </div>
+        }
 
-      <div class="form-floating mb-3">
-  <input asp-for="Input.EmailOrUsername" class="form-control" autocomplete="username" aria-required="true" placeholder="usuario o email" />
-  <label asp-for="Input.EmailOrUsername" class="form-label">Usuario o Correo Electrónico</label>
- <span asp-validation-for="Input.EmailOrUsername" class="text-danger"></span>
-           </div>
+        <div class="row">
+            <div class="col-md-12">
+                <section>
+                    <form id="account" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
 
-    <div class="form-floating mb-4">
-     <input asp-for="Input.Password" type="password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="contraseña" />
- <label asp-for="Input.Password" class="form-label">Contraseña</label>
-      <span asp-validation-for="Input.Password" class="text-danger"></span>
-    </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.EmailOrUsername" class="form-control" autocomplete="username" aria-required="true" placeholder="Usuario o Email" />
+                            <label asp-for="Input.EmailOrUsername" class="form-label">Usuario o Correo Electrónico</label>
+                            <span asp-validation-for="Input.EmailOrUsername" class="text-danger"></span>
+                        </div>
 
-     <div class="mt-4">
-     <button id="login-submit" type="submit" class="w-100 btn btn-lg">Iniciar Sesión</button>
-</div>
-         </form>
-           </section>
-        </div>
+                        <div class="form-floating mb-4">
+                            <input asp-for="Input.Password" type="password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Contraseña" />
+                            <label asp-for="Input.Password" class="form-label">Contraseña</label>
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="mt-4">
+                            <button id="login-submit" type="submit" class="w-100 btn btn-lg">Iniciar Sesión</button>
+                        </div>
+                    </form>
+                </section>
+            </div>
         </div>
     </main>
 
-  <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <partial name="_ValidationScriptsPartial" />
-    
- <!-- ✅ Script para limpiar la cookie después de mostrar el mensaje -->
+
     <script>
-   document.cookie = "SessionExpiredMessage=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = "SessionExpiredMessage=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     </script>
 </body>
 </html>
