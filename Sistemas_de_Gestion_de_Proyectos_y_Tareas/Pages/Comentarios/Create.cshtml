@@ -231,33 +231,34 @@
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+<partial name="_ValidationScriptsPartial" />
 
-    <script>
-        var tareaUsuariosMap = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
-            Model.TareaUsuariosMap.ToDictionary(
-                kvp => kvp.Key.ToString(),
-                kvp => kvp.Value.Select(u => new {
-                    Id = u.Id,
-                    Nombres = u.Nombres,
-                    PrimerApellido = u.PrimerApellido,
-                    Rol = u.Rol
-                }).ToList()
-            )
-        ));
+<script>
+    var tareaUsuariosMap = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+        Model.TareaUsuariosMap.ToDictionary(
+            kvp => kvp.Key.ToString(),
+            kvp => kvp.Value.Select(u => new {
+                Id = u.Id,
+                Nombres = u.Nombres,
+                PrimerApellido = u.PrimerApellido,
+                Rol = u.Rol
+            }).ToList()
+        )
+    ));
 
-        const tareaSearch = document.getElementById('tareaSearch');
-        const tareaOptions = document.querySelectorAll('.tarea-option');
-        const noResultsTarea = document.getElementById('noResultsTarea');
-        const tareaIdInput = document.getElementById('tareaIdInput');
-        const selectedTareaName = document.getElementById('selectedTareaName');
-        const tareasList = document.getElementById('tareasList');
+    const tareaSearch = document.getElementById('tareaSearch');
+    const tareaOptions = document.querySelectorAll('.tarea-option');
+    const noResultsTarea = document.getElementById('noResultsTarea');
+    const tareaIdInput = document.getElementById('tareaIdInput');
+    const selectedTareaName = document.getElementById('selectedTareaName');
+    const tareasList = document.getElementById('tareasList');
 
+    // FILTRO DE TAREAS
     tareaSearch.addEventListener('input', function () {
         const searchTerm = this.value.toLowerCase().trim();
         let visibleCount = 0;
 
-        tareaOptions.forEach(function (option) {
+        tareaOptions.forEach(option => {
             const titulo = option.getAttribute('data-titulo');
 
             if (titulo.includes(searchTerm) || searchTerm === '') {
@@ -277,33 +278,40 @@
         }
     });
 
-        function selectTarea(id, titulo) {
-            tareaIdInput.value = id;
-            selectedTareaName.textContent = titulo;
-            tareaSearch.value = titulo;
+    // -----------------------------
+    // SELECCIÓN REAL DE LA TAREA
+    // -----------------------------
+    function selectTareaFromElement(el) {
+        const id = el.getAttribute('data-id');
+        const titulo = el.textContent.trim();
 
-            tareaOptions.forEach(opt => opt.classList.remove('selected'));
-            const selectedOption = document.querySelector(`.tarea-option[data-id="${id}"]`);
-            if (selectedOption) {
-                selectedOption.classList.add('selected');
-            }
+        tareaIdInput.value = id;
+        selectedTareaName.textContent = titulo;
+        tareaSearch.value = titulo;
 
-            tareasList.style.display = 'none';
-            actualizarDestinatarios();
-        }
+        document.querySelectorAll('.tarea-option').forEach(opt => opt.classList.remove('selected'));
+        el.classList.add('selected');
 
-        const destinatarioSearch = document.getElementById('destinatarioSearch');
-        const destinatariosList = document.getElementById('destinatariosList');
-        const noResultsDestinatario = document.getElementById('noResultsDestinatario');
-        const destinatarioIdInput = document.getElementById('destinatarioIdInput');
-        const selectedDestinatarioName = document.getElementById('selectedDestinatarioName');
+        tareasList.style.display = 'none';
+        actualizarDestinatarios();
+    }
 
+    window.selectTareaFromElement = selectTareaFromElement;
+
+    // DATOS DEL DESTINATARIO
+    const destinatarioSearch = document.getElementById('destinatarioSearch');
+    const destinatariosList = document.getElementById('destinatariosList');
+    const noResultsDestinatario = document.getElementById('noResultsDestinatario');
+    const destinatarioIdInput = document.getElementById('destinatarioIdInput');
+    const selectedDestinatarioName = document.getElementById('selectedDestinatarioName');
+
+    // FILTRO DE DESTINATARIOS
     destinatarioSearch.addEventListener('input', function () {
         const searchTerm = this.value.toLowerCase().trim();
         const options = document.querySelectorAll('.destinatario-option');
         let visibleCount = 0;
 
-        options.forEach(function (option) {
+        options.forEach(option => {
             const nombre = option.getAttribute('data-nombre');
 
             if (nombre.includes(searchTerm) || searchTerm === '') {
@@ -323,100 +331,65 @@
         }
     });
 
-        function selectDestinatario(id, nombre) {
-            destinatarioIdInput.value = id;
-            selectedDestinatarioName.textContent = nombre;
-            destinatarioSearch.value = nombre;
-            const options = document.querySelectorAll('.destinatario-option');
-            options.forEach(opt => opt.classList.remove('selected'));
-            const selectedOption = document.querySelector(`.destinatario-option[data-id="${id}"]`);
-            if (selectedOption) {
-                selectedOption.classList.add('selected');
-            }
-            destinatariosList.style.display = 'none';
-        }
+    // SELECCIÓN DE DESTINATARIO
+    function selectDestinatario(id, nombre) {
+        destinatarioIdInput.value = id;
+        selectedDestinatarioName.textContent = nombre;
+        destinatarioSearch.value = nombre;
 
-        function actualizarDestinatarios() {
-            var tareaId = tareaIdInput.value;
-            destinatariosList.innerHTML = '';
-            destinatarioSearch.value = '';
-            selectedDestinatarioName.textContent = 'Ninguno';
-            destinatarioIdInput.value = '';
+        document.querySelectorAll('.destinatario-option').forEach(opt => opt.classList.remove('selected'));
+        const selected = document.querySelector(`.destinatario-option[data-id="${id}"]`);
+        if (selected) selected.classList.add('selected');
 
-        if (!tareaId || !tareaUsuariosMap[tareaId]) {
+        destinatariosList.style.display = 'none';
+    }
+
+    window.selectDestinatario = selectDestinatario;
+
+    // -----------------------------
+    // ACTUALIZAR DESTINATARIOS SEGÚN TAREA
+    // -----------------------------
+    function actualizarDestinatarios() {
+        var tareaId = tareaIdInput.value;
+
+        destinatariosList.innerHTML = '';
+        destinatarioSearch.value = '';
+        selectedDestinatarioName.textContent = 'Ninguno';
+        destinatarioIdInput.value = '';
+
+        if (!tareaUsuariosMap[tareaId]) {
             destinatariosList.innerHTML = '<div class="no-results">No hay usuarios disponibles para esta tarea</div>';
             destinatariosList.style.display = 'block';
-            noResultsDestinatario.style.display = 'none';
             return;
         }
 
         var usuarios = tareaUsuariosMap[tareaId];
 
-        if (!usuarios || usuarios.length === 0) {
-            destinatariosList.innerHTML = '<div class="no-results">No hay usuarios asignados a esta tarea</div>';
-            destinatariosList.style.display = 'block';
-            noResultsDestinatario.style.display = 'none';
-            return;
-        }
+        usuarios.forEach(usuario => {
+            var textoCompleto = `${usuario.Nombres} ${usuario.PrimerApellido}` +
+                (usuario.Rol === 'JefeDeProyecto' ? ' (Jefe de Proyecto)' :
+                 usuario.Rol === 'Empleado' ? ' (Empleado)' : '');
 
-            usuarios.forEach(function(usuario) {
-                var nombreCompleto = usuario.Nombres + ' ' + usuario.PrimerApellido;
-                var etiquetaRol = '';
-                if (usuario.Rol === 'JefeDeProyecto') {
-                    etiquetaRol = ' (Jefe de Proyecto)';
-                } else if (usuario.Rol === 'Empleado') {
-                    etiquetaRol = ' (Empleado)';
-                }
-                var textoCompleto = nombreCompleto + etiquetaRol;
+            var div = document.createElement('div');
+            div.className = 'option-item destinatario-option';
+            div.setAttribute('data-id', usuario.Id);
+            div.setAttribute('data-nombre', textoCompleto.toLowerCase());
+            div.setAttribute('onclick', `selectDestinatario(${usuario.Id}, '${textoCompleto.replace(/'/g, "\\'")}')`);
+            div.textContent = textoCompleto;
 
-                var div = document.createElement('div');
-                div.className = 'option-item destinatario-option';
-                div.setAttribute('data-id', usuario.Id);
-                div.setAttribute('data-nombre', textoCompleto.toLowerCase());
-                div.setAttribute('onclick', `selectDestinatario(${usuario.Id}, '${textoCompleto.replace(/'/g, "\\'")}')`);
-                div.textContent = textoCompleto;
-
-                destinatariosList.appendChild(div);
-            });
-            destinatariosList.style.display = 'block';
-            noResultsDestinatario.style.display = 'none';
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            if (tareaOptions.length > 0) {
-                const firstTarea = tareaOptions[0];
-                const id = firstTarea.getAttribute('data-id');
-                const titulo = firstTarea.textContent.trim();
-                selectTarea(id, titulo);
-            } else {
-                destinatariosList.innerHTML = '<div class="no-results">Selecciona una tarea primero</div>';
-                destinatariosList.style.display = 'block';
-            }
-            tareasList.style.display = 'none';
-            destinatariosList.style.display = 'none';
-            tareaSearch.addEventListener('focus', function() {
-                tareasList.style.display = 'block';
-                noResultsTarea.style.display = 'none';
-            });
-            tareaSearch.addEventListener('blur', function() {
-                setTimeout(() => {
-                    if (!tareasList.contains(document.activeElement)) {
-                        tareasList.style.display = 'none';
-                    }
-                }, 100);
-            });
-
-            destinatarioSearch.addEventListener('focus', function() {
-                destinatariosList.style.display = 'block';
-                noResultsDestinatario.style.display = 'none';
-            });
-            destinatarioSearch.addEventListener('blur', function() {
-                setTimeout(() => {
-                    if (!destinatariosList.contains(document.activeElement)) {
-                        destinatariosList.style.display = 'none';
-                    }
-                }, 100);
-            });
+            destinatariosList.appendChild(div);
         });
-    </script>
+
+        destinatariosList.style.display = 'block';
+        noResultsDestinatario.style.display = 'none';
+    }
+
+    // -----------------------------
+    // QUITAR AUTO-SELECCIÓN ERRÓNEA
+    // -----------------------------
+    document.addEventListener('DOMContentLoaded', function () {
+        tareasList.style.display = 'none';
+        destinatariosList.style.display = 'none';
+    });
+</script>
 }
