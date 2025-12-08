@@ -5,7 +5,6 @@ using Sistema_de_Gestion_de_Proyectos_y_Tareas.ApiClients;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Tareas;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Usuarios;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -38,41 +37,52 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
         {
             TareaId = id;
 
-            // Obtengo la tarea actual
+            // Obtener la tarea actual
             var tarea = await _tareaApi.GetByIdAsync(id);
             NombreTarea = tarea?.Titulo ?? "Tarea desconocida";
 
             // Usuarios asignados a esta tarea
             var asignadosIds = await _tareaApi.GetUsuariosAsignadosAsync(id);
 
-            // Todos los usuarios
             var todos = await _usuarioApi.GetAllAsync();
 
             UsuariosActualmenteAsignados = todos
                 .Where(u => asignadosIds.Contains(u.Id))
                 .ToList();
 
-            // ---------------------------
-            // 🔥 FILTRAR USUARIOS DE OTRAS TAREAS
-            // ---------------------------
+            // -----------------------------------------------
+            // 🔥 FILTRAR USUARIOS ASIGNADOS A OTRAS TAREAS ACTIVAS
+            //    PERO PERMITIRLOS SI ESA TAREA ESTÁ COMPLETADA
+            // -----------------------------------------------
+
             var todasLasTareas = await _tareaApi.GetAllAsync();
 
-            var usuariosEnOtrasTareas = new HashSet<int>();
+            // Usuarios ocupados en otras tareas NO completadas
+            var usuariosOcupados = new HashSet<int>();
 
             foreach (var t in todasLasTareas)
             {
                 if (t.Id == id)
-                    continue; // ignorar la tarea actual
+                    continue; // ignorar tarea actual
 
+                bool tareaCompletada = (t.Status == "Completada");
+                // Ajusta aquí si tu valor de "Completada" es otro
+
+                if (tareaCompletada)
+                    continue; // 🔥 Si está completada NO bloquea al usuario
+
+                // Tarea activa → bloquear usuarios asignados
                 var uids = await _tareaApi.GetUsuariosAsignadosAsync(t.Id);
                 foreach (var uid in uids)
-                    usuariosEnOtrasTareas.Add(uid);
+                    usuariosOcupados.Add(uid);
             }
 
-            // Usuarios disponibles = NO están en otras tareas
+            // Usuarios disponibles = 
+            // - no son SuperAdmin
+            // - no están ocupados en otra tarea ACTIVA
             UsuariosDisponibles = todos
                 .Where(u => u.Rol != "SuperAdmin")
-                .Where(u => !usuariosEnOtrasTareas.Contains(u.Id))  // 🔥 NO permitir duplicados
+                .Where(u => !usuariosOcupados.Contains(u.Id))
                 .ToList();
 
             return Page();
