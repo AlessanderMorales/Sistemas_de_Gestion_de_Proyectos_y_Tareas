@@ -25,7 +25,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
         [BindProperty]
         public TareaDTO Tarea { get; set; } = new();
 
-        public List<ProyectoDTO> ProyectosDisponibles { get; set; }
+        public List<ProyectoDTO> ProyectosDisponibles { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync()
         {

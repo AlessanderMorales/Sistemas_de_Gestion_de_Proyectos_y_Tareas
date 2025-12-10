@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Usuarios
@@ -8,22 +8,22 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Usuarios
     {
         [Required(ErrorMessage = "Los nombres son requeridos")]
         [Display(Name = "Nombres")]
-      public string Nombres { get; set; }
+      public string Nombres { get; set; } = "";
         
         [Required(ErrorMessage = "El primer apellido es requerido")]
         [Display(Name = "Primer Apellido")]
-        public string PrimerApellido { get; set; }
+        public string PrimerApellido { get; set; } = "";
         
         [Display(Name = "Segundo Apellido")]
         public string? SegundoApellido { get; set; }
   
         [Required(ErrorMessage = "El email es requerido")]
-        [EmailAddress(ErrorMessage = "El formato del email no es v�lido")]
+        [EmailAddress(ErrorMessage = "El formato del email no es válido")]
         [Display(Name = "Email")]
-        public string Email { get; set; }
+        public string Email { get; set; } = "";
       
         [Required(ErrorMessage = "El rol es requerido")]
         [Display(Name = "Rol")]
-        public string Rol { get; set; }
+        public string Rol { get; set; } = "";
   }
 }

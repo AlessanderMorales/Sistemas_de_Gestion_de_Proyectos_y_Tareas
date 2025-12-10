@@ -1,0 +1,1202 @@
+﻿@page
+@model Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas.GestionarModel
+@{
+    ViewData["Title"] = "Gesti�n de Tareas y Reportes";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/gestionar.css" asp-append-version="true" />
+}
+
+<style>
+    :root {
+        --accent-red: #D32F2F;
+        --accent-orange: #FF5722;
+        --accent-gold: #FFD700;
+        --text-primary: #f5f5f7;
+        --bg-dark: #2c2c31;
+        --bg-darker: #1e1e23;
+    }
+
+    .title-volcanic {
+        background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 700;
+        border-bottom: 2px solid rgba(255,255,255,0.1);
+        padding-bottom: 0.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .section-card {
+        background-color: var(--bg-dark);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .section-title {
+        color: var(--accent-gold);
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .search-input {
+        background-color: #3a3a40;
+        color: var(--text-primary);
+        border: 1px solid #555;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        width: 100%;
+        transition: all 0.3s ease;
+        margin-bottom: 0.5rem;
+    }
+
+    .search-input:focus {
+        background-color: #4a4a50;
+        border-color: var(--accent-orange);
+        box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
+        outline: none;
+    }
+
+    .options-list {
+        max-height: 250px;
+        overflow-y: auto;
+        background-color: #3a3a40;
+        border-radius: 8px;
+        border: 1px solid #555;
+        margin-bottom: 1rem;
+    }
+
+    .option-item {
+        padding: 0.75rem 1rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        border-bottom: 1px solid #4a4a50;
+    }
+
+    .option-item:hover {
+        background-color: #4a4a50;
+    }
+
+    .option-item.hidden {
+        display: none;
+    }
+
+    .option-item.selected {
+        background-color: #4a4a50;
+        border-left: 4px solid var(--accent-orange);
+    }
+
+    .empleado-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+        background-color: #3a3a40;
+        border-bottom: 1px solid #4a4a50;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .empleado-checkbox:hover {
+        background-color: #4a4a50;
+    }
+
+    .empleado-checkbox input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
+
+    .empleado-checkbox.hidden {
+        display: none;
+    }
+
+    .selected-info {
+        color: var(--accent-gold);
+        font-weight: 500;
+    }
+
+    .no-results {
+        padding: 1rem;
+        text-align: center;
+        color: #888;
+        font-style: italic;
+    }
+
+    .btn-volcanic-primary {
+        background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
+        border: none;
+        color: white;
+        font-weight: bold;
+        padding: 12px 25px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-volcanic-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
+    }
+
+    .btn-volcanic-secondary {
+        background-color: transparent;
+        border: 2px solid #6c757d;
+        color: #ced4da;
+        font-weight: bold;
+        padding: 10px 25px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-volcanic-secondary:hover {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .btn-create-tarea {
+        background: linear-gradient(45deg, #4CAF50, #45a049);
+        border: none;
+        color: white;
+        font-weight: bold;
+        padding: 10px 20px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-create-tarea:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+    }
+
+    .info-panel {
+        background-color: var(--bg-darker);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-top: 2rem;
+        border: 2px solid var(--accent-orange);
+    }
+
+    .info-panel-title {
+        color: var(--accent-gold);
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .empleado-item {
+        background-color: #3a3a40;
+        padding: 0.75rem 1rem;
+        border-radius: 6px;
+        margin-bottom: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .empleado-activo {
+        border-left: 4px solid #4CAF50;
+    }
+
+    .empleado-historico {
+        border-left: 4px solid #888;
+        opacity: 0.7;
+    }
+
+    .badge-activo {
+        background-color: #4CAF50;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.85rem;
+    }
+
+    .badge-historico {
+        background-color: #888;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.85rem;
+    }
+
+    .btn-report {
+        background: linear-gradient(45deg, #2196F3, #1976D2);
+        border: none;
+        color: white;
+        font-weight: bold;
+        padding: 12px 25px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        margin: 0.5rem;
+    }
+
+    .btn-report:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(33, 150, 243, 0.4);
+    }
+
+    .report-section {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+    }
+
+    .form-label {
+        color: var(--text-primary);
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .counter-badge {
+        background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        display: inline-block;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(255, 87, 34, 0.3);
+    }
+
+    .counter-badge:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 12px rgba(255, 87, 34, 0.5);
+    }
+
+    /* Animaciones */
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @@keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.02);
+        }
+    }
+
+    .section-card {
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    .option-item {
+        animation: slideIn 0.3s ease-out;
+    }
+
+    .empleado-checkbox {
+        animation: slideIn 0.3s ease-out;
+    }
+
+    /* Loading spinner */
+    .loading-spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s ease-in-out infinite;
+    }
+
+    @@keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* Badge con animaci�n */
+    .badge-activo {
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* Tooltips mejorados */
+    .tooltip-custom {
+        position: relative;
+        display: inline-block;
+    }
+
+    .tooltip-custom .tooltip-text {
+        visibility: hidden;
+        width: 200px;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -100px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .tooltip-custom:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    /* Alerts personalizados */
+    .alert {
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    .alert-success {
+        background: linear-gradient(135deg, #4CAF50, #45a049);
+        color: white;
+        border-left: 4px solid #2e7d32;
+    }
+
+    .alert-danger {
+        background: linear-gradient(135deg, #f44336, #e53935);
+        color: white;
+        border-left: 4px solid #c62828;
+    }
+
+    .alert-warning {
+        background: linear-gradient(135deg, #ff9800, #fb8c00);
+        color: white;
+        border-left: 4px solid #ef6c00;
+    }
+
+    .alert-info {
+        background: linear-gradient(135deg, #2196F3, #1976D2);
+        color: white;
+        border-left: 4px solid #0d47a1;
+    }
+
+    /* Scrollbar personalizado */
+    .options-list::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .options-list::-webkit-scrollbar-track {
+        background: #2c2c31;
+        border-radius: 4px;
+    }
+
+    .options-list::-webkit-scrollbar-thumb {
+        background: var(--accent-orange);
+        border-radius: 4px;
+    }
+
+    .options-list::-webkit-scrollbar-thumb:hover {
+        background: var(--accent-red);
+    }
+
+    /* Estado de carga en botones */
+    .btn-volcanic-primary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .btn-volcanic-primary.loading {
+        position: relative;
+        color: transparent;
+    }
+
+    .btn-volcanic-primary.loading::after {
+        content: "";
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        top: 50%;
+        left: 50%;
+        margin-left: -8px;
+        margin-top: -8px;
+        border: 2px solid white;
+        border-radius: 50%;
+        border-top-color: transparent;
+        animation: spin 1s linear infinite;
+    }
+
+    /* Mejoras responsive */
+    @@media (max-width: 992px) {
+        .info-panel {
+            margin-top: 1rem;
+        }
+
+        .report-section {
+            flex-direction: column;
+        }
+
+        .btn-report {
+            width: 100%;
+            margin: 0.25rem 0;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .section-card {
+            padding: 1rem;
+        }
+
+        .btn-create-tarea {
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .counter-badge {
+            font-size: 1rem;
+            padding: 0.4rem 0.8rem;
+        }
+    }
+</style>
+
+<h1 class="title-volcanic">@ViewData["Title"]</h1>
+
+@if (!string.IsNullOrEmpty(TempData["SuccessMessage"] as string))
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>? �xito:</strong> @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(TempData["ErrorMessage"] as string))
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>? Error:</strong> @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(TempData["WarningMessage"] as string))
+{
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>?? Advertencia:</strong> @TempData["WarningMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(TempData["InfoMessage"] as string))
+{
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <strong>?? Informaci�n:</strong> @TempData["InfoMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- SECCI�N 1: SELECCI�N DE PROYECTO -->
+        <div class="section-card">
+            <div class="section-title">
+                ?? Seleccionar Proyecto
+            </div>
+            
+            <input type="text" 
+                   id="proyectoSearch" 
+                   class="search-input" 
+                   placeholder="?? Buscar proyecto..."
+                   autocomplete="off">
+
+            <div id="proyectosList" class="options-list">
+                @if (Model.Proyectos != null && Model.Proyectos.Any())
+                {
+                    foreach (var proyecto in Model.Proyectos)
+                    {
+                        <div class="option-item proyecto-option"
+                             data-id="@proyecto.IdProyecto"
+                             data-nombre="@proyecto.Nombre.ToLower()">
+                            @proyecto.Nombre
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="no-results">No hay proyectos disponibles</div>
+                }
+            </div>
+
+            <small class="text-muted d-block">
+                Proyecto seleccionado: <span id="selectedProyectoName" class="selected-info">Ninguno</span>
+            </small>
+        </div>
+
+        <!-- SECCI�N 2: SELECCI�N/CREACI�N DE TAREA -->
+        <div class="section-card">
+            <div class="section-title">
+                ?? Seleccionar o Crear Tarea
+            </div>
+
+            <div class="d-flex gap-2 mb-3">
+                <input type="text" 
+                       id="tareaSearch" 
+                       class="search-input flex-grow-1" 
+                       placeholder="?? Buscar tarea..."
+                       autocomplete="off"
+                       disabled>
+
+                <a asp-page="/Tareas/Create" class="btn btn-create-tarea">
+                    ? Crear Nueva Tarea
+                </a>
+            </div>
+
+            <div id="tareasList" class="options-list" style="display: none;">
+                <!-- Se llenar�n din�micamente con JavaScript -->
+            </div>
+
+            <div id="noTareasMessage" class="no-results" style="display: none;">
+                Selecciona un proyecto primero
+            </div>
+
+            <small class="text-muted d-block">
+                Tarea seleccionada: <span id="selectedTareaName" class="selected-info">Ninguna</span>
+            </small>
+        </div>
+
+        <!-- SECCI�N 3: SELECCI�N DE EMPLEADOS -->
+        <div class="section-card">
+            <div class="section-title">
+                ?? Asignar Empleados Disponibles
+            </div>
+
+            <input type="text" 
+                   id="empleadoSearch" 
+                   class="search-input" 
+                   placeholder="?? Buscar empleado..."
+                   autocomplete="off"
+                   disabled>
+
+            <div id="empleadosList" class="options-list" style="display: none;">
+                <!-- Se llenar�n din�micamente -->
+            </div>
+
+            <div id="noEmpleadosMessage" class="no-results">
+                Selecciona una tarea primero
+            </div>
+
+            <div class="counter-badge mt-3" id="empleadosSeleccionadosCounter">
+                0 empleado(s) seleccionado(s)
+            </div>
+
+            <form method="post" id="asignarForm">
+                <input type="hidden" id="tareaIdInput" name="TareaId" />
+                <input type="hidden" id="empleadosIdsInput" name="EmpleadosIds" />
+
+                <button type="submit" class="btn btn-volcanic-primary" id="btnAsignar" disabled>
+                    Asignar Empleados Seleccionados
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- PANEL LATERAL: INFORMACI�N Y REPORTES -->
+    <div class="col-lg-4">
+        <div class="info-panel fade-in-up">
+            <div class="info-panel-title">
+                <span class="icon-rotate">??</span> Informaci�n de la Tarea
+            </div>
+
+            <div id="infoTareaContent">
+                <div class="empty-state">
+                    <div class="empty-state-icon">??</div>
+                    <p class="text-muted">Selecciona una tarea para ver la informaci�n</p>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="info-panel-title">
+                <span class="icon-rotate">??</span> Generar Reportes
+            </div>
+
+            <div class="report-section">
+                <button type="button" class="btn btn-report custom-tooltip" id="btnReportePDF" disabled data-tooltip="Generar reporte en formato PDF">
+                    <span class="icon-rotate">??</span> Reporte PDF
+                </button>
+                <button type="button" class="btn btn-report custom-tooltip" id="btnReporteExcel" disabled data-tooltip="Generar reporte en formato Excel">
+                    <span class="icon-rotate">??</span> Reporte Excel
+                </button>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="info-panel-title">
+                <span class="icon-rotate">??</span> Reporte Completo del Sistema
+            </div>
+
+            <div class="report-section">
+                <button type="button" class="btn btn-report custom-tooltip" onclick="generarReporteCompletoPDF()" data-tooltip="Incluye todos los proyectos y tareas">
+                    <span class="icon-rotate">??</span> Sistema Completo (PDF)
+                </button>
+                <button type="button" class="btn btn-report custom-tooltip" onclick="generarReporteCompletoExcel()" data-tooltip="Exportar todo el sistema a Excel">
+                    <span class="icon-rotate">??</span> Sistema Completo (Excel)
+                </button>
+            </div>
+
+            <!-- Indicador de ayuda -->
+            <div style="margin-top: 2rem; padding: 1rem; background-color: rgba(33, 150, 243, 0.1); border-radius: 8px; border-left: 4px solid #2196F3;">
+                <small style="color: var(--text-primary);">
+                    <strong>?? Tip:</strong> Los reportes incluyen informaci�n actualizada y datos hist�ricos de asignaciones.
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    // Variables globales
+    let proyectoSeleccionado = null;
+    let tareaSeleccionada = null;
+    let empleadosSeleccionados = [];
+    let todasLasTareas = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Tareas ?? new List<Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Tareas.TareaDTO>()));
+    let todosLosEmpleados = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.EmpleadosDisponibles ?? new List<Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Usuarios.UsuarioDTO>()));
+    let empleadosAsignados = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.EmpleadosAsignados ?? new Dictionary<int, List<Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Usuarios.UsuarioDTO>>()));
+
+    // ========== BUSCADOR DE PROYECTOS ==========
+    const proyectoSearch = document.getElementById('proyectoSearch');
+    const proyectoOptions = document.querySelectorAll('.proyecto-option');
+
+    // Agregar event listeners a cada proyecto
+    proyectoOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            const id = parseInt(this.getAttribute('data-id'));
+            const nombre = this.textContent.trim();
+            selectProyecto(id, nombre);
+        });
+    });
+
+    proyectoSearch.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase().trim();
+        proyectoOptions.forEach(option => {
+            const nombre = option.getAttribute('data-nombre');
+            if (nombre.includes(searchTerm) || searchTerm === '') {
+                option.classList.remove('hidden');
+            } else {
+                option.classList.add('hidden');
+            }
+        });
+    });
+
+    function selectProyecto(id, nombre) {
+        console.log('Seleccionando proyecto:', id, nombre);
+        
+        proyectoSeleccionado = id;
+        document.getElementById('selectedProyectoName').textContent = nombre;
+        
+        // Marcar como seleccionado
+        proyectoOptions.forEach(opt => opt.classList.remove('selected'));
+        const selectedElement = document.querySelector(`[data-id="${id}"]`);
+        if (selectedElement) {
+            selectedElement.classList.add('selected');
+            agregarEfectoSeleccion(selectedElement);
+        }
+
+        // Limpiar selecci�n de tarea
+        tareaSeleccionada = null;
+        document.getElementById('selectedTareaName').textContent = 'Ninguna';
+        empleadosSeleccionados = [];
+        actualizarContador();
+
+        // Habilitar b�squeda de tareas
+        document.getElementById('tareaSearch').disabled = false;
+        
+        // Cargar tareas del proyecto
+        cargarTareasDelProyecto(id);
+        
+        // Mostrar notificaci�n
+        mostrarNotificacion(`Proyecto "${nombre}" seleccionado`, 'info');
+    }
+
+    // ========== CARGAR TAREAS DEL PROYECTO ==========
+    function cargarTareasDelProyecto(idProyecto) {
+        const tareasList = document.getElementById('tareasList');
+        const noTareasMessage = document.getElementById('noTareasMessage');
+        
+        console.log('Filtrando tareas para proyecto:', idProyecto);
+        console.log('Todas las tareas:', todasLasTareas);
+        
+        // Soportar ambos formatos: PascalCase y camelCase
+        const tareasDelProyecto = todasLasTareas.filter(t => {
+            const idProy = t.IdProyecto || t.idProyecto;
+            return idProy === idProyecto;
+        });
+        
+        console.log('Tareas filtradas:', tareasDelProyecto);
+        
+        tareasList.innerHTML = '';
+        
+        if (tareasDelProyecto.length === 0) {
+            tareasList.style.display = 'none';
+            noTareasMessage.textContent = 'No hay tareas en este proyecto';
+            noTareasMessage.style.display = 'block';
+            return;
+        }
+
+        tareasDelProyecto.forEach(tarea => {
+            const tareaId = tarea.Id || tarea.id;
+            const tareaTitulo = tarea.Titulo || tarea.titulo;
+            
+            const div = document.createElement('div');
+            div.className = 'option-item tarea-option';
+            div.setAttribute('data-id', tareaId);
+            div.setAttribute('data-titulo', tareaTitulo.toLowerCase());
+            
+            // ? FIX: Usar addEventListener en lugar de onclick inline
+            div.addEventListener('click', function() {
+                selectTarea(tareaId, tareaTitulo);
+            });
+            
+            div.textContent = tareaTitulo;
+            tareasList.appendChild(div);
+        });
+
+        tareasList.style.display = 'block';
+        noTareasMessage.style.display = 'none';
+    }
+
+    // ========== BUSCADOR DE TAREAS ==========
+    const tareaSearch = document.getElementById('tareaSearch');
+    
+    tareaSearch.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase().trim();
+        const tareaOptions = document.querySelectorAll('.tarea-option');
+        
+        tareaOptions.forEach(option => {
+            const titulo = option.getAttribute('data-titulo');
+            if (titulo.includes(searchTerm) || searchTerm === '') {
+                option.classList.remove('hidden');
+            } else {
+                option.classList.add('hidden');
+            }
+        });
+    });
+
+    function selectTarea(id, titulo) {
+        console.log('Seleccionando tarea:', id, titulo);
+        
+        // ? FIX: Convertir a n�mero para evitar problemas de comparaci�n
+        tareaSeleccionada = parseInt(id);
+        document.getElementById('selectedTareaName').textContent = titulo;
+        document.getElementById('tareaIdInput').value = tareaSeleccionada;
+        
+        // Marcar como seleccionada
+        const tareaOptions = document.querySelectorAll('.tarea-option');
+        tareaOptions.forEach(opt => opt.classList.remove('selected'));
+        const selected = document.querySelector(`.tarea-option[data-id="${tareaSeleccionada}"]`);
+        if (selected) {
+            selected.classList.add('selected');
+            agregarEfectoSeleccion(selected);
+        }
+
+        // Habilitar b�squeda de empleados
+        document.getElementById('empleadoSearch').disabled = false;
+        
+        // Cargar empleados disponibles
+        cargarEmpleadosDisponibles();
+        
+        // Cargar informaci�n de la tarea
+        cargarInformacionTarea(tareaSeleccionada);
+
+        // ? FIX: Habilitar botones de reporte
+        const btnPDF = document.getElementById('btnReportePDF');
+        const btnExcel = document.getElementById('btnReporteExcel');
+        if (btnPDF) btnPDF.disabled = false;
+        if (btnExcel) btnExcel.disabled = false;
+        
+        console.log('Tarea seleccionada guardada:', tareaSeleccionada, typeof tareaSeleccionada);
+        
+        // Mostrar notificaci�n
+        mostrarNotificacion(`Tarea "${titulo}" seleccionada`, 'success');
+    }
+
+    // ========== CARGAR EMPLEADOS DISPONIBLES ==========
+    function cargarEmpleadosDisponibles() {
+        const empleadosList = document.getElementById('empleadosList');
+        const noEmpleadosMessage = document.getElementById('noEmpleadosMessage');
+        
+        empleadosList.innerHTML = '';
+        empleadosSeleccionados = [];
+        actualizarContador();
+
+        console.log('Empleados disponibles:', todosLosEmpleados); // Debug
+
+        if (!todosLosEmpleados || todosLosEmpleados.length === 0) {
+            empleadosList.style.display = 'none';
+            noEmpleadosMessage.textContent = 'No hay empleados disponibles';
+            noEmpleadosMessage.style.display = 'block';
+            return;
+        }
+
+        todosLosEmpleados.forEach(empleado => {
+            // Soportar ambos formatos: PascalCase (C#) y camelCase (JSON)
+            const empId = parseInt(empleado.Id || empleado.id);
+            const empNombres = empleado.Nombres || empleado.nombres || '';
+            const empApellido = empleado.PrimerApellido || empleado.primerApellido || '';
+            
+            console.log('Procesando empleado:', empId, empNombres, empApellido); // Debug
+            
+            const div = document.createElement('div');
+            div.className = 'empleado-checkbox';
+            div.setAttribute('data-id', empId);
+            div.setAttribute('data-nombre', `${empNombres} ${empApellido}`.toLowerCase());
+            
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = `emp_${empId}`;
+            checkbox.value = empId;
+            
+            // ? FIX: Usar addEventListener en lugar de onchange
+            checkbox.addEventListener('change', function() {
+                toggleEmpleado(empId);
+            });
+            
+            const label = document.createElement('label');
+            label.htmlFor = `emp_${empId}`;
+            label.textContent = `${empNombres} ${empApellido}`;
+            label.style.cursor = 'pointer';
+            label.style.flex = '1';
+            label.style.margin = '0';
+            
+            // ? FIX: Tambi�n permitir click en el label
+            label.addEventListener('click', function(e) {
+                e.preventDefault();
+                checkbox.checked = !checkbox.checked;
+                toggleEmpleado(empId);
+            });
+            
+            div.appendChild(checkbox);
+            div.appendChild(label);
+            empleadosList.appendChild(div);
+        });
+
+        empleadosList.style.display = 'block';
+        noEmpleadosMessage.style.display = 'none';
+    }
+
+    // ========== BUSCADOR DE EMPLEADOS ==========
+    const empleadoSearch = document.getElementById('empleadoSearch');
+    
+    empleadoSearch.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase().trim();
+        const empleadoCheckboxes = document.querySelectorAll('.empleado-checkbox');
+        
+        empleadoCheckboxes.forEach(checkbox => {
+            const nombre = checkbox.getAttribute('data-nombre');
+            if (nombre.includes(searchTerm) || searchTerm === '') {
+                checkbox.classList.remove('hidden');
+            } else {
+                checkbox.classList.add('hidden');
+            }
+        });
+    });
+
+    // ========== TOGGLE EMPLEADO ==========
+    function toggleEmpleado(idEmpleado) {
+        // ? FIX: Convertir a n�mero para evitar duplicados por tipo de dato
+        idEmpleado = parseInt(idEmpleado);
+        console.log('Toggle empleado:', idEmpleado, typeof idEmpleado);
+        
+        // ? FIX: Buscar por valor num�rico
+        const index = empleadosSeleccionados.findIndex(id => parseInt(id) === idEmpleado);
+        
+        if (index > -1) {
+            // Ya est� seleccionado, remover
+            empleadosSeleccionados.splice(index, 1);
+            console.log('Empleado removido. Array actual:', empleadosSeleccionados);
+        } else {
+            // No est� seleccionado, agregar
+            empleadosSeleccionados.push(idEmpleado);
+            console.log('Empleado agregado. Array actual:', empleadosSeleccionados);
+        }
+        
+        // Actualizar estilos visuales
+        const checkbox = document.getElementById(`emp_${idEmpleado}`);
+        if (checkbox) {
+            const parent = checkbox.closest('.empleado-checkbox');
+            if (parent) {
+                if (checkbox.checked) {
+                    parent.style.backgroundColor = '#4a4a50';
+                    parent.style.borderLeft = '4px solid var(--accent-orange)';
+                } else {
+                    parent.style.backgroundColor = '#3a3a40';
+                    parent.style.borderLeft = 'none';
+                }
+                agregarEfectoSeleccion(parent);
+            }
+        }
+        
+        actualizarContador();
+        document.getElementById('empleadosIdsInput').value = JSON.stringify(empleadosSeleccionados);
+        document.getElementById('btnAsignar').disabled = empleadosSeleccionados.length === 0;
+    }
+
+    function actualizarContador() {
+        document.getElementById('empleadosSeleccionadosCounter').textContent = 
+            `${empleadosSeleccionados.length} empleado(s) seleccionado(s)`;
+    }
+
+    // ========== CARGAR INFORMACI�N DE LA TAREA ==========
+    function cargarInformacionTarea(idTarea) {
+        const infoContent = document.getElementById('infoTareaContent');
+        
+        // Soportar ambos formatos
+        const tarea = todasLasTareas.find(t => (t.Id || t.id) === idTarea);
+        
+        if (!tarea) {
+            infoContent.innerHTML = '<p class="text-muted">No se pudo cargar la informaci�n</p>';
+            return;
+        }
+
+        const asignados = empleadosAsignados[idTarea] || [];
+        const tareaStatus = tarea.Status || tarea.status;
+        const tareaPrioridad = tarea.Prioridad || tarea.prioridad;
+        
+        let html = `
+            <div class="counter-badge mb-3">
+                Total asignados: ${asignados.length}
+            </div>
+            <div class="mb-3">
+                <strong>Estado:</strong> <span class="badge-activo">${tareaStatus}</span>
+            </div>
+            <div class="mb-3">
+                <strong>Prioridad:</strong> ${tareaPrioridad}</span>
+            </div>
+        `;
+
+        if (asignados.length > 0) {
+            html += '<div class="mb-2"><strong>Empleados asignados:</strong></div>';
+            asignados.forEach(emp => {
+                const empNombres = emp.Nombres || emp.nombres || '';
+                const empApellido = emp.PrimerApellido || emp.primerApellido || '';
+                
+                html += `
+                    <div class="empleado-item empleado-activo">
+                        <span>${empNombres} ${empApellido}</span>
+                        <span class="badge-activo">Activo</span>
+                    </div>
+                `;
+            });
+        }
+
+        infoContent.innerHTML = html;
+    }
+
+    // ========== GENERAR REPORTES (M�TODO MEJORADO - window.location) ==========
+    document.getElementById('btnReportePDF').onclick = function() {
+        if (tareaSeleccionada) {
+            mostrarNotificacion('?? Generando reporte PDF...', 'info');
+            
+            // Usar window.location para forzar descarga autom�tica
+            window.location.href = `/Tareas/Gestionar?handler=GenerarReporte&tareaId=${tareaSeleccionada}&formato=pdf`;
+            
+            // Notificar despu�s de un breve delay
+            setTimeout(() => {
+                mostrarNotificacion('? Reporte PDF descargado', 'success');
+            }, 1500);
+        } else {
+            mostrarNotificacion('?? Debes seleccionar una tarea primero', 'warning');
+        }
+    };
+
+    document.getElementById('btnReporteExcel').onclick = function() {
+        if (tareaSeleccionada) {
+            mostrarNotificacion('?? Generando reporte Excel...', 'info');
+            
+            // Usar window.location para forzar descarga autom�tica
+            window.location.href = `/Tareas/Gestionar?handler=GenerarReporte&tareaId=${tareaSeleccionada}&formato=excel`;
+            
+            // Notificar despu�s de un breve delay
+            setTimeout(() => {
+                mostrarNotificacion('? Reporte Excel descargado', 'success');
+            }, 1500);
+        } else {
+            mostrarNotificacion('?? Debes seleccionar una tarea primero', 'warning');
+        }
+    };
+
+    function generarReporteCompletoPDF() {
+        mostrarNotificacion('?? Generando reporte completo PDF...', 'info');
+        
+        // Usar window.location para forzar descarga autom�tica
+        window.location.href = '/Tareas/Gestionar?handler=GenerarReporteCompleto&formato=pdf';
+        
+        setTimeout(() => {
+            mostrarNotificacion('? Reporte completo PDF descargado', 'success');
+        }, 1500);
+    }
+
+    function generarReporteCompletoExcel() {
+        mostrarNotificacion('?? Generando reporte completo Excel...', 'info');
+        
+        // Usar window.location para forzar descarga autom�tica
+        window.location.href = '/Tareas/Gestionar?handler=GenerarReporteCompleto&formato=excel';
+        
+        setTimeout(() => {
+            mostrarNotificacion('? Reporte completo Excel descargado', 'success');
+        }, 1500);
+    }
+
+    // ========== VALIDACI�N DEL FORMULARIO ==========
+    document.getElementById('asignarForm').onsubmit = function(e) {
+        if (empleadosSeleccionados.length === 0) {
+            e.preventDefault();
+            mostrarNotificacion('?? Debes seleccionar al menos un empleado', 'warning');
+            return false;
+        }
+        
+        if (!tareaSeleccionada) {
+            e.preventDefault();
+            mostrarNotificacion('?? Debes seleccionar una tarea', 'warning');
+            return false;
+        }
+
+        // Mostrar estado de carga
+        const btnAsignar = document.getElementById('btnAsignar');
+        btnAsignar.classList.add('loading');
+        btnAsignar.disabled = true;
+
+        return true;
+    };
+
+    // ========== SISTEMA DE NOTIFICACIONES ==========
+    function mostrarNotificacion(mensaje, tipo = 'info') {
+        const colores = {
+            'success': { bg: 'linear-gradient(135deg, #4CAF50, #45a049)', icon: '?' },
+            'error': { bg: 'linear-gradient(135deg, #f44336, #e53935)', icon: '?' },
+            'warning': { bg: 'linear-gradient(135deg, #ff9800, #fb8c00)', icon: '??' },
+            'info': { bg: 'linear-gradient(135deg, #2196F3, #1976D2)', icon: '??' }
+        };
+
+        const config = colores[tipo] || colores.info;
+
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: ${config.bg};
+            color: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 9999;
+            animation: slideInRight 0.3s ease-out;
+            max-width: 400px;
+            font-weight: 500;
+        `;
+        notification.innerHTML = `${config.icon} ${mensaje}`;
+
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            notification.style.animation = 'slideOutRight 0.3s ease-out';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+
+    // ========== ANIMACIONES CSS DIN�MICAS ==========
+    const style = document.createElement('style');
+    style.textContent = `
+        @@keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @@keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+
+    // ========== EFECTOS VISUALES AL SELECCIONAR ==========
+    function agregarEfectoSeleccion(elemento) {
+        elemento.style.transition = 'all 0.3s ease';
+        elemento.style.transform = 'scale(1.02)';
+        setTimeout(() => {
+            elemento.style.transform = 'scale(1)';
+        }, 300);
+    }
+
+    // ========== AUTO-CERRAR ALERTS ==========
+    document.addEventListener('DOMContentLoaded', function() {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            setTimeout(() => {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            }, 5000);
+        });
+    });
+
+    // ========== EFECTOS ADICIONALES (sin sobrescribir las funciones originales) ==========
+    document.addEventListener('DOMContentLoaded', function() {
+        // Agregar efectos visuales cuando se selecciona un proyecto
+        document.querySelectorAll('.proyecto-option').forEach(option => {
+            option.addEventListener('click', function() {
+                agregarEfectoSeleccion(this);
+            });
+        });
+    });
+
+    // ========== LOADING EN GENERACI�N DE REPORTES ==========
+    function agregarLoadingBoton(botonId) {
+        const boton = document.getElementById(botonId);
+        if (boton) {
+            boton.addEventListener('click', function() {
+                const originalText = this.innerHTML;
+                this.classList.add('loading');
+                this.disabled = true;
+                
+                setTimeout(() => {
+                    this.classList.remove('loading');
+                    this.disabled = false;
+                }, 2000);
+            });
+        }
+    }
+
+    agregarLoadingBoton('btnReportePDF');
+    agregarLoadingBoton('btnReporteExcel');
+</script>
+}

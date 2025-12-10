@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
     <meta name="request-verification-token" content="@tokens.RequestToken" />
+    @await RenderSectionAsync("Styles", required: false)
     <style>
         :root {
             --bg-dark-primary: #1a1a1d;
@@ -400,13 +401,14 @@
                 }
                 else if (User.IsInRole("JefeDeProyecto"))
                 {
-                    <a asp-page="/Index" class="list-group-item list-group-item-action">Home</a>
-                    <a asp-page="/Empleados/Index" class="list-group-item list-group-item-action">Ver Empleados</a>
-                    <a asp-page="/Proyectos/Create" class="list-group-item list-group-item-action">Crear Proyectos</a>
-                    <a asp-page="/Proyectos/Index" class="list-group-item list-group-item-action">Mostrar Proyectos</a>
-                    <a asp-page="/Tareas/Index" class="list-group-item list-group-item-action">Tareas</a>
-                    <a asp-page="/Comentarios/Index" class="list-group-item list-group-item-action">Comentarios</a>
-                    <a asp-page="/Configuracion/CambiarPassword" class="list-group-item list-group-item-action">Configuración</a>
+                    <a asp-page="/Index" class="list-group-item list-group-item-action">🏠 Home</a>
+                    <a asp-page="/Empleados/Index" class="list-group-item list-group-item-action">👥 Ver Empleados</a>
+                    <a asp-page="/Proyectos/Create" class="list-group-item list-group-item-action">➕ Crear Proyectos</a>
+                    <a asp-page="/Proyectos/Index" class="list-group-item list-group-item-action">📁 Mostrar Proyectos</a>
+                    <a asp-page="/Tareas/Index" class="list-group-item list-group-item-action">📋 Tareas</a>
+                    <a asp-page="/Tareas/Gestionar" class="list-group-item list-group-item-action">📈 Asignación y Reportes</a>
+                    <a asp-page="/Comentarios/Index" class="list-group-item list-group-item-action">💬 Comentarios</a>
+                    <a asp-page="/Configuracion/CambiarPassword" class="list-group-item list-group-item-action">⚙️ Configuración</a>
                 }
                 else if (User.IsInRole("Empleado"))
                 {

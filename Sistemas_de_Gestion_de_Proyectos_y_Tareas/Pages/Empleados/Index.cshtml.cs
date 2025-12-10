@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.ApiClients;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Usuarios;
@@ -26,11 +26,11 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Empleados
 
         public class EmpleadoInfo
         {
-            public UsuarioDTO Usuario { get; set; }
+            public UsuarioDTO Usuario { get; set; } = default!;
             public List<string> ProyectosAsignados { get; set; } = new();
             public List<string> TareasAsignadas { get; set; } = new();
-            public int TotalProyectos { get; set; }
-            public int TotalTareas { get; set; }
+            public int TotalProyectos { get; set; } = default!;
+            public int TotalTareas { get; set; } = default!;
         }
 
         public List<EmpleadoInfo> Empleados { get; set; } = new();

@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Authorization;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.Application.Facades;
@@ -16,8 +16,8 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages
             _facade = facade;
         }
 
-        public EstadisticasGeneralesViewModel Estadisticas { get; set; }
-        public DashboardUsuarioViewModel DashboardUsuario { get; set; }
+        public EstadisticasGeneralesViewModel Estadisticas { get; set; } = default!;
+        public DashboardUsuarioViewModel DashboardUsuario { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -40,7 +40,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages
 
                     if (DashboardUsuario == null)
                     {
-                        TempData["ErrorMessage"] = "Tu cuenta de usuario no fue encontrada. Por favor, contacta al administrador o inicia sesi�n nuevamente.";
+                        TempData["ErrorMessage"] = "Tu cuenta de usuario no fue encontrada. Por favor, contacta al administrador o inicia sesión nuevamente.";
                         return RedirectToPage("/Logout");
                     }
                 }

@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Usuarios;
@@ -13,7 +13,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Proyectos
         private readonly ProyectoApiClient _proyectoApi;
         private readonly UsuarioApiClient _usuarioApi;
 
-        public ProyectoDTO Proyecto { get; set; }
+        public ProyectoDTO Proyecto { get; set; } = default!;
         public List<UsuarioDTO> UsuariosAsignados { get; set; } = new();
         public List<UsuarioDTO> UsuariosDisponibles { get; set; } = new();
 

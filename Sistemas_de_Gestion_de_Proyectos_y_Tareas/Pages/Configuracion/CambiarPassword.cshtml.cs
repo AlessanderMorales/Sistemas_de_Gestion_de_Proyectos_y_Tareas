@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+ï»¿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.ApiClients;
@@ -22,36 +22,36 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Configuracion
         }
 
         [BindProperty]
-        public CambiarContraseñaInput Input { get; set; } = new();
+        public CambiarContraseÃ±aInput Input { get; set; } = new();
 
-        public class CambiarContraseñaInput
+        public class CambiarContraseÃ±aInput
         {
-            [Required(ErrorMessage = "La contraseña actual es obligatoria.")]
+            [Required(ErrorMessage = "La contraseÃ±a actual es obligatoria.")]
             [DataType(DataType.Password)]
-            [Display(Name = "Contraseña Actual")]
-            public string ContraseñaActual { get; set; } = "";
+            [Display(Name = "ContraseÃ±a Actual")]
+            public string ContraseÃ±aActual { get; set; } = "";
 
-            [Required(ErrorMessage = "La nueva contraseña es obligatoria.")]
+            [Required(ErrorMessage = "La nueva contraseÃ±a es obligatoria.")]
             [DataType(DataType.Password)]
             [StringLength(15, MinimumLength = 8, ErrorMessage = "Debe tener entre 8 y 15 caracteres.")]
-            [Display(Name = "Nueva Contraseña")]
-            public string NuevaContraseña { get; set; } = "";
+            [Display(Name = "Nueva ContraseÃ±a")]
+            public string NuevaContraseÃ±a { get; set; } = "";
 
-            [Required(ErrorMessage = "Debe confirmar la contraseña.")]
+            [Required(ErrorMessage = "Debe confirmar la contraseÃ±a.")]
             [DataType(DataType.Password)]
-            [Compare("NuevaContraseña", ErrorMessage = "Las contraseñas no coinciden.")]
-            [Display(Name = "Confirmar Contraseña")]
-            public string ConfirmarContraseña { get; set; } = "";
+            [Compare("NuevaContraseÃ±a", ErrorMessage = "Las contraseÃ±as no coinciden.")]
+            [Display(Name = "Confirmar ContraseÃ±a")]
+            public string ConfirmarContraseÃ±a { get; set; } = "";
         }
 
         public void OnGet()
         {
-            _logger.LogInformation($"Usuario {User.Identity?.Name} accedió a cambiar contraseña");
+            _logger.LogInformation($"Usuario {User.Identity?.Name} accediÃ³ a cambiar contraseÃ±a");
 
-            var requiereCambio = User.FindFirst("RequiereCambioContraseña")?.Value == "True";
+            var requiereCambio = User.FindFirst("RequiereCambioContraseÃ±a")?.Value == "True";
             if (requiereCambio)
             {
-                _logger.LogInformation("Usuario requiere cambio de contraseña obligatorio");
+                _logger.LogInformation("Usuario requiere cambio de contraseÃ±a obligatorio");
             }
         }
 
@@ -59,61 +59,61 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Configuracion
         {
             try
             {
-                _logger.LogInformation($"Iniciando cambio de contraseña para usuario {User.Identity?.Name}");
+                _logger.LogInformation($"Iniciando cambio de contraseÃ±a para usuario {User.Identity?.Name}");
 
                 if (!ModelState.IsValid)
                 {
-                    _logger.LogWarning("ModelState inválido en cambio de contraseña");
+                    _logger.LogWarning("ModelState invÃ¡lido en cambio de contraseÃ±a");
                     return Page();
                 }
 
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int usuarioId))
                 {
-                    TempData["MensajeError"] = "Error al identificar el usuario. Por favor, inicie sesión nuevamente.";
+                    TempData["MensajeError"] = "Error al identificar el usuario. Por favor, inicie sesiÃ³n nuevamente.";
                     return Page();
                 }
 
-                if (Input.ContraseñaActual == Input.NuevaContraseña)
+                if (Input.ContraseÃ±aActual == Input.NuevaContraseÃ±a)
                 {
-                    TempData["MensajeError"] = "La nueva contraseña no puede ser igual a la actual.";
+                    TempData["MensajeError"] = "La nueva contraseÃ±a no puede ser igual a la actual.";
                     return Page();
                 }
 
-                if (!ValidarContraseña(Input.NuevaContraseña))
+                if (!ValidarContraseÃ±a(Input.NuevaContraseÃ±a))
                 {
-                    TempData["MensajeError"] = "La contraseña debe contener: mayúscula, minúscula, número y símbolo especial.";
+                    TempData["MensajeError"] = "La contraseÃ±a debe contener: mayÃºscula, minÃºscula, nÃºmero y sÃ­mbolo especial.";
                     return Page();
                 }
 
-                _logger.LogInformation($"Llamando a la API para cambiar contraseña del usuario {usuarioId}");
+                _logger.LogInformation($"Llamando a la API para cambiar contraseÃ±a del usuario {usuarioId}");
 
-                bool ok = await _usuarioApi.CambiarContraseñaAsync(
+                bool ok = await _usuarioApi.CambiarContraseÃ±aAsync(
                     usuarioId,
-                    Input.ContraseñaActual,
-                    Input.NuevaContraseña
+                    Input.ContraseÃ±aActual,
+                    Input.NuevaContraseÃ±a
                 );
 
                 if (!ok)
                 {
-                    _logger.LogWarning($"Fallo al cambiar contraseña para usuario {usuarioId}");
-                    TempData["MensajeError"] = "La contraseña actual es incorrecta.";
+                    _logger.LogWarning($"Fallo al cambiar contraseÃ±a para usuario {usuarioId}");
+                    TempData["MensajeError"] = "La contraseÃ±a actual es incorrecta.";
                     return Page();
                 }
 
-                _logger.LogInformation($"Contraseña cambiada exitosamente para usuario {usuarioId}");
+                _logger.LogInformation($"ContraseÃ±a cambiada exitosamente para usuario {usuarioId}");
 
                 var identity = (ClaimsIdentity)User.Identity;
-                var requiereCambioClaim = identity.FindFirst("RequiereCambioContraseña");
+                var requiereCambioClaim = identity.FindFirst("RequiereCambioContraseÃ±a");
                 if (requiereCambioClaim != null)
                 {
                     identity.RemoveClaim(requiereCambioClaim);
                 }
-                identity.AddClaim(new Claim("RequiereCambioContraseña", "False"));
+                identity.AddClaim(new Claim("RequiereCambioContraseÃ±a", "False"));
 
                 await HttpContext.SignInAsync("MyCookieAuth", new ClaimsPrincipal(identity));
 
-                TempData["SuccessMessage"] = "Contraseña cambiada exitosamente";
+                TempData["SuccessMessage"] = "ContraseÃ±a cambiada exitosamente";
 
                 if (User.IsInRole("SuperAdmin"))
                 {
@@ -128,13 +128,13 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Configuracion
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al cambiar contraseña");
-                TempData["MensajeError"] = "Ocurrió un error al cambiar la contraseña. Por favor, intente nuevamente.";
+                _logger.LogError(ex, "Error al cambiar contraseÃ±a");
+                TempData["MensajeError"] = "OcurriÃ³ un error al cambiar la contraseÃ±a. Por favor, intente nuevamente.";
                 return Page();
             }
         }
 
-        private bool ValidarContraseña(string c)
+        private bool ValidarContraseÃ±a(string c)
         {
             if (string.IsNullOrWhiteSpace(c)) return false;
             if (c.Length < 8 || c.Length > 15) return false;

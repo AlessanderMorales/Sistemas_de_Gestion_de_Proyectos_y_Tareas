@@ -2,7 +2,7 @@
 {
     public class TareaExtendidaDTO : TareaDTO
     {
-        public string? ProyectoNombre { get; set; }
-        public string? UsuarioAsignadoNombre { get; set; }
+        public new string? ProyectoNombre { get; set; }
+        public new string? UsuarioAsignadoNombre { get; set; }
     }
 }

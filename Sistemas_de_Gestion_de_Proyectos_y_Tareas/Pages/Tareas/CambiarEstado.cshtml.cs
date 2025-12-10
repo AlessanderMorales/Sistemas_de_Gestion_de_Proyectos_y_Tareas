@@ -19,10 +19,10 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
             _tareaApi = tareaApi;
         }
 
-        [BindProperty] public int TareaId { get; set; }
-        [BindProperty] public string NuevoStatus { get; set; }
-        public TareaDTO? Tarea { get; set; }
-        public SelectList StatusDisponibles { get; set; }
+        [BindProperty] public int TareaId { get; set; } = default!;
+        [BindProperty] public string NuevoStatus { get; set; } = default!;
+        public TareaDTO? Tarea { get; set; } = default!;
+        public SelectList StatusDisponibles { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int id)
         {

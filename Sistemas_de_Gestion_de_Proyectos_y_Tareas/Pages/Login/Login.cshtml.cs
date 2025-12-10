@@ -23,16 +23,16 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages
         [BindProperty]
         public InputModel Input { get; set; }
 
-        public string ReturnUrl { get; set; }
+        public string ReturnUrl { get; set; } = "/Index";
 
         public class InputModel
         {
             [Required(ErrorMessage = "El email o nombre de usuario es obligatorio.")]
-            public string EmailOrUsername { get; set; }
+            public string EmailOrUsername { get; set; } = "";
 
             [Required(ErrorMessage = "La contraseña es obligatoria.")]
             [DataType(DataType.Password)]
-            public string Password { get; set; }
+            public string Password { get; set; } = "";
         }
 
         public void OnGet(string returnUrl = null)
@@ -85,8 +85,8 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier, loginResponse.Id_Usuario.ToString()),
-                    new Claim(ClaimTypes.Name, loginResponse.Email ?? loginResponse.NombreUsuario),
-                    new Claim("Username", loginResponse.NombreUsuario ?? loginResponse.Email),
+                    new Claim(ClaimTypes.Name, loginResponse.Email ?? loginResponse.NombreUsuario ?? ""),
+                    new Claim("Username", loginResponse.NombreUsuario ?? loginResponse.Email ?? ""),
                     new Claim("FullName", fullName),
                     new Claim(ClaimTypes.Role, normalizedRole),
                     new Claim("RequiereCambioContraseña", requiereCambioString)

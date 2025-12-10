@@ -13,4 +13,9 @@
     <None Remove="Backups\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.102.1" />
+    <PackageReference Include="iTextSharp.LGPLv2.Core" Version="3.4.15" />
+  </ItemGroup>
+
 </Project>

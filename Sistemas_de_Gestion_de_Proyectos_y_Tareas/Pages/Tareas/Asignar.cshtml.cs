@@ -118,7 +118,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
     public class UsuarioViewModel
     {
         public int Id { get; set; }
-        public string Nombres { get; set; }
-        public string PrimerApellido { get; set; }
+        public string Nombres { get; set; } = "";
+        public string PrimerApellido { get; set; } = "";
     }
 }

@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Configuration;
+ï»¿using Microsoft.Extensions.Configuration;
 using System.Net;
 using System.Net.Mail;
 
@@ -13,7 +13,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Service
             _configuration = configuration;
         }
 
-        public async Task<bool> EnviarEmailContraseña(string destinatario, string nombreCompleto, string nombreUsuario, string contraseña)
+        public async Task<bool> EnviarEmailContraseÃ±a(string destinatario, string nombreCompleto, string nombreUsuario, string contraseÃ±a)
         {
             try
             {
@@ -30,7 +30,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Service
                 message.To.Add(new MailAddress(destinatario));
                 message.Subject = "Bienvenido - Credenciales de Acceso";
                 message.IsBodyHtml = true;
-                message.Body = GenerarCuerpoEmail(nombreCompleto, destinatario, nombreUsuario, contraseña);
+                message.Body = GenerarCuerpoEmail(nombreCompleto, destinatario, nombreUsuario, contraseÃ±a);
 
                 using var smtpClient = new SmtpClient(smtpHost, smtpPort);
                 smtpClient.Credentials = new NetworkCredential(smtpUsername, smtpPassword);
@@ -46,7 +46,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Service
             }
         }
 
-        private string GenerarCuerpoEmail(string nombreCompleto, string email, string nombreUsuario, string contraseña)
+        private string GenerarCuerpoEmail(string nombreCompleto, string email, string nombreUsuario, string contraseÃ±a)
         {
             return $@"
                 <!DOCTYPE html>
@@ -126,11 +126,11 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Service
                 <body>
                     <div class='container'>
                         <div class='header'>
-                            <h1>¡Bienvenido al Sistema!</h1>
+                            <h1>Â¡Bienvenido al Sistema!</h1>
                         </div>
                         <div class='content'>
                             <p>Hola <strong>{nombreCompleto}</strong>,</p>
-                            <p>Tu cuenta ha sido creada exitosamente en nuestro Sistema de Gestión de Proyectos y Tareas.</p>
+                            <p>Tu cuenta ha sido creada exitosamente en nuestro Sistema de GestiÃ³n de Proyectos y Tareas.</p>
                             
                             <div class='credentials'>
                                 <h3 style='margin-top: 0; color: #D32F2F;'>Tus Credenciales de Acceso</h3>
@@ -141,29 +141,29 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Service
                                 </div>
                                 
                                 <div class='credential-item'>
-                                    <span class='credential-label'>Contraseña temporal:</span><br/>
-                                    <span class='credential-value'>{contraseña}</span>
+                                    <span class='credential-label'>ContraseÃ±a temporal:</span><br/>
+                                    <span class='credential-value'>{contraseÃ±a}</span>
                                 </div>
                             </div>
 
                             <div class='info-box'>
                                 <strong> Nota:</strong><br/>
-                                También puedes iniciar sesión usando tu email: <strong>{email}</strong>
+                                TambiÃ©n puedes iniciar sesiÃ³n usando tu email: <strong>{email}</strong>
                             </div>
 
                             <div class='warning'>
                                 <strong> Importante:</strong><br/>
-                                • Por seguridad, te recomendamos cambiar tu contraseña después del primer inicio de sesión.<br/>
-                                • Ve a: <strong>Configuración Cambiar Contraseña</strong><br/>
-                                • Nunca compartas tus credenciales con nadie.
+                                â€¢ Por seguridad, te recomendamos cambiar tu contraseÃ±a despuÃ©s del primer inicio de sesiÃ³n.<br/>
+                                â€¢ Ve a: <strong>ConfiguraciÃ³n Cambiar ContraseÃ±a</strong><br/>
+                                â€¢ Nunca compartas tus credenciales con nadie.
                             </div>
 
-                            <p>Puedes iniciar sesión en el sistema con tu <strong>nombre de usuario</strong> o tu <strong>email</strong>, junto con la contraseña proporcionada.</p>
+                            <p>Puedes iniciar sesiÃ³n en el sistema con tu <strong>nombre de usuario</strong> o tu <strong>email</strong>, junto con la contraseÃ±a proporcionada.</p>
                             <p>Si tienes alguna pregunta o necesitas ayuda, no dudes en contactar con el administrador del sistema.</p>
                         </div>
                         <div class='footer'>
-                            <p>Este es un correo automático, por favor no respondas a este mensaje.</p>
-                            <p>&copy; 2025 Sistema de Gestión de Proyectos y Tareas</p>
+                            <p>Este es un correo automÃ¡tico, por favor no respondas a este mensaje.</p>
+                            <p>&copy; 2025 Sistema de GestiÃ³n de Proyectos y Tareas</p>
                         </div>
                     </div>
                 </body>

@@ -1,0 +1,301 @@
+/* ============================================================
+   ESTILOS ADICIONALES PARA PÁGINA DE GESTIÓN
+   ============================================================ */
+
+/* Animaciones de entrada suaves */
+.fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Efecto hover mejorado en cards */
+.section-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(255, 87, 34, 0.2);
+    transition: all 0.3s ease;
+}
+
+/* Iconos animados */
+.icon-rotate {
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.icon-rotate:hover {
+    transform: rotate(360deg);
+}
+
+/* Badge pulsante */
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: 0 4px 6px rgba(255, 87, 34, 0.3);
+    }
+    50% {
+        box-shadow: 0 6px 20px rgba(255, 87, 34, 0.6);
+    }
+}
+
+.counter-badge-pulse {
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Skeleton loading */
+.skeleton {
+    background: linear-gradient(90deg, #3a3a40 25%, #4a4a50 50%, #3a3a40 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Estado vacío mejorado */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #888;
+}
+
+.empty-state-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+/* Transiciones suaves en todos los elementos interactivos */
+.option-item,
+.empleado-checkbox,
+.btn-report,
+.btn-volcanic-primary,
+.btn-volcanic-secondary,
+.btn-create-tarea {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Mejora en focus para accesibilidad */
+.search-input:focus,
+.option-item:focus,
+button:focus {
+    outline: 2px solid var(--accent-orange);
+    outline-offset: 2px;
+}
+
+/* Sombras suaves */
+.soft-shadow {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.medium-shadow {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.strong-shadow {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Gradientes de fondo alternativos */
+.gradient-primary {
+    background: linear-gradient(135deg, var(--accent-red), var(--accent-orange));
+}
+
+.gradient-success {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+}
+
+.gradient-info {
+    background: linear-gradient(135deg, #2196F3, #1976D2);
+}
+
+/* Estados de hover mejorados */
+.option-item:hover,
+.empleado-checkbox:hover {
+    transform: translateX(4px);
+}
+
+/* Separadores elegantes */
+.divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    margin: 2rem 0;
+}
+
+/* Loading dots animation */
+.loading-dots::after {
+    content: '...';
+    animation: loading-dots 1.5s infinite;
+}
+
+@keyframes loading-dots {
+    0%, 20% {
+        content: '.';
+    }
+    40% {
+        content: '..';
+    }
+    60%, 100% {
+        content: '...';
+    }
+}
+
+/* Mejora en los tooltips */
+.custom-tooltip {
+    position: relative;
+    cursor: help;
+}
+
+.custom-tooltip::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.custom-tooltip:hover::before {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+}
+
+/* Print styles para reportes */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    
+    .section-card {
+        page-break-inside: avoid;
+    }
+}
+
+/* Dark mode support (futuro) */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-dark: #1a1a1d;
+        --bg-darker: #0f0f11;
+    }
+}
+
+/* Responsive mejoras adicionales */
+@media (max-width: 576px) {
+    .section-title {
+        font-size: 1rem;
+    }
+    
+    .counter-badge {
+        font-size: 0.9rem;
+        padding: 0.3rem 0.6rem;
+    }
+    
+    .btn-report {
+        font-size: 0.875rem;
+        padding: 10px 20px;
+    }
+}
+
+/* Efectos de glassmorphism */
+.glass-effect {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Indicadores de progreso */
+.progress-ring {
+    transform: rotate(-90deg);
+}
+
+.progress-ring-circle {
+    stroke-dasharray: 283;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 0.5s ease;
+}
+
+/* Badges con efectos */
+.badge-shimmer {
+    background: linear-gradient(90deg, 
+        var(--accent-red) 0%, 
+        var(--accent-orange) 50%, 
+        var(--accent-red) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Microinteracciones */
+.bounce-on-click {
+    animation: bounce 0.5s ease;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+/* Estados de éxito/error visuales */
+.success-flash {
+    animation: success-flash 0.5s ease;
+}
+
+@keyframes success-flash {
+    0%, 100% {
+        background-color: transparent;
+    }
+    50% {
+        background-color: rgba(76, 175, 80, 0.3);
+    }
+}
+
+.error-shake {
+    animation: error-shake 0.5s ease;
+}
+
+@keyframes error-shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-10px);
+    }
+    75% {
+        transform: translateX(10px);
+    }
+}

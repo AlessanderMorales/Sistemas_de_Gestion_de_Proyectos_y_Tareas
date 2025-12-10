@@ -66,7 +66,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
             try
             {
                 Tarea.Titulo = Trim(Tarea.Titulo);
-                Tarea.Descripcion = Trim(Tarea.Descripcion);
+                Tarea.Descripcion = Trim(Tarea.Descripcion ?? "");
 
                 // Validar título
                 if (!string.IsNullOrEmpty(Tarea.Titulo) && ContienePatroneseligrosos(Tarea.Titulo))

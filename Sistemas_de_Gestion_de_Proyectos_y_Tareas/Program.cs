@@ -70,25 +70,31 @@ builder.Services.AddTransient<JwtAuthenticationHandler>();
 
 builder.Services.AddHttpClient<UsuarioApiClient>(client =>
 {
-    client.BaseAddress = new Uri(builder.Configuration["ApiUrls:UsuarioApi"]);
+    client.BaseAddress = new Uri(builder.Configuration["ApiUrls:UsuarioApi"] ?? "http://localhost:5001");
 }).AddHttpMessageHandler<JwtAuthenticationHandler>();
 
 builder.Services.AddHttpClient<ProyectoApiClient>(client =>
 {
-    client.BaseAddress = new Uri(builder.Configuration["ApiUrls:ProyectoApi"]);
+    client.BaseAddress = new Uri(builder.Configuration["ApiUrls:ProyectoApi"] ?? "http://localhost:5002");
 }).AddHttpMessageHandler<JwtAuthenticationHandler>();
 
 builder.Services.AddHttpClient<TareaApiClient>(client =>
 {
-    client.BaseAddress = new Uri(builder.Configuration["ApiUrls:TareaApi"]);
+    client.BaseAddress = new Uri(builder.Configuration["ApiUrls:TareaApi"] ?? "http://localhost:5003");
 }).AddHttpMessageHandler<JwtAuthenticationHandler>();
 
 builder.Services.AddHttpClient<ComentarioApiClient>(client =>
 {
-    client.BaseAddress = new Uri(builder.Configuration["ApiUrls:ComentarioApi"]);
+    client.BaseAddress = new Uri(builder.Configuration["ApiUrls:ComentarioApi"] ?? "http://localhost:5004");
+}).AddHttpMessageHandler<JwtAuthenticationHandler>();
+
+builder.Services.AddHttpClient<SagaApiClient>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5005");
 }).AddHttpMessageHandler<JwtAuthenticationHandler>();
 
 builder.Services.AddScoped<GestionProyectosFacade>();
+builder.Services.AddScoped<Sistema_de_Gestion_de_Proyectos_y_Tareas.Services.ReporteService>();
 
 builder.Services.AddRazorPages(options =>
 {
