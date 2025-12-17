@@ -475,6 +475,18 @@
         <strong>? �xito:</strong> @TempData["SuccessMessage"]
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
+    
+    @if (!string.IsNullOrEmpty(TempData["DownloadPdf"] as string) && !string.IsNullOrEmpty(TempData["DownloadExcel"] as string))
+    {
+        <script>
+            setTimeout(function() {
+                window.location.href = '/Tareas/Gestionar?handler=DescargarReporte&archivo=@TempData["DownloadPdf"]';
+                setTimeout(function() {
+                    window.location.href = '/Tareas/Gestionar?handler=DescargarReporte&archivo=@TempData["DownloadExcel"]';
+                }, 500);
+            }, 1000);
+        </script>
+    }
 }
 
 @if (!string.IsNullOrEmpty(TempData["ErrorMessage"] as string))

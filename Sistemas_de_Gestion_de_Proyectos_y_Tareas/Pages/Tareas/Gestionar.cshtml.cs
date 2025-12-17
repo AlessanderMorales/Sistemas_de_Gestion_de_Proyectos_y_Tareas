@@ -149,11 +149,10 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
                 {
                     try
                     {
-                        _logger.LogInformation($"📄 Generando reportes automáticos (PDF y Excel) para tarea {TareaId}");
+                        _logger.LogInformation($"📄 Generando reportes para descarga automática (tarea {TareaId})");
                         
                         var nombreUsuario = User.Identity?.Name ?? "Sistema";
                         
-                        // Obtener directorio raíz
                         var directorioActual = Directory.GetCurrentDirectory();
                         var directorioRaiz = Directory.GetParent(directorioActual)?.Parent?.FullName;
                         
@@ -165,31 +164,28 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
                         var rutaReportes = Path.Combine(directorioRaiz, "reportes");
                         Directory.CreateDirectory(rutaReportes);
 
-                        // Usar el mismo timestamp para ambos archivos
                         var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
                         
-                        // Generar PDF
                         var pdfBytes = await _reporteService.GenerarReporteTareaPDFAsync(TareaId, nombreUsuario);
                         var nombreArchivoPdf = $"Tarea_{TareaId}_{timestamp}.pdf";
                         var rutaCompletaPdf = Path.Combine(rutaReportes, nombreArchivoPdf);
                         await System.IO.File.WriteAllBytesAsync(rutaCompletaPdf, pdfBytes);
                         _logger.LogInformation($"✅ Reporte PDF guardado en: {rutaCompletaPdf}");
                         
-                        // Generar Excel
                         var excelBytes = await _reporteService.GenerarReporteTareaExcelAsync(TareaId, nombreUsuario);
                         var nombreArchivoExcel = $"Tarea_{TareaId}_{timestamp}.xlsx";
                         var rutaCompletaExcel = Path.Combine(rutaReportes, nombreArchivoExcel);
                         await System.IO.File.WriteAllBytesAsync(rutaCompletaExcel, excelBytes);
                         _logger.LogInformation($"✅ Reporte Excel guardado en: {rutaCompletaExcel}");
 
-                        TempData["SuccessMessage"] = $"✅ {empleadosIdsLista.Count} empleado(s) asignado(s) exitosamente. " +
-                                                     $"📄 Reportes generados: {nombreArchivoPdf} y {nombreArchivoExcel}";
+                        TempData["SuccessMessage"] = $"✅ {empleadosIdsLista.Count} empleado(s) asignado(s) exitosamente. 📄 Reportes guardados: {nombreArchivoPdf} y {nombreArchivoExcel}";
+                        TempData["DownloadPdf"] = nombreArchivoPdf;
+                        TempData["DownloadExcel"] = nombreArchivoExcel;
                     }
                     catch (Exception exReporte)
                     {
-                        _logger.LogWarning($"⚠️ No se pudieron generar los reportes automáticos: {exReporte.Message}");
-                        TempData["SuccessMessage"] = $"✅ {empleadosIdsLista.Count} empleado(s) asignado(s) exitosamente. " +
-                                                     $"⚠️ Los reportes no pudieron generarse automáticamente.";
+                        _logger.LogWarning($"⚠️ No se pudieron generar los reportes: {exReporte.Message}");
+                        TempData["SuccessMessage"] = $"✅ {empleadosIdsLista.Count} empleado(s) asignado(s) exitosamente. ⚠️ Los reportes no pudieron generarse.";
                     }
                 }
                 else
@@ -252,6 +248,42 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
             {
                 _logger.LogError($"Error al generar reporte: {ex.Message}");
                 TempData["ErrorMessage"] = $"Error al generar el reporte: {ex.Message}";
+                return RedirectToPage();
+            }
+        }
+
+        public async Task<IActionResult> OnGetDescargarReporteAsync(string archivo)
+        {
+            try
+            {
+                var directorioActual = Directory.GetCurrentDirectory();
+                var directorioRaiz = Directory.GetParent(directorioActual)?.Parent?.FullName;
+                
+                if (string.IsNullOrEmpty(directorioRaiz))
+                {
+                    directorioRaiz = directorioActual;
+                }
+                
+                var rutaReportes = Path.Combine(directorioRaiz, "reportes");
+                var rutaArchivo = Path.Combine(rutaReportes, archivo);
+
+                if (!System.IO.File.Exists(rutaArchivo))
+                {
+                    TempData["ErrorMessage"] = "El archivo no existe.";
+                    return RedirectToPage();
+                }
+
+                var fileBytes = await System.IO.File.ReadAllBytesAsync(rutaArchivo);
+                var contentType = archivo.EndsWith(".pdf") ? "application/pdf" : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+                Response.Headers.Append("Content-Disposition", $"attachment; filename=\"{archivo}\"");
+                
+                return File(fileBytes, contentType, archivo);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al descargar archivo: {ex.Message}");
+                TempData["ErrorMessage"] = "Error al descargar el archivo.";
                 return RedirectToPage();
             }
         }
