@@ -34,7 +34,6 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
 
         public async Task OnGetAsync()
         {
-            // Si es empleado → solo ver tareas asignadas
             if (User.IsInRole("Empleado"))
             {
                 var idClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -43,22 +42,16 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
                 {
                     var tareas = await _tareaApi.GetByUsuarioAsync(usuarioId);
                     Tareas = await EnriquecerTareas(tareas);
-                    // Ordenar por ID descendente (más nuevas primero)
                     Tareas = Tareas.OrderByDescending(t => t.Id).ToList();
                     return;
                 }
             }
 
-            // Si es jefe/admin → ver todas las tareas
             var todas = await _tareaApi.GetAllAsync();
             Tareas = await EnriquecerTareas(todas);
-            // Ordenar por ID descendente (más nuevas primero)
             Tareas = Tareas.OrderByDescending(t => t.Id).ToList();
         }
 
-        // ============================================================
-        // 🗑 ELIMINAR TAREA + ELIMINACIÓN EN CASCADA DE COMENTARIOS
-        // ============================================================
         public async Task<IActionResult> OnPostAsync(int id)
         {
             if (User.IsInRole("Empleado"))
@@ -71,22 +64,18 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
 
             try
             {
-                // 1️⃣ Obtener TODOS los comentarios para filtrarlos por IdTarea
                 var todosComentarios = (await _comentarioApi.GetAllAsync())
-                                        ?.ToList() ?? new List<ComentarioDTO>();
+                                        .ToList() ?? new List<ComentarioDTO>();
 
-                // 2️⃣ Filtrar comentarios que dependen de esta tarea
                 var comentariosDeTarea = todosComentarios
                     .Where(c => c.IdTarea == id)
                     .ToList();
 
-                // 3️⃣ Eliminar (estado = 0) cada comentario
                 foreach (var c in comentariosDeTarea)
                 {
                     await _comentarioApi.DeleteAsync(c.IdComentario);
                 }
 
-                // 4️⃣ Eliminar la tarea (estado = 0)
                 ok = await _tareaApi.DeleteAsync(id);
             }
             catch (Exception ex)
@@ -103,9 +92,6 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
             return RedirectToPage();
         }
 
-        // ============================================================
-        // 🧠 ENRIQUECER TAREAS
-        // ============================================================
         private async Task<List<TareaExtendidaDTO>> EnriquecerTareas(List<TareaDTO> tareas)
         {
             var usuarios = await _usuarioApi.GetAllAsync();
@@ -123,16 +109,15 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
                     Prioridad = t.Prioridad,
                     Status = t.Status,
                     IdProyecto = t.IdProyecto,
-                    ProyectoNombre = proyectos.FirstOrDefault(p => p.IdProyecto == t.IdProyecto)?.Nombre
+                    ProyectoNombre = proyectos.FirstOrDefault(p => p.IdProyecto == t.IdProyecto)?.Nombre ?? "Sin proyecto"
                 };
 
-                // Usuarios asignados a la tarea
                 var asignados = await _tareaApi.GetUsuariosAsignadosAsync(t.Id);
 
                 if (asignados.Any())
                 {
                     var u = usuarios.FirstOrDefault(us => us.Id == asignados.First());
-                    tarea.UsuarioAsignadoNombre = $"{u?.Nombres} {u?.PrimerApellido}";
+                    tarea.UsuarioAsignadoNombre = $"{u.Nombres} {u.PrimerApellido}";
                 }
 
                 lista.Add(tarea);

@@ -273,7 +273,6 @@
         box-shadow: 0 6px 12px rgba(255, 87, 34, 0.5);
     }
 
-    /* Animaciones */
     @@keyframes fadeIn {
         from {
             opacity: 0;
@@ -317,7 +316,6 @@
         animation: slideIn 0.3s ease-out;
     }
 
-    /* Loading spinner */
     .loading-spinner {
         display: inline-block;
         width: 20px;
@@ -332,12 +330,10 @@
         to { transform: rotate(360deg); }
     }
 
-    /* Badge con animaci�n */
     .badge-activo {
         animation: pulse 2s ease-in-out infinite;
     }
 
-    /* Tooltips mejorados */
     .tooltip-custom {
         position: relative;
         display: inline-block;
@@ -365,7 +361,6 @@
         opacity: 1;
     }
 
-    /* Alerts personalizados */
     .alert {
         border-radius: 12px;
         border: none;
@@ -397,7 +392,6 @@
         border-left: 4px solid #0d47a1;
     }
 
-    /* Scrollbar personalizado */
     .options-list::-webkit-scrollbar {
         width: 8px;
     }
@@ -416,7 +410,6 @@
         background: var(--accent-red);
     }
 
-    /* Estado de carga en botones */
     .btn-volcanic-primary:disabled {
         opacity: 0.6;
         cursor: not-allowed;
@@ -442,7 +435,6 @@
         animation: spin 1s linear infinite;
     }
 
-    /* Mejoras responsive */
     @@media (max-width: 992px) {
         .info-panel {
             margin-top: 1rem;
@@ -511,16 +503,15 @@
 
 <div class="row">
     <div class="col-lg-8">
-        <!-- SECCI�N 1: SELECCI�N DE PROYECTO -->
         <div class="section-card">
             <div class="section-title">
-                ?? Seleccionar Proyecto
+                Seleccionar Proyecto
             </div>
             
             <input type="text" 
                    id="proyectoSearch" 
                    class="search-input" 
-                   placeholder="?? Buscar proyecto..."
+                   placeholder="Buscar proyecto..."
                    autocomplete="off">
 
             <div id="proyectosList" class="options-list">
@@ -546,27 +537,25 @@
             </small>
         </div>
 
-        <!-- SECCI�N 2: SELECCI�N/CREACI�N DE TAREA -->
         <div class="section-card">
             <div class="section-title">
-                ?? Seleccionar o Crear Tarea
+                Seleccionar o Crear Tarea
             </div>
 
             <div class="d-flex gap-2 mb-3">
                 <input type="text" 
                        id="tareaSearch" 
                        class="search-input flex-grow-1" 
-                       placeholder="?? Buscar tarea..."
+                       placeholder="Buscar tarea..."
                        autocomplete="off"
                        disabled>
 
                 <a asp-page="/Tareas/Create" class="btn btn-create-tarea">
-                    ? Crear Nueva Tarea
+                    Crear Nueva Tarea
                 </a>
             </div>
 
             <div id="tareasList" class="options-list" style="display: none;">
-                <!-- Se llenar�n din�micamente con JavaScript -->
             </div>
 
             <div id="noTareasMessage" class="no-results" style="display: none;">
@@ -578,21 +567,19 @@
             </small>
         </div>
 
-        <!-- SECCI�N 3: SELECCI�N DE EMPLEADOS -->
         <div class="section-card">
             <div class="section-title">
-                ?? Asignar Empleados Disponibles
+                Asignar Empleados Disponibles
             </div>
 
             <input type="text" 
                    id="empleadoSearch" 
                    class="search-input" 
-                   placeholder="?? Buscar empleado..."
+                   placeholder="Buscar empleado..."
                    autocomplete="off"
                    disabled>
 
             <div id="empleadosList" class="options-list" style="display: none;">
-                <!-- Se llenar�n din�micamente -->
             </div>
 
             <div id="noEmpleadosMessage" class="no-results">
@@ -614,16 +601,15 @@
         </div>
     </div>
 
-    <!-- PANEL LATERAL: INFORMACI�N Y REPORTES -->
     <div class="col-lg-4">
         <div class="info-panel fade-in-up">
             <div class="info-panel-title">
-                <span class="icon-rotate">??</span> Informaci�n de la Tarea
+                <span class="icon-rotate"> </span> Informaci�n de la Tarea
             </div>
 
             <div id="infoTareaContent">
                 <div class="empty-state">
-                    <div class="empty-state-icon">??</div>
+                    <div class="empty-state-icon"> </div>
                     <p class="text-muted">Selecciona una tarea para ver la informaci�n</p>
                 </div>
             </div>
@@ -631,37 +617,22 @@
             <div class="divider"></div>
 
             <div class="info-panel-title">
-                <span class="icon-rotate">??</span> Generar Reportes
-            </div>
-
-            <div class="report-section">
-                <button type="button" class="btn btn-report custom-tooltip" id="btnReportePDF" disabled data-tooltip="Generar reporte en formato PDF">
-                    <span class="icon-rotate">??</span> Reporte PDF
-                </button>
-                <button type="button" class="btn btn-report custom-tooltip" id="btnReporteExcel" disabled data-tooltip="Generar reporte en formato Excel">
-                    <span class="icon-rotate">??</span> Reporte Excel
-                </button>
-            </div>
-
-            <div class="divider"></div>
-
-            <div class="info-panel-title">
-                <span class="icon-rotate">??</span> Reporte Completo del Sistema
+                <span class="icon-rotate"> </span> Reporte Completo del Sistema
             </div>
 
             <div class="report-section">
                 <button type="button" class="btn btn-report custom-tooltip" onclick="generarReporteCompletoPDF()" data-tooltip="Incluye todos los proyectos y tareas">
-                    <span class="icon-rotate">??</span> Sistema Completo (PDF)
+                    <span class="icon-rotate"> </span> Sistema Completo (PDF)
                 </button>
                 <button type="button" class="btn btn-report custom-tooltip" onclick="generarReporteCompletoExcel()" data-tooltip="Exportar todo el sistema a Excel">
-                    <span class="icon-rotate">??</span> Sistema Completo (Excel)
+                    <span class="icon-rotate"> </span> Sistema Completo (Excel)
                 </button>
             </div>
 
-            <!-- Indicador de ayuda -->
+
             <div style="margin-top: 2rem; padding: 1rem; background-color: rgba(33, 150, 243, 0.1); border-radius: 8px; border-left: 4px solid #2196F3;">
                 <small style="color: var(--text-primary);">
-                    <strong>?? Tip:</strong> Los reportes incluyen informaci�n actualizada y datos hist�ricos de asignaciones.
+                    <strong>Tip:</strong> Los reportes incluyen informaci�n actualizada y datos hist�ricos de asignaciones.
                 </small>
             </div>
         </div>
@@ -670,7 +641,6 @@
 
 @section Scripts {
 <script>
-    // Variables globales
     let proyectoSeleccionado = null;
     let tareaSeleccionada = null;
     let empleadosSeleccionados = [];
@@ -678,11 +648,9 @@
     let todosLosEmpleados = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.EmpleadosDisponibles ?? new List<Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Usuarios.UsuarioDTO>()));
     let empleadosAsignados = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.EmpleadosAsignados ?? new Dictionary<int, List<Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Usuarios.UsuarioDTO>>()));
 
-    // ========== BUSCADOR DE PROYECTOS ==========
     const proyectoSearch = document.getElementById('proyectoSearch');
     const proyectoOptions = document.querySelectorAll('.proyecto-option');
 
-    // Agregar event listeners a cada proyecto
     proyectoOptions.forEach(option => {
         option.addEventListener('click', function() {
             const id = parseInt(this.getAttribute('data-id'));
@@ -709,7 +677,6 @@
         proyectoSeleccionado = id;
         document.getElementById('selectedProyectoName').textContent = nombre;
         
-        // Marcar como seleccionado
         proyectoOptions.forEach(opt => opt.classList.remove('selected'));
         const selectedElement = document.querySelector(`[data-id="${id}"]`);
         if (selectedElement) {
@@ -717,23 +684,18 @@
             agregarEfectoSeleccion(selectedElement);
         }
 
-        // Limpiar selecci�n de tarea
         tareaSeleccionada = null;
         document.getElementById('selectedTareaName').textContent = 'Ninguna';
         empleadosSeleccionados = [];
         actualizarContador();
 
-        // Habilitar b�squeda de tareas
         document.getElementById('tareaSearch').disabled = false;
         
-        // Cargar tareas del proyecto
         cargarTareasDelProyecto(id);
         
-        // Mostrar notificaci�n
         mostrarNotificacion(`Proyecto "${nombre}" seleccionado`, 'info');
     }
 
-    // ========== CARGAR TAREAS DEL PROYECTO ==========
     function cargarTareasDelProyecto(idProyecto) {
         const tareasList = document.getElementById('tareasList');
         const noTareasMessage = document.getElementById('noTareasMessage');
@@ -741,7 +703,6 @@
         console.log('Filtrando tareas para proyecto:', idProyecto);
         console.log('Todas las tareas:', todasLasTareas);
         
-        // Filtrar por idProyecto (camelCase)
         const tareasDelProyecto = todasLasTareas.filter(t => t.idProyecto === idProyecto);
         
         console.log('Tareas filtradas:', tareasDelProyecto);
@@ -756,7 +717,6 @@
         }
 
         tareasDelProyecto.forEach((tarea, index) => {
-            // ✅ CORREGIDO: Usar 'idTarea' (camelCase) como lo serializa el JSON
             const tareaId = tarea.idTarea;
             const tareaTitulo = tarea.titulo;
             
@@ -767,7 +727,6 @@
             div.setAttribute('data-id', tareaId);
             div.setAttribute('data-titulo', tareaTitulo.toLowerCase());
             
-            // ✅ FIX: Leer desde el data-id en el momento del click
             div.addEventListener('click', function() {
                 const id = this.getAttribute('data-id');
                 const titulo = this.textContent.trim();
@@ -783,7 +742,6 @@
         noTareasMessage.style.display = 'none';
     }
 
-    // ========== BUSCADOR DE TAREAS ==========
     const tareaSearch = document.getElementById('tareaSearch');
     
     tareaSearch.addEventListener('input', function() {
@@ -805,7 +763,6 @@
         console.log('ID recibido:', id, 'Tipo:', typeof id);
         console.log('Título:', titulo);
         
-        // Convertir a número (acepta string o number)
         let tareaId = id;
         if (typeof id === 'string') {
             tareaId = parseInt(id, 10);
@@ -813,27 +770,22 @@
         
         console.log('ID convertido:', tareaId, 'Tipo:', typeof tareaId);
         
-        // Validar SOLO si es NaN, permitir cualquier número positivo
         if (isNaN(tareaId)) {
             console.error('❌ ERROR: ID no es un número válido:', id);
             mostrarNotificacion('Error: ID de tarea inválido', 'error');
             return;
         }
         
-        // Asignar la tarea seleccionada
         tareaSeleccionada = tareaId;
         console.log('✅ Tarea asignada a variable global:', tareaSeleccionada);
         
-        // Actualizar UI
         document.getElementById('selectedTareaName').textContent = titulo;
         document.getElementById('tareaIdInput').value = tareaSeleccionada;
         
-        // Guardar en sessionStorage para persistencia
         sessionStorage.setItem('tareaSeleccionada', tareaSeleccionada.toString());
         sessionStorage.setItem('tareaTitulo', titulo);
         console.log('💾 Guardado en sessionStorage');
         
-        // Marcar visualmente como seleccionada
         const tareaOptions = document.querySelectorAll('.tarea-option');
         tareaOptions.forEach(opt => opt.classList.remove('selected'));
         const selected = document.querySelector(`.tarea-option[data-id="${tareaSeleccionada}"]`);
@@ -843,37 +795,20 @@
             console.log('🎨 Elemento marcado visualmente');
         }
 
-        // Habilitar búsqueda de empleados
         document.getElementById('empleadoSearch').disabled = false;
         
-        // Cargar empleados disponibles
         cargarEmpleadosDisponibles();
         
-        // Cargar información de la tarea
         cargarInformacionTarea(tareaSeleccionada);
-
-        // Habilitar botones de reporte
-        const btnPDF = document.getElementById('btnReportePDF');
-        const btnExcel = document.getElementById('btnReporteExcel');
-        if (btnPDF) {
-            btnPDF.disabled = false;
-            console.log('📄 Botón PDF habilitado');
-        }
-        if (btnExcel) {
-            btnExcel.disabled = false;
-            console.log('📊 Botón Excel habilitado');
-        }
         
         console.log('==== TAREA SELECCIONADA EXITOSAMENTE ====');
         console.log('Estado final - tareaSeleccionada:', tareaSeleccionada);
         console.log('Tipo:', typeof tareaSeleccionada);
         console.log('Es número válido:', !isNaN(tareaSeleccionada));
         
-        // Mostrar notificación de éxito
         mostrarNotificacion(`✅ Tarea "${titulo}" seleccionada`, 'success');
     }
 
-    // ========== CARGAR EMPLEADOS DISPONIBLES ==========
     function cargarEmpleadosDisponibles() {
         const empleadosList = document.getElementById('empleadosList');
         const noEmpleadosMessage = document.getElementById('noEmpleadosMessage');
@@ -885,7 +820,6 @@
         console.log('📋 Empleados disponibles globales:', todosLosEmpleados);
         console.log('👥 Empleados asignados por tarea:', empleadosAsignados);
 
-        // Obtener empleados YA ASIGNADOS a la tarea actual
         const empleadosYaAsignados = empleadosAsignados[tareaSeleccionada] || [];
         const idsYaAsignados = empleadosYaAsignados.map(emp => 
             parseInt(emp.id_Usuario || emp.Id || emp.id)
@@ -902,7 +836,6 @@
 
         let empleadosMostrados = 0;
 
-        // Mostrar PRIMERO los empleados ya asignados (con checkbox marcado)
         empleadosYaAsignados.forEach(empleado => {
             const empId = parseInt(empleado.id_Usuario || empleado.Id || empleado.id);
             const empNombres = empleado.Nombres || '';
@@ -914,28 +847,22 @@
             empleadosList.appendChild(div);
             empleadosMostrados++;
             
-            // Agregarlo al array de seleccionados
             empleadosSeleccionados.push(empId);
         });
 
-        // Luego mostrar empleados DISPONIBLES (sin tarea activa y no asignados a esta tarea)
         todosLosEmpleados.forEach(empleado => {
             const empId = parseInt(empleado.id_Usuario || empleado.Id || empleado.id);
             
-            // Si ya está asignado a esta tarea, skip (ya lo mostramos arriba)
             if (idsYaAsignados.includes(empId)) {
                 return;
             }
             
-            // ✅ NUEVO: Verificar si el empleado ya tiene una tarea asignada en CUALQUIER tarea
             let tieneOtraTareaActiva = false;
             for (const [tareaId, empleadosAsignadosEnTarea] of Object.entries(empleadosAsignados)) {
-                // Saltar la tarea actual
                 if (parseInt(tareaId) === tareaSeleccionada) {
                     continue;
                 }
                 
-                // Buscar si este empleado está en otra tarea
                 const estaEnOtraTarea = empleadosAsignadosEnTarea.some(emp => {
                     const idEmp = parseInt(emp.id_Usuario || emp.Id || emp.id);
                     return idEmp === empId;
@@ -948,7 +875,6 @@
                 }
             }
             
-            // Si tiene otra tarea activa, NO mostrarlo como disponible
             if (tieneOtraTareaActiva) {
                 return;
             }
@@ -975,7 +901,6 @@
         actualizarContador();
         document.getElementById('empleadosIdsInput').value = JSON.stringify(empleadosSeleccionados);
         
-        // ✅ CORREGIDO: Habilitar botón si hay tarea seleccionada (permite desasignar todos)
         const btnAsignar = document.getElementById('btnAsignar');
         if (tareaSeleccionada) {
             btnAsignar.disabled = false;
@@ -989,14 +914,12 @@
         console.log('🎯 Empleados seleccionados inicialmente:', empleadosSeleccionados);
     }
 
-    // ========== CREAR ELEMENTO DE EMPLEADO (HELPER) ==========
     function crearElementoEmpleado(empId, nombres, apellido, yaAsignado, checked) {
         const div = document.createElement('div');
         div.className = 'empleado-checkbox';
         div.setAttribute('data-id', empId);
         div.setAttribute('data-nombre', `${nombres} ${apellido}`.toLowerCase());
         
-        // Estilo especial para empleados ya asignados
         if (yaAsignado) {
             div.style.backgroundColor = '#4a4a50';
             div.style.borderLeft = '4px solid #4CAF50';
@@ -1018,7 +941,6 @@
         label.style.flex = '1';
         label.style.margin = '0';
         
-        // Mostrar indicador si ya está asignado
         if (yaAsignado) {
             const badge = document.createElement('span');
             badge.className = 'badge-activo';
@@ -1041,7 +963,6 @@
         return div;
     }
 
-    // ========== BUSCADOR DE EMPLEADOS ==========
     const empleadoSearch = document.getElementById('empleadoSearch');
     
     empleadoSearch.addEventListener('input', function() {
@@ -1058,34 +979,26 @@
         });
     });
 
-    // ========== TOGGLE EMPLEADO ==========
     function toggleEmpleado(idEmpleado) {
-        // Convertir a n�mero para evitar duplicados por tipo de dato
         idEmpleado = parseInt(idEmpleado);
         console.log('Toggle empleado:', idEmpleado, typeof idEmpleado);
         
-        // Obtener el checkbox para verificar su estado REAL
         const checkbox = document.getElementById(`emp_${idEmpleado}`);
         if (!checkbox) {
             console.error('Checkbox no encontrado para empleado:', idEmpleado);
             return;
         }
         
-        // Buscar por valor num�rico
         const index = empleadosSeleccionados.findIndex(id => parseInt(id) === idEmpleado);
         
-        // Sincronizar array con el estado del checkbox
         if (checkbox.checked && index === -1) {
-            // Checkbox marcado pero NO est� en el array -> AGREGAR
             empleadosSeleccionados.push(idEmpleado);
             console.log('Empleado agregado. Array actual:', empleadosSeleccionados);
         } else if (!checkbox.checked && index > -1) {
-            // Checkbox desmarcado pero S� est� en el array -> REMOVER
             empleadosSeleccionados.splice(index, 1);
             console.log('Empleado removido. Array actual:', empleadosSeleccionados);
         }
         
-        // Actualizar estilos visuales
         const parent = checkbox.closest('.empleado-checkbox');
         if (parent) {
             if (checkbox.checked) {
@@ -1101,7 +1014,6 @@
         actualizarContador();
         document.getElementById('empleadosIdsInput').value = JSON.stringify(empleadosSeleccionados);
         
-        // Mantener botón habilitado si hay tarea seleccionada
         if (tareaSeleccionada) {
             document.getElementById('btnAsignar').disabled = false;
         }
@@ -1112,11 +1024,9 @@
             `${empleadosSeleccionados.length} empleado(s) seleccionado(s)`;
     }
 
-    // ========== CARGAR INFORMACI�N DE LA TAREA ==========
     function cargarInformacionTarea(idTarea) {
         const infoContent = document.getElementById('infoTareaContent');
         
-        // Buscar por idTarea (camelCase)
         const tarea = todasLasTareas.find(t => t.idTarea === idTarea);
         
         if (!tarea) {
@@ -1158,59 +1068,9 @@
         infoContent.innerHTML = html;
     }
 
-    // ========== GENERAR REPORTES (M�TODO MEJORADO - window.location) ==========
-    document.getElementById('btnReportePDF').onclick = function() {
-        // Recuperar tareaSeleccionada desde sessionStorage si se perdi�
-        if (!tareaSeleccionada || isNaN(tareaSeleccionada) || tareaSeleccionada <= 0) {
-            const stored = sessionStorage.getItem('tareaSeleccionada');
-            if (stored) {
-                tareaSeleccionada = parseInt(stored);
-                console.log('Tarea recuperada desde sessionStorage:', tareaSeleccionada);
-            }
-        }
-        
-        console.log('Generando PDF. Tarea seleccionada:', tareaSeleccionada, typeof tareaSeleccionada);
-        
-        if (tareaSeleccionada && !isNaN(tareaSeleccionada) && tareaSeleccionada > 0) {
-            mostrarNotificacion('Generando reporte PDF...', 'info');
-            window.location.href = `/Tareas/Gestionar?handler=GenerarReporte&tareaId=${tareaSeleccionada}&formato=pdf`;
-            setTimeout(() => {
-                mostrarNotificacion('Reporte PDF descargado', 'success');
-            }, 1500);
-        } else {
-            console.error('Tarea no seleccionada o invalida:', tareaSeleccionada);
-            mostrarNotificacion('⚠️ Debes seleccionar una tarea primero', 'warning');
-        }
-    };
-
-    document.getElementById('btnReporteExcel').onclick = function() {
-        // Recuperar tareaSeleccionada desde sessionStorage si se perdi�
-        if (!tareaSeleccionada || isNaN(tareaSeleccionada) || tareaSeleccionada <= 0) {
-            const stored = sessionStorage.getItem('tareaSeleccionada');
-            if (stored) {
-                tareaSeleccionada = parseInt(stored);
-                console.log('Tarea recuperada desde sessionStorage:', tareaSeleccionada);
-            }
-        }
-        
-        console.log('Generando Excel. Tarea seleccionada:', tareaSeleccionada, typeof tareaSeleccionada);
-        
-        if (tareaSeleccionada && !isNaN(tareaSeleccionada) && tareaSeleccionada > 0) {
-            mostrarNotificacion('Generando reporte Excel...', 'info');
-            window.location.href = `/Tareas/Gestionar?handler=GenerarReporte&tareaId=${tareaSeleccionada}&formato=excel`;
-            setTimeout(() => {
-                mostrarNotificacion('Reporte Excel descargado', 'success');
-            }, 1500);
-        } else {
-            console.error('Tarea no seleccionada o invalida:', tareaSeleccionada);
-            mostrarNotificacion('⚠️ Debes seleccionar una tarea primero', 'warning');
-        }
-    };
-
     function generarReporteCompletoPDF() {
         mostrarNotificacion('?? Generando reporte completo PDF...', 'info');
         
-        // Usar window.location para forzar descarga autom�tica
         window.location.href = '/Tareas/Gestionar?handler=GenerarReporteCompleto&formato=pdf';
         
         setTimeout(() => {
@@ -1221,7 +1081,6 @@
     function generarReporteCompletoExcel() {
         mostrarNotificacion('?? Generando reporte completo Excel...', 'info');
         
-        // Usar window.location para forzar descarga autom�tica
         window.location.href = '/Tareas/Gestionar?handler=GenerarReporteCompleto&formato=excel';
         
         setTimeout(() => {
@@ -1229,16 +1088,13 @@
         }, 1500);
     }
 
-    // ========== VALIDACI�N DEL FORMULARIO ==========
     document.getElementById('asignarForm').onsubmit = function(e) {
-        // ✅ CORREGIDO: Permitir guardar con 0 empleados (desasignar todos)
         if (!tareaSeleccionada) {
             e.preventDefault();
             mostrarNotificacion('\u26a0\ufe0f Debes seleccionar una tarea', 'warning');
             return false;
         }
         
-        // Mostrar mensaje apropiado seg\u00fan la cantidad de empleados
         if (empleadosSeleccionados.length === 0) {
             console.log('\ud83d\udee1\ufe0f Guardando sin empleados (desasignar todos)');
             mostrarNotificacion('\ud83d\udce4 Desasignando todos los empleados de la tarea...', 'info');
@@ -1247,7 +1103,6 @@
             mostrarNotificacion(`\ud83d\udcbe Guardando ${empleadosSeleccionados.length} empleado(s)...`, 'info');
         }
 
-        // Mostrar estado de carga
         const btnAsignar = document.getElementById('btnAsignar');
         btnAsignar.classList.add('loading');
         btnAsignar.disabled = true;
@@ -1255,7 +1110,6 @@
         return true;
     };
 
-    // ========== SISTEMA DE NOTIFICACIONES ==========
     function mostrarNotificacion(mensaje, tipo = 'info') {
         const colores = {
             'success': { bg: 'linear-gradient(135deg, #4CAF50, #45a049)', icon: '?' },
@@ -1291,7 +1145,6 @@
         }, 3000);
     }
 
-    // ========== ANIMACIONES CSS DIN�MICAS ==========
     const style = document.createElement('style');
     style.textContent = `
         @@keyframes slideInRight {
@@ -1318,7 +1171,6 @@
     `;
     document.head.appendChild(style);
 
-    // ========== EFECTOS VISUALES AL SELECCIONAR ==========
     function agregarEfectoSeleccion(elemento) {
         elemento.style.transition = 'all 0.3s ease';
         elemento.style.transform = 'scale(1.02)';
@@ -1327,7 +1179,6 @@
         }, 300);
     }
 
-    // ========== AUTO-CERRAR ALERTS ==========
     document.addEventListener('DOMContentLoaded', function() {
         const alerts = document.querySelectorAll('.alert');
         alerts.forEach(alert => {
@@ -1337,7 +1188,6 @@
             }, 5000);
         });
         
-        // Restaurar tareaSeleccionada desde sessionStorage si existe
         const storedTarea = sessionStorage.getItem('tareaSeleccionada');
         const storedTitulo = sessionStorage.getItem('tareaTitulo');
         if (storedTarea && storedTitulo) {
@@ -1346,9 +1196,7 @@
         }
     });
 
-    // ========== EFECTOS ADICIONALES (sin sobrescribir las funciones originales) ==========
     document.addEventListener('DOMContentLoaded', function() {
-        // Agregar efectos visuales cuando se selecciona un proyecto
         document.querySelectorAll('.proyecto-option').forEach(option => {
             option.addEventListener('click', function() {
                 agregarEfectoSeleccion(this);
@@ -1356,6 +1204,5 @@
         });
     });
 
-    // ========== REPORTES: Configuracion completada arriba ==========
 </script>
 }

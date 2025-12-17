@@ -48,35 +48,33 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
         {
             if (!ModelState.IsValid)
             {
-                TempData["ErrorMessage"] = "❌ Por favor corrija los errores en el formulario antes de continuar.";
+                TempData["ErrorMessage"] = "Por favor corrija los errores en el formulario antes de continuar.";
                 ProyectosDisponibles = await _proyectoApi.GetAllAsync();
                 return Page();
             }
 
             try
             {
-                // Validar y sanitizar título
                 if (!string.IsNullOrEmpty(Tarea.Titulo))
                 {
                     Tarea.Titulo = TrimExtraSpaces(Tarea.Titulo);
 
                     if (ContienePatroneseligrosos(Tarea.Titulo))
                     {
-                        ModelState.AddModelError("Tarea.Titulo", "⚠️ El título contiene caracteres no permitidos.");
+                        ModelState.AddModelError("Tarea.Titulo", "El título contiene caracteres no permitidos.");
                         TempData["ErrorMessage"] = "El título contiene caracteres o patrones no permitidos.";
                         ProyectosDisponibles = await _proyectoApi.GetAllAsync();
                         return Page();
                     }
                 }
 
-                // Validar y sanitizar descripción
                 if (!string.IsNullOrEmpty(Tarea.Descripcion))
                 {
                     Tarea.Descripcion = TrimExtraSpaces(Tarea.Descripcion);
 
                     if (ContienePatroneseligrosos(Tarea.Descripcion))
                     {
-                        ModelState.AddModelError("Tarea.Descripcion", "⚠️ La descripción contiene caracteres no permitidos.");
+                        ModelState.AddModelError("Tarea.Descripcion", "La descripción contiene caracteres no permitidos.");
                         TempData["ErrorMessage"] = "La descripción contiene caracteres o patrones no permitidos.";
                         ProyectosDisponibles = await _proyectoApi.GetAllAsync();
                         return Page();
@@ -89,12 +87,12 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
 
                 if (!ok)
                 {
-                    TempData["ErrorMessage"] = "❌ Error al comunicarse con el servidor. Por favor, intente nuevamente.";
+                    TempData["ErrorMessage"] = "Error al comunicarse con el servidor. Por favor, intente nuevamente.";
                     ProyectosDisponibles = await _proyectoApi.GetAllAsync();
                     return Page();
                 }
 
-                TempData["SuccessMessage"] = "✅ Tarea creada exitosamente.";
+                TempData["SuccessMessage"] = "Tarea creada exitosamente.";
                 return RedirectToPage("Index");
             }
             catch (Exception ex)
@@ -103,11 +101,11 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
 
                 if (errorMsg.Contains("caracteres") || errorMsg.Contains("patrones") || errorMsg.Contains("sql"))
                 {
-                    TempData["ErrorMessage"] = $"⚠️ Validación de seguridad: {ex.Message}";
+                    TempData["ErrorMessage"] = $"Validación de seguridad: {ex.Message}";
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = $"❌ Error al crear la tarea: {ex.Message}";
+                    TempData["ErrorMessage"] = $"Error al crear la tarea: {ex.Message}";
                 }
 
                 ProyectosDisponibles = await _proyectoApi.GetAllAsync();
@@ -136,7 +134,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
                 @"onerror\s*=",
                 @"onload\s*=",
                 @"<iframe",
-                @"[$%^&*(){}[\]\\|]"  // Caracteres especiales peligrosos
+                @"[$%^&*(){}[\]\\|]"
             };
 
             foreach (var patron in patronesPeligrosos)

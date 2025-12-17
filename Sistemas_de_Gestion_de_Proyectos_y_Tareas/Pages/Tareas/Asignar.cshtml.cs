@@ -37,11 +37,9 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
         {
             TareaId = id;
 
-            // Obtener la tarea actual
             var tarea = await _tareaApi.GetByIdAsync(id);
-            NombreTarea = tarea?.Titulo ?? "Tarea desconocida";
+            NombreTarea = tarea.Titulo ?? "Tarea desconocida";
 
-            // Usuarios asignados a esta tarea
             var asignadosIds = await _tareaApi.GetUsuariosAsignadosAsync(id);
 
             var todos = await _usuarioApi.GetAllAsync();
@@ -50,36 +48,25 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
                 .Where(u => asignadosIds.Contains(u.Id))
                 .ToList();
 
-            // -----------------------------------------------
-            // 🔥 FILTRAR USUARIOS ASIGNADOS A OTRAS TAREAS ACTIVAS
-            //    PERO PERMITIRLOS SI ESA TAREA ESTÁ COMPLETADA
-            // -----------------------------------------------
-
             var todasLasTareas = await _tareaApi.GetAllAsync();
 
-            // Usuarios ocupados en otras tareas NO completadas
             var usuariosOcupados = new HashSet<int>();
 
             foreach (var t in todasLasTareas)
             {
                 if (t.Id == id)
-                    continue; // ignorar tarea actual
+                    continue;
 
                 bool tareaCompletada = (t.Status == "Completada");
-                // Ajusta aquí si tu valor de "Completada" es otro
 
                 if (tareaCompletada)
-                    continue; // 🔥 Si está completada NO bloquea al usuario
+                    continue;
 
-                // Tarea activa → bloquear usuarios asignados
                 var uids = await _tareaApi.GetUsuariosAsignadosAsync(t.Id);
                 foreach (var uid in uids)
                     usuariosOcupados.Add(uid);
             }
 
-            // Usuarios disponibles = 
-            // - no son SuperAdmin
-            // - no están ocupados en otra tarea ACTIVA
             UsuariosDisponibles = todos
                 .Where(u => u.Rol != "SuperAdmin")
                 .Where(u => !usuariosOcupados.Contains(u.Id))

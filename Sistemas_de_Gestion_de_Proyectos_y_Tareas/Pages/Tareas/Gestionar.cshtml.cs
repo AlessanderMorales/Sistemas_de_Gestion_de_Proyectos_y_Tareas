@@ -6,6 +6,7 @@ using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Proyectos;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Tareas;
 using Sistema_de_Gestion_de_Proyectos_y_Tareas.DTO.Usuarios;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -53,21 +54,17 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
         {
             try
             {
-                // Cargar todos los proyectos
                 Proyectos = (await _proyectoApi.GetAllAsync())?.ToList() ?? new();
 
                 if (!Proyectos.Any())
                 {
-                    TempData["WarningMessage"] = "?? No hay proyectos disponibles en el sistema.";
+                    TempData["WarningMessage"] = "No hay proyectos disponibles en el sistema.";
                 }
 
-                // Cargar todas las tareas
                 Tareas = (await _tareaApi.GetAllAsync())?.ToList() ?? new();
 
-                // Cargar todos los usuarios
                 var todosLosUsuarios = (await _usuarioApi.GetAllAsync())?.ToList() ?? new();
 
-                // Cargar empleados asignados a cada tarea
                 var todosLosEmpleadosAsignadosIds = new HashSet<int>();
                 foreach (var tarea in Tareas)
                 {
@@ -78,19 +75,16 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
                     
                     EmpleadosAsignados[tarea.Id] = asignados;
                     
-                    // Recopilar todos los IDs de empleados asignados a cualquier tarea
                     foreach (var id in asignadosIds)
                     {
                         todosLosEmpleadosAsignadosIds.Add(id);
                     }
                 }
 
-                // ✅ CORREGIDO: Filtrar empleados disponibles basándose en asignaciones REALES
-                // en lugar de confiar solo en la columna disponible_tarea
                 EmpleadosDisponibles = todosLosUsuarios
                     .Where(u => u.Rol == "Empleado" && 
                                 u.Estado == 1 && 
-                                !todosLosEmpleadosAsignadosIds.Contains(u.Id)) // No está asignado a ninguna tarea
+                                !todosLosEmpleadosAsignadosIds.Contains(u.Id))
                     .ToList();
 
                 _logger.LogInformation($"Empleados disponibles (sin tarea activa): {EmpleadosDisponibles.Count}");
@@ -101,7 +95,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
             catch (Exception ex)
             {
                 _logger.LogError($"Error al cargar datos en Gestionar: {ex.Message}");
-                TempData["ErrorMessage"] = "? Error al cargar los datos del sistema.";
+                TempData["ErrorMessage"] = "Error al cargar los datos del sistema.";
                 return RedirectToPage("/Tareas/Index");
             }
         }
@@ -112,11 +106,10 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
             {
                 if (TareaId <= 0)
                 {
-                    TempData["ErrorMessage"] = "? Debe seleccionar una tarea válida.";
+                    TempData["ErrorMessage"] = "Debe seleccionar una tarea válida.";
                     return RedirectToPage();
                 }
 
-                // Deserializar los IDs de empleados
                 List<int> empleadosIdsLista;
                 try
                 {
@@ -128,25 +121,16 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
                     return RedirectToPage();
                 }
 
-                // ✅ CORREGIDO: Permitir lista vacía para desasignar todos los empleados
                 _logger.LogInformation($"Procesando asignación: {empleadosIdsLista.Count} empleados para tarea {TareaId}");
 
-                // Obtener información de la tarea para la Saga
                 var tarea = await _tareaApi.GetByIdAsync(TareaId);
                 
                 if (tarea == null)
                 {
-                    TempData["ErrorMessage"] = "? La tarea seleccionada no existe.";
+                    TempData["ErrorMessage"] = "La tarea seleccionada no existe.";
                     return RedirectToPage();
                 }
 
-                // ============================================================
-                // ?? USAR SAGA PARA ASIGNAR EMPLEADOS
-                // ============================================================
-                // Nota: Como la tarea ya existe, solo asignamos empleados
-                // directamente sin crear una nueva tarea
-
-                // Opción 1: Asignación directa (sin Saga, ya que la tarea existe)
                 var dto = new AsignarUsuariosDTO
                 {
                     TareaId = TareaId,
@@ -161,17 +145,56 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
                     return RedirectToPage();
                 }
 
-                // TODO: Llamar al endpoint de usuario para marcar como ocupados
-                // Por ahora el backend lo manejará
-
-                // ✅ Mensaje diferenciado según la acción
-                if (empleadosIdsLista.Count == 0)
+                if (empleadosIdsLista.Count > 0)
                 {
-                    TempData["SuccessMessage"] = "✅ Todos los empleados han sido desasignados de la tarea.";
+                    try
+                    {
+                        _logger.LogInformation($"📄 Generando reportes automáticos (PDF y Excel) para tarea {TareaId}");
+                        
+                        var nombreUsuario = User.Identity?.Name ?? "Sistema";
+                        
+                        // Obtener directorio raíz
+                        var directorioActual = Directory.GetCurrentDirectory();
+                        var directorioRaiz = Directory.GetParent(directorioActual)?.Parent?.FullName;
+                        
+                        if (string.IsNullOrEmpty(directorioRaiz))
+                        {
+                            directorioRaiz = directorioActual;
+                        }
+                        
+                        var rutaReportes = Path.Combine(directorioRaiz, "reportes");
+                        Directory.CreateDirectory(rutaReportes);
+
+                        // Usar el mismo timestamp para ambos archivos
+                        var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+                        
+                        // Generar PDF
+                        var pdfBytes = await _reporteService.GenerarReporteTareaPDFAsync(TareaId, nombreUsuario);
+                        var nombreArchivoPdf = $"Tarea_{TareaId}_{timestamp}.pdf";
+                        var rutaCompletaPdf = Path.Combine(rutaReportes, nombreArchivoPdf);
+                        await System.IO.File.WriteAllBytesAsync(rutaCompletaPdf, pdfBytes);
+                        _logger.LogInformation($"✅ Reporte PDF guardado en: {rutaCompletaPdf}");
+                        
+                        // Generar Excel
+                        var excelBytes = await _reporteService.GenerarReporteTareaExcelAsync(TareaId, nombreUsuario);
+                        var nombreArchivoExcel = $"Tarea_{TareaId}_{timestamp}.xlsx";
+                        var rutaCompletaExcel = Path.Combine(rutaReportes, nombreArchivoExcel);
+                        await System.IO.File.WriteAllBytesAsync(rutaCompletaExcel, excelBytes);
+                        _logger.LogInformation($"✅ Reporte Excel guardado en: {rutaCompletaExcel}");
+
+                        TempData["SuccessMessage"] = $"✅ {empleadosIdsLista.Count} empleado(s) asignado(s) exitosamente. " +
+                                                     $"📄 Reportes generados: {nombreArchivoPdf} y {nombreArchivoExcel}";
+                    }
+                    catch (Exception exReporte)
+                    {
+                        _logger.LogWarning($"⚠️ No se pudieron generar los reportes automáticos: {exReporte.Message}");
+                        TempData["SuccessMessage"] = $"✅ {empleadosIdsLista.Count} empleado(s) asignado(s) exitosamente. " +
+                                                     $"⚠️ Los reportes no pudieron generarse automáticamente.";
+                    }
                 }
                 else
                 {
-                    TempData["SuccessMessage"] = $"✅ {empleadosIdsLista.Count} empleado(s) asignado(s) exitosamente a la tarea.";
+                    TempData["SuccessMessage"] = "✅ Todos los empleados han sido desasignados de la tarea.";
                 }
                 
                 return RedirectToPage();
@@ -179,14 +202,11 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
             catch (Exception ex)
             {
                 _logger.LogError($"Error al asignar empleados: {ex.Message}");
-                TempData["ErrorMessage"] = $"? Error al asignar empleados: {ex.Message}";
+                TempData["ErrorMessage"] = $"Error al asignar empleados: {ex.Message}";
                 return RedirectToPage();
             }
         }
 
-        // ============================================================
-        // MÉTODOS PARA GENERACIÓN DE REPORTES
-        // ============================================================
 
         public async Task<IActionResult> OnGetGenerarReporteAsync(int tareaId, string formato)
         {
@@ -194,11 +214,10 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
             {
                 if (tareaId <= 0)
                 {
-                    TempData["ErrorMessage"] = "? Debe especificar una tarea válida.";
+                    TempData["ErrorMessage"] = "Debe especificar una tarea válida.";
                     return RedirectToPage();
                 }
 
-                // Obtener nombre del usuario actual
                 var usuarioNombre = User.Identity?.Name ?? "Sistema";
 
                 byte[] fileBytes;
@@ -221,11 +240,10 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = "? Formato de reporte no válido.";
+                    TempData["ErrorMessage"] = "Formato de reporte no válido.";
                     return RedirectToPage();
                 }
 
-                // ? AGREGAR HEADER PARA FORZAR DESCARGA
                 Response.Headers.Append("Content-Disposition", $"attachment; filename=\"{fileName}\"");
                 
                 return File(fileBytes, contentType, fileName);
@@ -233,7 +251,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
             catch (Exception ex)
             {
                 _logger.LogError($"Error al generar reporte: {ex.Message}");
-                TempData["ErrorMessage"] = $"? Error al generar el reporte: {ex.Message}";
+                TempData["ErrorMessage"] = $"Error al generar el reporte: {ex.Message}";
                 return RedirectToPage();
             }
         }
@@ -242,7 +260,6 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
         {
             try
             {
-                // Obtener nombre del usuario actual
                 var usuarioNombre = User.Identity?.Name ?? "Sistema";
 
                 byte[] fileBytes;
@@ -265,11 +282,10 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = "? Formato de reporte no válido.";
+                    TempData["ErrorMessage"] = "Formato de reporte no válido.";
                     return RedirectToPage();
                 }
 
-                // ? AGREGAR HEADER PARA FORZAR DESCARGA
                 Response.Headers.Append("Content-Disposition", $"attachment; filename=\"{fileName}\"");
                 
                 return File(fileBytes, contentType, fileName);
@@ -277,7 +293,7 @@ namespace Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Tareas
             catch (Exception ex)
             {
                 _logger.LogError($"Error al generar reporte completo: {ex.Message}");
-                TempData["ErrorMessage"] = $"? Error al generar el reporte completo: {ex.Message}";
+                TempData["ErrorMessage"] = $"Error al generar el reporte completo: {ex.Message}";
                 return RedirectToPage();
             }
         }
