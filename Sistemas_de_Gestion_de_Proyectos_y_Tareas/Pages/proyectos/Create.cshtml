@@ -6,398 +6,374 @@
 
 <style>
     :root {
-  --accent-red: #D32F2F;
-  --accent-orange: #FF5722;
-      --accent-gold: #FFD700;
-   --text-primary: #f5f5f7;
+        --volcanic-bg: #1e1e2d;
+        --volcanic-card: #2d2d3b;
+        --accent-orange: #FF5722;
+        --accent-red: #D32F2F;
+        --text-primary: #f5f5f7;
+    }
+
+    body {
+        background-color: var(--volcanic-bg);
+        color: var(--text-primary);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     .title-volcanic {
-   background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
+        background: linear-gradient(to right, #FF512F, #F09819);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-font-weight: 700;
-        border-bottom: 2px solid rgba(255,255,255,0.1);
-        padding-bottom: 0.5rem;
-  margin-bottom: 2rem;
-    }
-
-    .form-control, .form-select {
-        background-color: #3a3a40;
- color: var(--text-primary);
-    border: 1px solid #555;
-        border-radius: 8px;
-  padding: 0.75rem 1rem;
-    }
-
- .form-control:focus, .form-select:focus {
-background-color: #4a4a50;
-         color: var(--text-primary);
-      border-color: var(--accent-orange);
-           box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
-        }
-
-     .form-control::placeholder {
-      color: #888;
- }
-
-    .form-label {
-        color: var(--text-primary);
-        font-weight: 500;
-    }
-
-  .text-danger {
-    color: #ff5252 !important;
-      font-weight: 500;
+        font-weight: 800;
+        margin-bottom: 2rem;
     }
 
     .form-container {
-    max-width: 700px;
-  width: 100%;
-  }
+        background-color: var(--volcanic-card);
+        padding: 2.5rem;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .form-label {
+        color: #ddd;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Input oscuro elegante */
+    .form-control {
+        background-color: #1a1a20;
+        color: #fff;
+        border: 1px solid #444;
+        border-radius: 8px;
+        padding: 0.8rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+        .form-control:focus {
+            background-color: #222;
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.2);
+            color: #fff;
+        }
+
+        .form-control::placeholder {
+            color: #555;
+        }
+
+    /* Inputs de solo lectura (fechas) */
+    input.fecha-input[readonly] {
+        background-color: #1a1a20;
+        cursor: pointer;
+    }
+
+    .text-danger {
+        color: #ff5252 !important;
+        font-size: 0.85rem;
+        margin-top: 4px;
+        display: block;
+    }
 
     .btn-volcanic-primary {
-  background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
-  border: none;
-    color: white;
+        background: linear-gradient(135deg, #FF512F 0%, #DD2476 100%);
+        border: none;
+        color: white;
         font-weight: bold;
-        padding: 12px 25px;
- border-radius: 8px;
-transition: all 0.3s ease;
+        padding: 12px 30px;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        font-size: 0.9rem;
     }
 
         .btn-volcanic-primary:hover {
-         transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(221, 36, 118, 0.4);
+            color: white;
         }
 
     .btn-volcanic-secondary {
-      background-color: transparent;
-        border: 2px solid #6c757d;
-    color: #ced4da;
+        background-color: transparent;
+        border: 2px solid #555;
+        color: #aaa;
         font-weight: bold;
         padding: 10px 25px;
-      border-radius: 8px;
+        border-radius: 50px;
         transition: all 0.3s ease;
-  }
+        text-decoration: none;
+        display: inline-block;
+    }
 
         .btn-volcanic-secondary:hover {
-        background-color: #6c757d;
-    color: white;
-            border-color: #6c757d;
-  }
+            border-color: #fff;
+            color: #fff;
+            background-color: rgba(255,255,255,0.05);
+        }
 
- .date-format-hint {
-        font-size: 0.85rem;
-        color: #888;
-        margin-top: 0.25rem;
-    font-style: italic;
+    .date-format-hint {
+        font-size: 0.75rem;
+        color: #666;
+        font-style: italic;
+        margin-top: 4px;
     }
 
-    /* Estilo para campos de fecha readonly */
-    input.fecha-input[readonly] {
-     background-color: #3a3a40;
-        cursor: pointer;
-user-select: none;
-    }
-
-    input.fecha-input[readonly]:hover {
-        background-color: #4a4a50;
-        border-color: var(--accent-orange);
-  }
-
-    input.fecha-input[readonly]:focus {
- background-color: #4a4a50;
-     border-color: var(--accent-orange);
-        box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
-    }
-
+    /* Alerta de error global */
     .alert-danger {
-        background-color: #f8d7da;
-     border-left: 4px solid #dc3545;
-      color: #721c24;
-     padding: 15px;
-        margin-bottom: 20px;
-        border-radius: 5px;
+        background-color: rgba(220, 53, 69, 0.1);
+        border: 1px solid #dc3545;
+        color: #ff8b94;
     }
-
- .alert-danger strong {
-     display: block;
-      margin-bottom: 5px;
-          font-weight: 700;
-   }
-
-        .alert-danger ul {
-            margin: 5px 0 0 0;
-         padding-left: 20px;
-        }
-
-        .alert-danger li {
-            margin-bottom: 3px;
-        }
 </style>
 
 <h1 class="title-volcanic">@ViewData["Title"]</h1>
 
 <div class="row justify-content-center justify-content-md-start">
-    <div class="col-md-8 form-container">
-  
-        @* Mostrar errores de validación *@
-        @if (!ViewData.ModelState.IsValid && ViewData.ModelState[""]?.Errors.Count > 0)
-        {
-    <div class="alert alert-danger" role="alert">
-     <strong>❌ Error de validación:</strong>
-     <ul class="mb-0">
-        @foreach (var error in ViewData.ModelState[""].Errors)
-    {
-          <li>@error.ErrorMessage</li>
-     }
-   </ul>
-      </div>
-        }
+    <div class="col-md-8">
+        <div class="form-container">
+            @* Mostrar errores de validación *@
+            @if (!ViewData.ModelState.IsValid && ViewData.ModelState[""]?.Errors.Count > 0)
+            {
+            <div class="alert alert-danger" role="alert">
+                <strong><i class="bi bi-exclamation-triangle-fill"></i> Error de validación:</strong>
+                <ul class="mb-0 mt-2">
+                    @foreach (var error in ViewData.ModelState[""].Errors)
+                        {
+                    <li>@error.ErrorMessage</li>
+                        }
+                </ul>
+            </div>
+            }
 
-        <form method="post" id="createProyectoForm" novalidate>
-      <div class="mb-3">
-     <label asp-for="Proyecto.Nombre" class="form-label">Nombre del Proyecto <span style="color: red;">*</span></label>
-        <input asp-for="Proyecto.Nombre" class="form-control" placeholder="Ej: Desarrollo de App Móvil" />
-         <span asp-validation-for="Proyecto.Nombre" class="text-danger"></span>
-         </div>
-         <div class="mb-3">
-      <label asp-for="Proyecto.Descripcion" class="form-label">Descripción <span style="color: red;">*</span></label>
-        <textarea asp-for="Proyecto.Descripcion" class="form-control" rows="4" placeholder="Describe los objetivos y el alcance del proyecto..."></textarea>
-                <span asp-validation-for="Proyecto.Descripcion" class="text-danger"></span>
-       </div>
-    <div class="row">
-          <div class="col-md-6 mb-3">
-       <label asp-for="Proyecto.FechaInicio" class="form-label">Fecha de Inicio <span style="color: red;">*</span></label>
-      <input asp-for="Proyecto.FechaInicio" 
-  class="form-control fecha-input" 
-             type="text" 
-             placeholder="DD/MM/YYYY" 
-             maxlength="10" 
-      id="fechaInicioInput"
-     readonly />
-   <div class="date-format-hint">Formato: DD/MM/YYYY</div>
-  <span asp-validation-for="Proyecto.FechaInicio" class="text-danger"></span>
-  </div>
-  <div class="col-md-6 mb-3">
-            <label asp-for="Proyecto.FechaFin" class="form-label">Fecha de Fin <span style="color: red;">*</span></label>
-          <input asp-for="Proyecto.FechaFin" 
-       class="form-control fecha-input" 
-      type="text" 
-     placeholder="DD/MM/YYYY" 
-         maxlength="10" 
-     id="fechaFinInput"
-          readonly />
-      <div class="date-format-hint">Formato: DD/MM/YYYY</div>
-    <span asp-validation-for="Proyecto.FechaFin" class="text-danger"></span>
-    </div>
-      </div>
-            <div class="mt-4">
-          <button type="submit" class="btn btn-volcanic-primary">Guardar Proyecto</button>
-   <a asp-page="Index" class="btn btn-volcanic-secondary ms-2">Cancelar</a>
-   </div>
-        </form>
+            <form method="post" id="createProyectoForm" novalidate>
+                <div class="mb-4">
+                    <label asp-for="Proyecto.Nombre" class="form-label">Nombre del Proyecto <span style="color: var(--accent-orange);">*</span></label>
+                    <input asp-for="Proyecto.Nombre" class="form-control" placeholder="Ej: Desarrollo de App Móvil" />
+                    <span asp-validation-for="Proyecto.Nombre" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Proyecto.Descripcion" class="form-label">Descripción <span style="color: var(--accent-orange);">*</span></label>
+                    <textarea asp-for="Proyecto.Descripcion" class="form-control" rows="5" placeholder="Describe los objetivos y el alcance del proyecto..."></textarea>
+                    <span asp-validation-for="Proyecto.Descripcion" class="text-danger"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label asp-for="Proyecto.FechaInicio" class="form-label">Fecha de Inicio <span style="color: var(--accent-orange);">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="background: #222; border-color: #444; color: #888;"><i class="bi bi-calendar"></i></span>
+                            <input asp-for="Proyecto.FechaInicio"
+                                   class="form-control fecha-input"
+                                   type="text"
+                                   placeholder="DD/MM/YYYY"
+                                   maxlength="10"
+                                   id="fechaInicioInput"
+                                   readonly />
+                        </div>
+                        <div class="date-format-hint">Formato: DD/MM/YYYY</div>
+                        <span asp-validation-for="Proyecto.FechaInicio" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <label asp-for="Proyecto.FechaFin" class="form-label">Fecha de Fin <span style="color: var(--accent-orange);">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="background: #222; border-color: #444; color: #888;"><i class="bi bi-calendar-check"></i></span>
+                            <input asp-for="Proyecto.FechaFin"
+                                   class="form-control fecha-input"
+                                   type="text"
+                                   placeholder="DD/MM/YYYY"
+                                   maxlength="10"
+                                   id="fechaFinInput"
+                                   readonly />
+                        </div>
+                        <div class="date-format-hint">Formato: DD/MM/YYYY</div>
+                        <span asp-validation-for="Proyecto.FechaFin" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mt-4 pt-3 border-top border-secondary d-flex gap-2">
+                    <button type="submit" class="btn btn-volcanic-primary">Guardar Proyecto</button>
+                    <a asp-page="Index" class="btn btn-volcanic-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-
-<!-- Script de validación de proyectos -->
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
     <script src="~/js/proyecto-validation.js"></script>
 
     <script>
- if (typeof setupFormConfirmation === 'function') {
+        // MANTENIENDO TU LÓGICA DE VALIDACIÓN EXACTA
+        if (typeof setupFormConfirmation === 'function') {
             setupFormConfirmation('createProyectoForm', 'confirmCreate');
         }
 
         document.addEventListener('DOMContentLoaded', function () {
-   const fechaInicioInput = document.querySelector('#fechaInicioInput');
+            const fechaInicioInput = document.querySelector('#fechaInicioInput');
             const fechaFinInput = document.querySelector('#fechaFinInput');
-   const form = document.querySelector('form');
+            const form = document.querySelector('form');
 
-            // Obtener la fecha de hoy a las 00:00:00
-    const hoy = new Date();
-  hoy.setHours(0, 0, 0, 0);
-
-        // Obtener mañana (para fecha fin por defecto)
- const manana = new Date(hoy);
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0);
+            const manana = new Date(hoy);
             manana.setDate(manana.getDate() + 1);
 
- // Configurar Flatpickr para Fecha de Inicio
-   const fechaInicioPicker = flatpickr(fechaInicioInput, {
-            dateFormat: "d/m/Y",
-     locale: "es",
-    allowInput: false,  // NO permitir escritura manual
-      clickOpens: true,   // Abrir SOLO al hacer clic
-     minDate: hoy,       // No permitir fechas anteriores a hoy
-      defaultDate: hoy,   // FECHA POR DEFECTO: HOY
-        onChange: function (selectedDates) {
-       const errorSpan = fechaInicioInput.parentElement.querySelector('.text-danger');
-   if (errorSpan) errorSpan.textContent = '';
- fechaInicioInput.classList.remove('is-invalid');
+            const fechaInicioPicker = flatpickr(fechaInicioInput, {
+                dateFormat: "d/m/Y",
+                locale: "es",
+                allowInput: false,
+                clickOpens: true,
+                minDate: hoy,
+                defaultDate: hoy,
+                onChange: function (selectedDates) {
+                    const errorSpan = fechaInicioInput.parentElement.parentElement.querySelector('.text-danger');
+                    if (errorSpan) errorSpan.textContent = '';
+                    fechaInicioInput.classList.remove('is-invalid');
 
-  // Actualizar fecha mínima de fecha fin
-       if (selectedDates.length > 0) {
-       const fechaFinPicker = fechaFinInput._flatpickr;
-     if (fechaFinPicker) {
-   // La fecha fin debe ser al menos un día después de la fecha de inicio
-   const minFechaFin = new Date(selectedDates[0]);
-     minFechaFin.setDate(minFechaFin.getDate() + 1);
-       fechaFinPicker.set('minDate', minFechaFin);
- }
-    }
-        }
-       });
+                    if (selectedDates.length > 0) {
+                        const fechaFinPicker = fechaFinInput._flatpickr;
+                        if (fechaFinPicker) {
+                            const minFechaFin = new Date(selectedDates[0]);
+                            minFechaFin.setDate(minFechaFin.getDate() + 1);
+                            fechaFinPicker.set('minDate', minFechaFin);
+                        }
+                    }
+                }
+            });
 
-         // Configurar Flatpickr para Fecha de Fin
-     const fechaFinPicker = flatpickr(fechaFinInput, {
-    dateFormat: "d/m/Y",
-      locale: "es",
-          allowInput: false,  // NO permitir escritura manual
-        clickOpens: true,   // Abrir SOLO al hacer clic
-  minDate: manana,    // Mínimo: mañana
-    defaultDate: manana,  // FECHA POR DEFECTO: MAÑANA
-  onChange: function () {
-      const errorSpan = fechaFinInput.parentElement.querySelector('.text-danger');
-           if (errorSpan) errorSpan.textContent = '';
-        fechaFinInput.classList.remove('is-invalid');
-     }
-         });
+            const fechaFinPicker = flatpickr(fechaFinInput, {
+                dateFormat: "d/m/Y",
+                locale: "es",
+                allowInput: false,
+                clickOpens: true,
+                minDate: manana,
+                defaultDate: manana,
+                onChange: function () {
+                    const errorSpan = fechaFinInput.parentElement.parentElement.querySelector('.text-danger');
+                    if (errorSpan) errorSpan.textContent = '';
+                    fechaFinInput.classList.remove('is-invalid');
+                }
+            });
 
-   // Validación de formato de fecha
-          function validarFormatoFecha(fecha) {
- if (!fecha) return true;
-       const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
- if (!regex.test(fecha)) return false;
-    const [, dia, mes, año] = regex.exec(fecha);
-   const d = parseInt(dia, 10);
- const m = parseInt(mes, 10);
-  const a = parseInt(año, 10);
-    if (m < 1 || m > 12) return false;
-       if (d < 1 || d > 31) return false;
-    const diasPorMes = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-         if (a % 4 === 0 && (a % 100 !== 0 || a % 400 === 0)) diasPorMes[1] = 29;
-    return d <= diasPorMes[m - 1];
-      }
+            function validarFormatoFecha(fecha) {
+                if (!fecha) return true;
+                const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+                if (!regex.test(fecha)) return false;
+                const [, dia, mes, año] = regex.exec(fecha);
+                const d = parseInt(dia, 10);
+                const m = parseInt(mes, 10);
+                const a = parseInt(año, 10);
+                if (m < 1 || m > 12) return false;
+                if (d < 1 || d > 31) return false;
+                const diasPorMes = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+                if (a % 4 === 0 && (a % 100 !== 0 || a % 400 === 0)) diasPorMes[1] = 29;
+                return d <= diasPorMes[m - 1];
+            }
 
-            // Parsear fecha
-        function parsearFecha(fechaStr) {
-         const [dia, mes, año] = fechaStr.split('/').map(Number);
- return new Date(año, mes - 1, dia);
-         }
+            function parsearFecha(fechaStr) {
+                const [dia, mes, año] = fechaStr.split('/').map(Number);
+                return new Date(año, mes - 1, dia);
+            }
 
-          // Validación al enviar el formulario
-          form.addEventListener('submit', function (event) {
+            form.addEventListener('submit', function (event) {
                 const inicioStr = fechaInicioInput.value.trim();
-             const finStr = fechaFinInput.value.trim();
-     const errorSpanInicio = fechaInicioInput.parentElement.querySelector('.text-danger');
-    const errorSpanFin = fechaFinInput.parentElement.querySelector('.text-danger');
+                const finStr = fechaFinInput.value.trim();
+                // Ajuste de selector debido al input-group
+                const errorSpanInicio = fechaInicioInput.parentElement.parentElement.querySelector('.text-danger');
+                const errorSpanFin = fechaFinInput.parentElement.parentElement.querySelector('.text-danger');
 
-     // Limpiar errores previos
-        if (errorSpanInicio) errorSpanInicio.textContent = '';
-  if (errorSpanFin) errorSpanFin.textContent = '';
+                if (errorSpanInicio) errorSpanInicio.textContent = '';
+                if (errorSpanFin) errorSpanFin.textContent = '';
 
-    let hasError = false;
+                let hasError = false;
 
-    // VALIDACIÓN CRÍTICA 1: Campos obligatorios
-       if (!inicioStr) {
-   event.preventDefault();
-    if (errorSpanInicio) errorSpanInicio.textContent = '⚠️ La fecha de inicio es obligatoria.';
-    fechaInicioInput.classList.add('is-invalid');
-  hasError = true;
-       }
+                if (!inicioStr) {
+                    event.preventDefault();
+                    if (errorSpanInicio) errorSpanInicio.textContent = '⚠️ La fecha de inicio es obligatoria.';
+                    fechaInicioInput.classList.add('is-invalid');
+                    hasError = true;
+                }
 
-  if (!finStr) {
-  event.preventDefault();
-        if (errorSpanFin) errorSpanFin.textContent = '⚠️ La fecha de fin es obligatoria.';
- fechaFinInput.classList.add('is-invalid');
-       hasError = true;
-}
+                if (!finStr) {
+                    event.preventDefault();
+                    if (errorSpanFin) errorSpanFin.textContent = '⚠️ La fecha de fin es obligatoria.';
+                    fechaFinInput.classList.add('is-invalid');
+                    hasError = true;
+                }
 
-       if (hasError) {
-      alert('⚠️ Las fechas son obligatorias. Por favor seleccione ambas fechas.');
-  event.stopPropagation();
-      return false;
-}
+                if (hasError) {
+                    alert('⚠️ Las fechas son obligatorias. Por favor seleccione ambas fechas.');
+                    event.stopPropagation();
+                    return false;
+                }
 
-    // VALIDACIÓN 2: Formato de fecha de inicio
-          if (inicioStr && !validarFormatoFecha(inicioStr)) {
-       event.preventDefault();
-      if (errorSpanInicio) errorSpanInicio.textContent = 'Formato de fecha inválido. Use DD/MM/YYYY';
-        fechaInicioInput.classList.add('is-invalid');
-        hasError = true;
-        }
+                if (inicioStr && !validarFormatoFecha(inicioStr)) {
+                    event.preventDefault();
+                    if (errorSpanInicio) errorSpanInicio.textContent = 'Formato de fecha inválido. Use DD/MM/YYYY';
+                    fechaInicioInput.classList.add('is-invalid');
+                    hasError = true;
+                }
 
-       // VALIDACIÓN 3: Formato de fecha de fin
- if (finStr && !validarFormatoFecha(finStr)) {
- event.preventDefault();
-   if (errorSpanFin) errorSpanFin.textContent = 'Formato de fecha inválido. Use DD/MM/YYYY';
-  fechaFinInput.classList.add('is-invalid');
-       hasError = true;
-    }
+                if (finStr && !validarFormatoFecha(finStr)) {
+                    event.preventDefault();
+                    if (errorSpanFin) errorSpanFin.textContent = 'Formato de fecha inválido. Use DD/MM/YYYY';
+                    fechaFinInput.classList.add('is-invalid');
+                    hasError = true;
+                }
 
-    if (hasError) {
-       event.stopPropagation();
-return false;
-  }
+                if (hasError) {
+                    event.stopPropagation();
+                    return false;
+                }
 
-       // VALIDACIÓN 4: Validar que ambas fechas estén presentes y sean válidas
-       if (inicioStr && finStr) {
-      const inicio = parsearFecha(inicioStr);
-    const fin = parsearFecha(finStr);
-     const hoyDate = new Date();
-      hoyDate.setHours(0, 0, 0, 0);
+                if (inicioStr && finStr) {
+                    const inicio = parsearFecha(inicioStr);
+                    const fin = parsearFecha(finStr);
+                    const hoyDate = new Date();
+                    hoyDate.setHours(0, 0, 0, 0);
 
-         // Validar que la fecha de inicio no sea anterior a hoy
-          if (inicio < hoyDate) {
-      event.preventDefault();
-     if (errorSpanInicio) errorSpanInicio.textContent = '⚠️ La fecha de inicio no puede ser anterior a hoy.';
-     fechaInicioInput.classList.add('is-invalid');
-       hasError = true;
-  }
+                    if (inicio < hoyDate) {
+                        event.preventDefault();
+                        if (errorSpanInicio) errorSpanInicio.textContent = '⚠️ La fecha de inicio no puede ser anterior a hoy.';
+                        fechaInicioInput.classList.add('is-invalid');
+                        hasError = true;
+                    }
 
- // Validar que la fecha de fin no sea anterior a hoy
-  if (fin < hoyDate) {
-       event.preventDefault();
-  if (errorSpanFin) errorSpanFin.textContent = '⚠️ La fecha de finalización no puede ser anterior a hoy.';
-          fechaFinInput.classList.add('is-invalid');
-       hasError = true;
-  }
+                    if (fin < hoyDate) {
+                        event.preventDefault();
+                        if (errorSpanFin) errorSpanFin.textContent = '⚠️ La fecha de finalización no puede ser anterior a hoy.';
+                        fechaFinInput.classList.add('is-invalid');
+                        hasError = true;
+                    }
 
-// Validar que la fecha de fin sea posterior a la fecha de inicio
-     if (fin <= inicio) {
-  event.preventDefault();
-    if (errorSpanFin) {
-     if (fin.getTime() === inicio.getTime()) {
-  errorSpanFin.textContent = '⚠️ La fecha de finalización no puede ser igual a la fecha de inicio.';
-      } else {
-    errorSpanFin.textContent = '⚠️ La fecha de finalización debe ser posterior a la fecha de inicio.';
-  }
-       }
-        fechaFinInput.classList.add('is-invalid');
-    hasError = true;
-           }
-      }
+                    if (fin <= inicio) {
+                        event.preventDefault();
+                        if (errorSpanFin) {
+                            if (fin.getTime() === inicio.getTime()) {
+                                errorSpanFin.textContent = '⚠️ La fecha de finalización no puede ser igual a la fecha de inicio.';
+                            } else {
+                                errorSpanFin.textContent = '⚠️ La fecha de finalización debe ser posterior a la fecha de inicio.';
+                            }
+                        }
+                        fechaFinInput.classList.add('is-invalid');
+                        hasError = true;
+                    }
+                }
 
-   // BLOQUEO FINAL: Si hay algún error, prevenir envío completamente
-    if (hasError) {
- event.preventDefault();
-           event.stopPropagation();
-       
-   // Scroll al primer error
-  const firstError = form.querySelector('.is-invalid');
-       if (firstError) {
-  firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-     firstError.focus();
-   }
-          
-     return false;
- }
-   });
-});
+                if (hasError) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    const firstError = form.querySelector('.is-invalid');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        firstError.focus();
+                    }
+                    return false;
+                }
+            });
+        });
     </script>
 }

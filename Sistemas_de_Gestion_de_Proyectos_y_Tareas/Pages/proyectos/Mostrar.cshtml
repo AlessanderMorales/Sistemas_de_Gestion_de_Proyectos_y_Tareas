@@ -5,183 +5,288 @@
     ViewData["Title"] = "Detalles del Proyecto";
 }
 
+<!-- Iconos -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
 <style>
     :root {
-        --accent-red: #D32F2F;
+        --volcanic-bg: #1e1e2d;
+        --volcanic-card: #2d2d3b;
         --accent-orange: #FF5722;
-        --accent-gold: #FFD700;
+        --accent-red: #D32F2F;
+        --accent-gold: #FFC107;
+        --text-primary: #f5f5f7;
+    }
+
+    body {
+        background-color: var(--volcanic-bg);
+        color: var(--text-primary);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     .title-volcanic {
-        background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
+        background: linear-gradient(to right, #FF512F, #F09819);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        font-weight: 700;
-        border-bottom: 2px solid rgba(255,255,255,0.1);
-        padding-bottom: 1rem;
+        font-weight: 800;
         margin-bottom: 2rem;
     }
 
-    .details-list dt {
+    .detail-card {
+        background-color: var(--volcanic-card);
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        border: 1px solid rgba(255,255,255,0.05);
+        margin-bottom: 2rem;
+    }
+
+    .section-title {
+        color: var(--accent-orange);
+        font-weight: 700;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 0.8rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .detail-row {
+        margin-bottom: 1rem;
+    }
+
+    .detail-label {
         color: var(--accent-gold);
         font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
     }
 
-    .details-list dd {
-        color: #e0e0e0;
-        margin-left: 0;
+    .detail-value {
+        color: #fff;
+        font-size: 1.1rem;
+        line-height: 1.6;
     }
 
-    .section-divider {
-        border-color: rgba(255,255,255,0.15) !important;
-        margin: 2rem 0;
-    }
-
-    h4 {
-        color: var(--accent-orange);
-        font-weight: 600;
-        margin-bottom: 1.5rem;
-    }
-
+    /* Tabla de Tareas dentro del detalle */
     .table-volcanic {
-        background-color: transparent;
-        color: #e0e0e0;
-        border-collapse: separate;
-        border-spacing: 0 10px;
         width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 5px;
+        color: #e0e0e0;
     }
-
-        .table-volcanic > :not(caption) > * > * {
-            background-color: #3a3a40;
-            padding: 1.25rem;
-            border-width: 0;
-        }
 
         .table-volcanic thead th {
-            background-color: transparent;
-            color: var(--accent-gold);
+            color: #aaa;
+            font-size: 0.85rem;
             text-transform: uppercase;
-            border-bottom: 2px solid var(--accent-orange);
-            white-space: nowrap;
+            padding: 10px;
+            border-bottom: 1px solid #444;
         }
 
-        .table-volcanic tbody tr:hover {
-            background-color: #4a4a50;
+        .table-volcanic tbody td {
+            background-color: rgba(255,255,255,0.03);
+            padding: 12px;
+            vertical-align: middle;
+        }
+
+        .table-volcanic tbody tr:hover td {
+            background-color: rgba(255,255,255,0.06);
+        }
+
+        .table-volcanic tbody tr td:first-child {
+            border-top-left-radius: 6px;
+            border-bottom-left-radius: 6px;
+        }
+
+        .table-volcanic tbody tr td:last-child {
+            border-top-right-radius: 6px;
+            border-bottom-right-radius: 6px;
+        }
+
+    /* Badges */
+    .priority-badge {
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+    }
+
+    .priority-alta {
+        color: #ff5252;
+        background: rgba(255, 82, 82, 0.15);
+        border: 1px solid #ff5252;
+    }
+
+    .priority-media {
+        color: #ffca28;
+        background: rgba(255, 202, 40, 0.15);
+        border: 1px solid #ffca28;
+    }
+
+    .priority-baja {
+        color: #66bb6a;
+        background: rgba(102, 187, 106, 0.15);
+        border: 1px solid #66bb6a;
+    }
+
+    /* Botones */
+    .btn-edit-task {
+        background: rgba(255, 193, 7, 0.1);
+        color: #ffc107;
+        border: 1px solid rgba(255, 193, 7, 0.3);
+        padding: 4px 12px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 0.85rem;
+        transition: 0.2s;
+    }
+
+        .btn-edit-task:hover {
+            background: #ffc107;
+            color: #000;
         }
 
     .btn-volcanic-primary {
-        background: linear-gradient(45deg, #4CAF50, #8BC34A);
+        background: linear-gradient(135deg, #FF512F 0%, #DD2476 100%);
         border: none;
         color: white;
+        padding: 10px 25px;
+        border-radius: 50px;
         font-weight: bold;
-        padding: 10px 20px;
-        border-radius: 8px;
-        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(221, 36, 118, 0.4);
+        text-decoration: none;
+        transition: 0.3s;
+        display: inline-block;
     }
 
         .btn-volcanic-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+            box-shadow: 0 6px 20px rgba(221, 36, 118, 0.6);
+            color: white;
         }
 
     .btn-volcanic-secondary {
-        background-color: transparent;
-        border: 2px solid #6c757d;
-        color: #ced4da;
-        font-weight: bold;
-        padding: 8px 20px;
-        border-radius: 8px;
-        transition: all 0.3s ease;
+        border: 1px solid #666;
+        color: #ccc;
+        padding: 8px 25px;
+        border-radius: 50px;
+        text-decoration: none;
+        display: inline-block;
     }
 
         .btn-volcanic-secondary:hover {
-            background-color: #6c757d;
-            color: white;
+            border-color: #fff;
+            color: #fff;
+            background: rgba(255,255,255,0.05);
         }
+
+    .alert-custom {
+        background: #2a2a30;
+        border-left: 4px solid #FF5722;
+        padding: 15px;
+        border-radius: 6px;
+        color: #ccc;
+    }
 </style>
 
 @if (Model.Proyecto != null)
 {
-    <h1 class="title-volcanic">@Model.Proyecto.Nombre</h1>
+<h1 class="title-volcanic">@Model.Proyecto.Nombre</h1>
 
-    <div class="container-fluid px-0">
-        <h4>Información del Proyecto</h4>
-        <dl class="row details-list">
-            <dt class="col-sm-3 col-md-2">Descripción</dt>
-            <dd class="col-sm-9 col-md-10">@Model.Proyecto.Descripcion</dd>
-
-            <dt class="col-sm-3 col-md-2">Fecha de Inicio</dt>
-            <dd class="col-sm-9 col-md-10">
+<div class="detail-card">
+    <h4 class="section-title"><i class="bi bi-info-circle"></i> Información del Proyecto</h4>
+    <div class="row">
+        <div class="col-md-12 detail-row">
+            <div class="detail-label">Descripción</div>
+            <div class="detail-value">@Model.Proyecto.Descripcion</div>
+        </div>
+        <div class="col-md-6 detail-row">
+            <div class="detail-label">Fecha de Inicio</div>
+            <div class="detail-value">
+                <i class="bi bi-calendar2-check me-2"></i>
                 @(Model.Proyecto.FechaInicio.HasValue? Model.Proyecto.FechaInicio.Value.ToShortDateString() : "Sin fecha")
-            </dd>
-
-            <dt class="col-sm-3 col-md-2">Fecha de Fin</dt>
-            <dd class="col-sm-9 col-md-10">
-                @(Model.Proyecto.FechaFin.HasValue? Model.Proyecto.FechaFin.Value.ToShortDateString() : "Sin fecha")
-            </dd>
-        </dl>
-    </div>
-
-    <hr class="section-divider" />
-
-    <div>
-        <h4>Tareas Asociadas</h4>
-        @if (Model.Proyecto.Tareas != null && Model.Proyecto.Tareas.Any())
-        {
-            <div class="table-responsive">
-                <table class="table table-volcanic">
-                    <thead>
-                        <tr>
-                            <th>Título</th>
-                            <th>Descripción</th>
-                            <th>Prioridad</th>
-                            @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
-                            {
-                                <th>Acciones</th>
-                            }
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var tarea in Model.Proyecto.Tareas)
-                        {
-                            <tr>
-                                <td>@tarea.Titulo</td>
-                                <td>@tarea.Descripcion</td>
-                                <td>@tarea.Prioridad</td>
-                                @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
-                                {
-                                    <td>
-                                        <a asp-page="/Tareas/Edit" asp-route-id="@tarea.Id" class="btn btn-sm btn-outline-warning">Editar Tarea</a>
-                                    </td>
-                                }
-                            </tr>
-                        }
-                    </tbody>
-                </table>
             </div>
+        </div>
+        <div class="col-md-6 detail-row">
+            <div class="detail-label">Fecha de Fin</div>
+            <div class="detail-value">
+                <i class="bi bi-flag me-2"></i>
+                @(Model.Proyecto.FechaFin.HasValue? Model.Proyecto.FechaFin.Value.ToShortDateString() : "Sin fecha")
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="detail-card">
+    <h4 class="section-title"><i class="bi bi-list-check"></i> Tareas Asociadas</h4>
+    @if (Model.Proyecto.Tareas != null && Model.Proyecto.Tareas.Any())
+        {
+    <div class="table-responsive">
+        <table class="table-volcanic">
+            <thead>
+                <tr>
+                    <th style="width: 30%">Título</th>
+                    <th style="width: 40%">Descripción</th>
+                    <th style="width: 15%">Prioridad</th>
+                    @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
+                            {
+                    <th style="width: 15%">Acciones</th>
+                            }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var tarea in Model.Proyecto.Tareas)
+                        {
+                <tr>
+                    <td style="font-weight: 600; color: white;">@tarea.Titulo</td>
+                    <td class="text-muted text-truncate" style="max-width: 300px;">@tarea.Descripcion</td>
+                    <td>
+                        <span class="priority-badge priority-@(tarea.Prioridad.ToLower())">@tarea.Prioridad</span>
+                    </td>
+                    @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
+                                {
+                    <td>
+                        <a asp-page="/Tareas/Edit" asp-route-id="@tarea.Id" class="btn-edit-task">
+                            <i class="bi bi-pencil-square"></i> Editar
+                        </a>
+                    </td>
+                                }
+                </tr>
+                        }
+            </tbody>
+        </table>
+    </div>
         }
         else
         {
-            <div class="alert alert-secondary bg-dark text-white" role="alert">
-                Este proyecto no tiene tareas asignadas todavía.
-            </div>
-        }
+    <div class="alert-custom">
+        <i class="bi bi-inbox me-2"></i> Este proyecto no tiene tareas asignadas todavía.
     </div>
+        }
+</div>
 
-    <div class="mt-4">
-        @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
+<div class="mt-4 d-flex gap-2">
+    @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
         {
-            <a asp-page="/Tareas/Create" asp-route-idProyecto="@Model.Proyecto.IdProyecto" class="btn btn-volcanic-primary">Añadir Nueva Tarea</a>
+    <a asp-page="/Tareas/Create" asp-route-idProyecto="@Model.Proyecto.IdProyecto" class="btn-volcanic-primary">
+        <i class="bi bi-plus-lg"></i> Añadir Nueva Tarea
+    </a>
         }
-        <a asp-page="./Index" class="btn btn-volcanic-secondary ms-2">Volver a la Lista</a>
-    </div>
+    <a asp-page="./Index" class="btn-volcanic-secondary">
+        <i class="bi bi-arrow-left"></i> Volver a la Lista
+    </a>
+</div>
 }
 else
 {
-    <div class="alert alert-danger" role="alert">
-        <h4 class="alert-heading">Proyecto no encontrado</h4>
-        <p>El proyecto que buscas no existe o fue eliminado.</p>
-        <hr />
-        <a asp-page="./Index" class="btn btn-primary">Volver a la Lista</a>
-    </div>
+<div class="alert alert-danger" role="alert" style="background: #2c0b0e; border-color: #842029; color: #ea868f;">
+    <h4 class="alert-heading"><i class="bi bi-exclamation-octagon"></i> Proyecto no encontrado</h4>
+    <p>El proyecto que buscas no existe o fue eliminado.</p>
+    <hr style="border-color: #842029;" />
+    <a asp-page="./Index" class="btn btn-outline-light btn-sm">Volver a la Lista</a>
+</div>
 }
