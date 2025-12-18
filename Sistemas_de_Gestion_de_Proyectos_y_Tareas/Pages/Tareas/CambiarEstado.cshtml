@@ -6,112 +6,121 @@
 
 <style>
     :root {
-        --accent-red: #D32F2F;
+        --volcanic-bg: #1e1e2d;
+        --volcanic-card: #2d2d3b;
         --accent-orange: #FF5722;
-        --accent-gold: #FFD700;
-        --text-primary: #f5f5f7;
+        --text-primary: #e0e0e0;
+    }
+
+    body {
+        background-color: var(--volcanic-bg);
+        color: var(--text-primary);
     }
 
     .title-volcanic {
-        background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
+        background: linear-gradient(to right, #FF512F, #F09819);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        font-weight: 700;
-        border-bottom: 2px solid rgba(255,255,255,0.1);
-        padding-bottom: 0.5rem;
+        font-weight: 800;
         margin-bottom: 2rem;
     }
 
     .form-control, .form-select {
-        background-color: #3a3a40;
+        background-color: #1a1a20;
         color: var(--text-primary);
-        border: 1px solid #555;
+        border: 1px solid #3f3f4b;
         border-radius: 8px;
-        padding: 0.75rem 1rem;
+        padding: 0.8rem 1rem;
     }
 
         .form-control:focus, .form-select:focus {
-            background-color: #4a4a50;
-            color: var(--text-primary);
+            background-color: #222;
+            color: #fff;
             border-color: var(--accent-orange);
-            box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
+            box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.2);
         }
 
-    .form-label {
-        color: var(--text-primary);
-        font-weight: 500;
-    }
-
     .info-box {
-        background-color: #3a3a40;
-        padding: 1.5rem;
-        border-radius: 10px;
-        border-left: 4px solid var(--accent-gold);
+        background-color: var(--volcanic-card);
+        padding: 2rem;
+        border-radius: 12px;
+        border-left: 5px solid var(--accent-orange);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         margin-bottom: 2rem;
     }
 
         .info-box h5 {
-            color: var(--accent-gold);
-            margin-bottom: 0.5rem;
+            color: var(--accent-orange);
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
         }
 
         .info-box p {
-            color: #e0e0e0;
-            margin-bottom: 0.25rem;
+            color: #b0b0b0;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 0.5rem;
         }
 
+            .info-box p strong {
+                color: #fff;
+            }
+
     .btn-volcanic-primary {
-        background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
+        background: linear-gradient(135deg, #FF512F 0%, #DD2476 100%);
         border: none;
         color: white;
         font-weight: bold;
-        padding: 12px 25px;
-        border-radius: 8px;
+        padding: 12px 30px;
+        border-radius: 50px;
         transition: all 0.3s ease;
     }
 
         .btn-volcanic-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
+            box-shadow: 0 5px 15px rgba(221, 36, 118, 0.4);
         }
 
     .btn-volcanic-secondary {
         background-color: transparent;
-        border: 2px solid #6c757d;
-        color: #ced4da;
-        font-weight: bold;
+        border: 2px solid #555;
+        color: #aaa;
         padding: 10px 25px;
-        border-radius: 8px;
-        transition: all 0.3s ease;
+        border-radius: 50px;
     }
 
         .btn-volcanic-secondary:hover {
-            background-color: #6c757d;
-            color: white;
-            border-color: #6c757d;
+            color: #fff;
+            border-color: #fff;
         }
 
     .status-badge {
-        display: inline-block;
-        padding: 6px 15px;
-        border-radius: 20px;
+        padding: 5px 12px;
+        border-radius: 4px;
+        font-size: 0.85rem;
         font-weight: bold;
-        font-size: 0.9rem;
+        text-transform: uppercase;
     }
 
     .status-sin-iniciar {
-        background-color: #6c757d;
-        color: white;
+        background-color: #424242;
+        color: #fff;
+        border: 1px solid #666;
     }
 
     .status-en-progreso {
-        background-color: #ffc107;
-        color: #212529;
+        background-color: rgba(255, 193, 7, 0.2);
+        color: #ffc107;
+        border: 1px solid #ffc107;
     }
 
     .status-completada {
-        background-color: #28a745;
-        color: white;
+        background-color: rgba(40, 167, 69, 0.2);
+        color: #28a745;
+        border: 1px solid #28a745;
     }
 </style>
 
@@ -119,55 +128,55 @@
 
 @if (Model.Tarea != null)
 {
-    <div class="info-box">
-        <h5>Información de la Tarea</h5>
-        <p><strong>Título:</strong> @Model.Tarea.Titulo</p>
-        <p><strong>Descripción:</strong> @Model.Tarea.Descripcion</p>
-        <p><strong>Prioridad:</strong> @Model.Tarea.Prioridad</p>
-        <p>
-            <strong>Estado Actual:</strong>
-            @if (Model.Tarea.Status == "SinIniciar")
+<div class="info-box">
+    <h5><i class="bi bi-card-text"></i> Detalles de la Tarea</h5>
+    <p><strong>Título:</strong> @Model.Tarea.Titulo</p>
+    <p><strong>Descripción:</strong> @Model.Tarea.Descripcion</p>
+    <p><strong>Prioridad:</strong> <span style="color: #ffc107">@Model.Tarea.Prioridad</span></p>
+    <p style="border:none">
+        <strong>Estado Actual:</strong>
+        @if (Model.Tarea.Status == "SinIniciar")
             {
-                <span class="status-badge status-sin-iniciar">Sin Iniciar</span>
+        <span class="status-badge status-sin-iniciar">Sin Iniciar</span>
             }
             else if (Model.Tarea.Status == "EnProgreso")
             {
-                <span class="status-badge status-en-progreso">En Progreso</span>
+        <span class="status-badge status-en-progreso">En Progreso</span>
             }
             else if (Model.Tarea.Status == "Completada")
             {
-                <span class="status-badge status-completada">Completada</span>
+        <span class="status-badge status-completada">Completada</span>
             }
-        </p>
+    </p>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post" id="cambiarEstadoForm">
+            <input type="hidden" asp-for="TareaId" />
+
+            <div class="form-group mb-4">
+                <label asp-for="NuevoStatus" class="form-label" style="color:#e0e0e0">Seleccionar Nuevo Estado</label>
+                <select asp-for="NuevoStatus" class="form-select" asp-items="Model.StatusDisponibles"></select>
+                <span asp-validation-for="NuevoStatus" class="text-danger"></span>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-volcanic-primary">Actualizar Estado</button>
+                <a asp-page="Index" class="btn btn-volcanic-secondary ms-2">Cancelar</a>
+            </div>
+        </form>
     </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <form method="post" id="cambiarEstadoForm">
-                <input type="hidden" asp-for="TareaId" />
-
-                <div class="form-group mb-3">
-                    <label asp-for="NuevoStatus" class="form-label">Nuevo Estado</label>
-                    <select asp-for="NuevoStatus" class="form-select" asp-items="Model.StatusDisponibles"></select>
-                    <span asp-validation-for="NuevoStatus" class="text-danger"></span>
-                </div>
-
-                <div class="mt-4">
-                    <button type="submit" class="btn btn-volcanic-primary">Actualizar Estado</button>
-                    <a asp-page="Index" class="btn btn-volcanic-secondary ms-2">Cancelar</a>
-                </div>
-            </form>
-        </div>
-    </div>
+</div>
 }
 else
 {
-    <div class="alert alert-danger" role="alert">
-        <h4 class="alert-heading">Tarea no encontrada</h4>
-        <p>La tarea que buscas no existe o fue eliminada.</p>
-        <hr>
-        <a asp-page="Index" class="btn btn-primary">Volver a la Lista</a>
-    </div>
+<div class="alert alert-danger" style="background:#2c0b0e; border-color: #842029; color: #ea868f;">
+    <h4 class="alert-heading">Tarea no encontrada</h4>
+    <p>La tarea que buscas no existe o fue eliminada.</p>
+    <hr style="border-color: #842029;">
+    <a asp-page="Index" class="btn btn-outline-light btn-sm">Volver a la Lista</a>
+</div>
 }
 
 @section Scripts {

@@ -6,218 +6,201 @@
 
 <style>
     :root {
-        --accent-red: #D32F2F;
+        --volcanic-bg: #1e1e2d;
+        --volcanic-card: #2d2d3b;
         --accent-orange: #FF5722;
-        --accent-gold: #FFD700;
         --text-primary: #f5f5f7;
     }
 
+    body {
+        background-color: var(--volcanic-bg);
+        color: var(--text-primary);
+    }
+
     .title-volcanic {
-        background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
+        background: linear-gradient(to right, #FF512F, #F09819);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        font-weight: 700;
-        border-bottom: 2px solid rgba(255,255,255,0.1);
-        padding-bottom: 0.5rem;
+        font-weight: 800;
         margin-bottom: 2rem;
     }
 
-    .form-control, .form-select {
-        background-color: #3a3a40;
+    .form-container {
+        background-color: var(--volcanic-card);
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .form-control, .form-select, .search-input {
+        background-color: #1a1a20;
         color: var(--text-primary);
-        border: 1px solid #555;
+        border: 1px solid #444;
         border-radius: 8px;
         padding: 0.75rem 1rem;
     }
 
-        .form-control:focus, .form-select:focus {
-            background-color: #4a4a50;
-            color: var(--text-primary);
+        .form-control:focus, .form-select:focus, .search-input:focus {
+            background-color: #222;
+            color: #fff;
             border-color: var(--accent-orange);
-            box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
+            box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.2);
+            outline: none;
         }
 
     .form-label {
-        color: var(--text-primary);
+        color: #cfcfcf;
         font-weight: 500;
+        margin-bottom: 0.5rem;
     }
 
     .text-danger {
         color: #ff5252 !important;
         font-weight: 500;
-    }
-
-    .form-container {
-        max-width: 700px;
-        width: 100%;
+        font-size: 0.85rem;
     }
 
     .btn-volcanic-primary {
-        background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
+        background: linear-gradient(135deg, #FF512F 0%, #DD2476 100%);
         border: none;
         color: white;
         font-weight: bold;
-        padding: 12px 25px;
-        border-radius: 8px;
+        padding: 12px 30px;
+        border-radius: 50px;
         transition: all 0.3s ease;
     }
 
         .btn-volcanic-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
+            box-shadow: 0 5px 15px rgba(221, 36, 118, 0.4);
         }
 
     .btn-volcanic-secondary {
-        background-color: transparent;
-        border: 2px solid #6c757d;
-        color: #ced4da;
-        font-weight: bold;
+        background: transparent;
+        border: 2px solid #555;
+        color: #aaa;
         padding: 10px 25px;
-        border-radius: 8px;
-        transition: all 0.3s ease;
+        border-radius: 50px;
     }
 
         .btn-volcanic-secondary:hover {
-            background-color: #6c757d;
-            color: white;
-            border-color: #6c757d;
+            border-color: #fff;
+            color: #fff;
         }
 
-    .search-select-container {
-        position: relative;
-    }
-
-    .search-input {
-        background-color: #3a3a40;
-        color: var(--text-primary);
-        border: 1px solid #555;
+    /* Custom Project Select */
+    .proyecto-list-container {
+        background-color: #1a1a20;
+        border: 1px solid #444;
         border-radius: 8px;
-        padding: 0.75rem 2.5rem 0.75rem 1rem;
-        width: 100%;
-        transition: all 0.3s ease;
-    }
-
-        .search-input:focus {
-            background-color: #4a4a50;
-            border-color: var(--accent-orange);
-            box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
-            outline: none;
-        }
-
-    .search-icon {
-        position: absolute;
-        right: 1rem;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #888;
-        pointer-events: none;
+        max-height: 200px;
+        overflow-y: auto;
+        margin-top: 5px;
     }
 
     .proyecto-option {
-        padding: 0.75rem 1rem;
+        padding: 10px 15px;
         cursor: pointer;
-        transition: background-color 0.2s;
-        border-bottom: 1px solid #4a4a50;
+        border-bottom: 1px solid #333;
+        color: #ccc;
     }
 
         .proyecto-option:hover {
-            background-color: #4a4a50;
+            background-color: #333;
+            color: var(--accent-orange);
+        }
+
+        .proyecto-option.selected-proyecto {
+            background-color: rgba(255, 87, 34, 0.1);
+            border-left: 3px solid var(--accent-orange);
+            color: #fff;
         }
 
         .proyecto-option.hidden {
             display: none;
         }
-
-    .no-results {
-        padding: 1rem;
-        text-align: center;
-        color: #888;
-        font-style: italic;
-    }
-
-    .selected-proyecto {
-        background-color: #4a4a50;
-        border: 2px solid var(--accent-orange);
-    }
 </style>
 
 <h1 class="title-volcanic">@ViewData["Title"]</h1>
 
 <div class="row justify-content-center justify-content-md-start">
-    <div class="col-md-8 form-container">
-        <form method="post" id="createTareaForm">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="col-lg-8">
+        <div class="form-container">
+            <form method="post" id="createTareaForm">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-            <div class="mb-3">
-                <label asp-for="Tarea.Titulo" class="form-label"></label>
-                <input asp-for="Tarea.Titulo" class="form-control" placeholder="Ej: Diseñar la interfaz de usuario" />
-                <span asp-validation-for="Tarea.Titulo" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="Tarea.Descripcion" class="form-label"></label>
-                <textarea asp-for="Tarea.Descripcion" class="form-control" rows="3" placeholder="Añade detalles específicos sobre la tarea..."></textarea>
-                <span asp-validation-for="Tarea.Descripcion" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="Tarea.Prioridad" class="form-label"></label>
-                <select asp-for="Tarea.Prioridad" class="form-select">
-                    <option value="Alta">Alta</option>
-                    <option value="Media" selected>Media</option>
-                    <option value="Baja">Baja</option>
-                </select>
-                <span asp-validation-for="Tarea.Prioridad" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Proyecto</label>
-                <div class="search-select-container">
-                    <input type="text" id="proyectoSearch" class="search-input" placeholder="Buscar proyecto..." autocomplete="off" />
-                    <span class="search-icon">🔍</span>
+                <div class="mb-4">
+                    <label asp-for="Tarea.Titulo" class="form-label">Título de la Tarea</label>
+                    <input asp-for="Tarea.Titulo" class="form-control" placeholder="Ej: Implementar Login Volcánico" />
+                    <span asp-validation-for="Tarea.Titulo" class="text-danger"></span>
                 </div>
 
-                <div id="proyectosList" class="mt-2" style="max-height: 300px; overflow-y: auto; background-color: #3a3a40; border-radius: 8px;">
-                    @foreach (var proyecto in Model.ProyectosDisponibles)
-                    {
+                <div class="mb-4">
+                    <label asp-for="Tarea.Descripcion" class="form-label">Descripción</label>
+                    <textarea asp-for="Tarea.Descripcion" class="form-control" rows="4" placeholder="Detalles técnicos..."></textarea>
+                    <span asp-validation-for="Tarea.Descripcion" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Tarea.Prioridad" class="form-label">Nivel de Prioridad</label>
+                    <select asp-for="Tarea.Prioridad" class="form-select">
+                        <option value="Alta">🔥 Alta</option>
+                        <option value="Media" selected>⚡ Media</option>
+                        <option value="Baja">🌱 Baja</option>
+                    </select>
+                    <span asp-validation-for="Tarea.Prioridad" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Asignar a Proyecto</label>
+                    <div class="position-relative">
+                        <input type="text" id="proyectoSearch" class="search-input" placeholder="🔍 Buscar proyecto..." autocomplete="off" />
+                    </div>
+
+                    <div id="proyectosList" class="proyecto-list-container">
+                        @foreach (var proyecto in Model.ProyectosDisponibles)
+                        {
                         <div class="proyecto-option"
                              data-id="@proyecto.IdProyecto"
                              data-nombre="@proyecto.Nombre.ToLower()"
                              onclick="selectProyecto(@proyecto.IdProyecto, '@proyecto.Nombre'.replaceAll('\'', '\\\''))">
                             @proyecto.Nombre
                         </div>
-                    }
+                        }
+                        <div id="noResultsProyecto" class="p-3 text-center text-muted" style="display: none;">
+                            No se encontraron proyectos
+                        </div>
+                    </div>
+
+                    <input type="hidden" asp-for="Tarea.IdProyecto" id="proyectoIdInput" />
+                    <span asp-validation-for="Tarea.IdProyecto" class="text-danger"></span>
+
+                    <div class="mt-2 text-end">
+                        <small class="text-muted">Proyecto seleccionado:</small>
+                        <span id="selectedProyectoName" style="color: var(--accent-orange); font-weight:bold;">Ninguno</span>
+                    </div>
                 </div>
 
-                <div id="noResultsProyecto" class="no-results" style="display: none;">No se encontraron proyectos</div>
+                <input type="hidden" asp-for="Tarea.Status" value="SinIniciar" />
 
-                <input type="hidden" asp-for="Tarea.IdProyecto" id="proyectoIdInput" />
-                <span asp-validation-for="Tarea.IdProyecto" class="text-danger"></span>
+                <div class="alert mt-3" style="background: rgba(33, 150, 243, 0.1); border-left: 4px solid #2196F3; color: #90caf9;">
+                    <i class="bi bi-info-circle-fill me-2"></i> La tarea iniciará con estado <strong>"Sin Iniciar"</strong>.
+                </div>
 
-                <small class="text-muted d-block mt-2">
-                    Proyecto seleccionado: <span id="selectedProyectoName" class="text-warning">Ninguno</span>
-                </small>
-            </div>
-
-            <input type="hidden" asp-for="Tarea.Status" value="SinIniciar" />
-
-            <div class="alert alert-info">
-                <strong>Nota:</strong> La tarea se creará con estado "Sin Iniciar" por defecto.
-            </div>
-
-            <div class="mt-4">
-                <button type="submit" class="btn btn-volcanic-primary">Guardar Tarea</button>
-                <a asp-page="Index" class="btn btn-volcanic-secondary ms-2">Cancelar</a>
-            </div>
-        </form>
+                <div class="mt-4 pt-3 border-top border-secondary">
+                    <button type="submit" class="btn btn-volcanic-primary">
+                        <i class="bi bi-check-lg"></i> Guardar Tarea
+                    </button>
+                    <a asp-page="Index" class="btn btn-volcanic-secondary ms-2">Cancelar</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
     <script>
         setupFormConfirmation('createTareaForm', 'confirmCreate');
 
@@ -247,18 +230,15 @@
         function selectProyecto(id, nombre) {
             proyectoIdInput.value = id;
             selectedProyectoName.textContent = nombre;
-
             proyectoOptions.forEach(opt => opt.classList.remove('selected-proyecto'));
             document.querySelector(`[data-id="${id}"]`).classList.add('selected-proyecto');
-            proyectoOptions.forEach(opt => opt.classList.remove('hidden'));
         }
 
+        // Auto-select first if available
         document.addEventListener('DOMContentLoaded', function () {
             if (proyectoOptions.length > 0) {
-                const firstProyecto = proyectoOptions[0];
-                const id = firstProyecto.getAttribute('data-id');
-                const nombre = firstProyecto.textContent.trim();
-                selectProyecto(id, nombre);
+                const first = proyectoOptions[0];
+                selectProyecto(first.getAttribute('data-id'), first.textContent.trim());
             }
         });
     </script>

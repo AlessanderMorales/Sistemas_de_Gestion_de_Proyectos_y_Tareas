@@ -4,221 +4,295 @@
     ViewData["Title"] = "Lista de Tareas";
 }
 
+<!-- Agregamos los iconos explícitamente por si faltan en tu Layout -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
 <style>
     :root {
-        --accent-red: #D32F2F;
+        --volcanic-bg: #1e1e2d;
+        --volcanic-card: #2d2d3b;
         --accent-orange: #FF5722;
-        --accent-gold: #FFD700;
-        --accent-edit: #ffc107;
+        --accent-red: #D32F2F;
+        --accent-gold: #FFC107;
+        --text-primary: #f5f5f7;
+        --text-secondary: #a0a0a0;
     }
 
+    body {
+        background-color: var(--volcanic-bg);
+        color: var(--text-primary);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Título con gradiente */
     .title-volcanic {
-        background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
+        background: linear-gradient(to right, #FF512F, #F09819);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        font-weight: 700;
+        font-weight: 800;
+        margin: 0;
+        font-size: 2rem;
     }
 
+    /* Header y Buscador */
     .header-actions {
         display: flex;
-        flex-wrap: wrap;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 2rem;
-        border-bottom: 2px solid rgba(255,255,255,0.1);
         padding-bottom: 1rem;
-        gap: 1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
     }
 
     .search-container {
+        position: relative;
         margin-bottom: 1.5rem;
-        max-width: 500px;
-        width: 100%;
     }
 
     .search-input {
-        background-color: #3a3a40;
-        color: #f5f5f7;
-        border: 1px solid #555;
-        border-radius: 8px;
-        padding: 0.75rem 1rem;
+        background-color: #15151a;
+        color: #fff;
+        border: 1px solid #444;
+        border-radius: 50px;
+        padding: 0.8rem 1.5rem 0.8rem 2.5rem;
         width: 100%;
-        transition: all 0.3s ease;
+        max-width: 400px;
+        transition: 0.3s;
     }
 
         .search-input:focus {
-            background-color: #4a4a50;
             border-color: var(--accent-orange);
-            box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
+            box-shadow: 0 0 15px rgba(255, 87, 34, 0.2);
             outline: none;
         }
 
-        .search-input::placeholder {
-            color: #888;
-        }
-
-    .table-volcanic {
-        background-color: transparent;
-        color: #e0e0e0;
-        border-collapse: separate;
-        border-spacing: 0 10px;
-        width: 100%;
+    .search-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #888;
     }
 
-        .table-volcanic > :not(caption) > * > * {
-            background-color: #3a3a40;
-            padding: 1.25rem;
-            border-width: 0;
-            vertical-align: middle;
-        }
+    /* --- TABLA --- */
+    .card-table {
+        background-color: var(--volcanic-card);
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        overflow: hidden;
+    }
+
+    .table-volcanic {
+        width: 100%;
+        border-collapse: collapse;
+        color: var(--text-primary);
+    }
 
         .table-volcanic thead th {
-            background-color: transparent;
-            color: var(--accent-gold);
-            font-size: 0.9rem;
+            text-align: left;
+            color: var(--accent-orange);
+            font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            border-bottom: 2px solid var(--accent-orange);
-            white-space: nowrap;
+            padding: 1rem;
+            border-bottom: 2px solid rgba(255, 87, 34, 0.3);
+            font-weight: 700;
+        }
+
+        .table-volcanic tbody td {
+            padding: 1.2rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            vertical-align: middle;
+            font-size: 0.95rem;
         }
 
         .table-volcanic tbody tr:hover {
-            background-color: #4a4a50;
+            background-color: rgba(255, 255, 255, 0.03);
         }
 
-    .priority-badge {
+        .table-volcanic tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+    /* Badges de Prioridad */
+    .badge-priority {
+        padding: 5px 12px;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.75rem;
+        text-transform: uppercase;
         display: inline-block;
-        padding: 6px 12px;
-        border-radius: 15px;
-        font-weight: bold;
-        color: #212529;
-        font-size: 0.85rem;
+        min-width: 70px;
+        text-align: center;
     }
 
-    .priority-alta {
-        background-color: #dc3545;
-        color: white;
+    .prioridad-alta {
+        background: rgba(255, 82, 82, 0.15);
+        color: #ff5252;
+        border: 1px solid rgba(255, 82, 82, 0.3);
     }
 
-    .priority-media {
-        background-color: #ffc107;
+    .prioridad-media {
+        background: rgba(255, 193, 7, 0.15);
+        color: #ffc107;
+        border: 1px solid rgba(255, 193, 7, 0.3);
     }
 
-    .priority-baja {
-        background-color: #28a745;
-        color: white;
+    .prioridad-baja {
+        background: rgba(102, 187, 106, 0.15);
+        color: #66bb6a;
+        border: 1px solid rgba(102, 187, 106, 0.3);
+    }
+
+    /* Estado */
+    .status-indicator {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 6px;
+    }
+
+    .status-text {
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .st-sin-iniciar .status-indicator {
+        background-color: #9e9e9e;
+        box-shadow: 0 0 5px #9e9e9e;
+    }
+
+    .st-sin-iniciar .status-text {
+        color: #ccc;
+    }
+
+    .st-progreso .status-indicator {
+        background-color: #ffca28;
+        box-shadow: 0 0 8px #ffca28;
+    }
+
+    .st-progreso .status-text {
+        color: #ffca28;
+    }
+
+    .st-completada .status-indicator {
+        background-color: #00e676;
+        box-shadow: 0 0 8px #00e676;
+    }
+
+    .st-completada .status-text {
+        color: #00e676;
+    }
+
+    .desc-text {
+        color: var(--text-secondary);
+        max-width: 250px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
     }
 
     .project-link {
-        color: var(--accent-orange);
+        color: #64b5f6;
         text-decoration: none;
         font-weight: 500;
+        transition: 0.2s;
     }
 
         .project-link:hover {
-            color: var(--accent-gold);
+            color: #90caf9;
+            text-decoration: underline;
         }
 
-    .btn-action {
-        border-radius: 6px;
-        font-weight: 500;
-        padding: 5px 12px;
+    /* --- CORRECCIÓN: TEXTO "SIN ASIGNAR" --- */
+    /* Lo hacemos más claro y legible */
+    .text-unassigned {
+        color: #b0b0b0; /* Gris claro brillante */
+        font-style: italic;
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+    /* --- CORRECCIÓN: BOTONES DE ACCIÓN --- */
+    .actions-cell {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+    }
+
+    .btn-icon {
+        width: 38px; /* Un poco más grandes */
+        height: 38px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
         transition: all 0.2s ease;
+        text-decoration: none;
+        font-size: 1.1rem; /* Icono más grande */
     }
 
-        .btn-action:hover {
-            transform: translateY(-1px);
-        }
-
+    /* Definimos colores específicos para que resalten */
     .btn-edit {
-        background-color: var(--accent-edit);
-        border-color: var(--accent-edit);
-        color: #212529;
+        background-color: rgba(255, 193, 7, 0.1);
+        color: #ffc107;
+        border: 1px solid rgba(255, 193, 7, 0.3);
     }
 
-    .btn-delete {
-        background-color: #6c757d;
-        border-color: #6c757d;
-        color: white;
-    }
-
-    .btn-volcanic-primary {
-        background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
-        border: none;
-        color: white;
-        font-weight: bold;
-        padding: 10px 20px;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-    }
-
-        .btn-volcanic-primary:hover {
+        .btn-edit:hover {
+            background-color: #ffc107;
+            color: #1e1e2d; /* Icono oscuro al hacer hover */
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
         }
-
-    .modal-content.volcanic-modal {
-        background-color: #2c2c31;
-        color: #f5f5f7;
-        border: 1px solid rgba(255,255,255,0.2);
-        border-radius: 15px;
-    }
-
-    .volcanic-modal .modal-header {
-        border-bottom: 1px solid var(--accent-orange);
-    }
-
-    .volcanic-modal .modal-footer {
-        border-top: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .btn-volcanic-delete {
-        background-color: var(--accent-red);
-        border: none;
-        color: white;
-        font-weight: bold;
-        padding: 10px 20px;
-        border-radius: 8px;
-    }
-
-    .btn-volcanic-secondary-modal {
-        background-color: #4a4a50;
-        border: none;
-        color: white;
-        font-weight: bold;
-        padding: 10px 20px;
-        border-radius: 8px;
-    }
-
-    .status-badge {
-        display: inline-block;
-        padding: 5px 10px;
-        border-radius: 15px;
-        font-weight: bold;
-        font-size: 0.8rem;
-        white-space: nowrap;
-    }
-
-    .status-sin-iniciar {
-        background-color: #6c757d;
-        color: white;
-    }
-
-    .status-en-progreso {
-        background-color: #ffc107;
-        color: #212529;
-    }
-
-    .status-completada {
-        background-color: #28a745;
-        color: white;
-    }
 
     .btn-status {
-        background-color: #17a2b8;
-        border-color: #17a2b8;
-        color: white;
+        background-color: rgba(0, 188, 212, 0.1);
+        color: #00bcd4;
+        border: 1px solid rgba(0, 188, 212, 0.3);
     }
+
+        .btn-status:hover {
+            background-color: #00bcd4;
+            color: #1e1e2d;
+            transform: translateY(-2px);
+        }
+
+    .btn-delete {
+        background-color: rgba(244, 67, 54, 0.1);
+        color: #f44336;
+        border: 1px solid rgba(244, 67, 54, 0.3);
+    }
+
+        .btn-delete:hover {
+            background-color: #f44336;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+    .btn-volcanic-create {
+        background: linear-gradient(135deg, #FF512F 0%, #DD2476 100%);
+        border: none;
+        color: white;
+        padding: 10px 25px;
+        border-radius: 50px;
+        font-weight: bold;
+        box-shadow: 0 4px 15px rgba(221, 36, 118, 0.4);
+        transition: 0.3s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .btn-volcanic-create:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(221, 36, 118, 0.6);
+            color: white;
+        }
 
     .hidden-row {
         display: none;
@@ -226,43 +300,66 @@
 
     .no-results {
         text-align: center;
-        padding: 2rem;
-        color: #888;
+        padding: 3rem;
+        color: #666;
         font-style: italic;
+    }
+
+    /* Modal Dark */
+    .modal-content {
+        background-color: #2d2d3b;
+        color: #fff;
+        border: 1px solid #444;
+    }
+
+    .modal-header {
+        border-bottom: 1px solid #444;
+    }
+
+    .modal-footer {
+        border-top: 1px solid #444;
+    }
+
+    .btn-close {
+        filter: invert(1);
     }
 </style>
 
 <div class="header-actions">
-    <h1 class="title-volcanic m-0">@ViewData["Title"]</h1>
+    <h1 class="title-volcanic">@ViewData["Title"]</h1>
     @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
     {
-        <a asp-page="Create" class="btn btn-volcanic-primary">Crear Nueva Tarea</a>
+    <a asp-page="Create" class="btn btn-volcanic-create">
+        <i class="bi bi-plus-lg"></i> Nueva Tarea
+    </a>
     }
 </div>
 
 <div class="search-container">
-    <input type="text" id="searchInput" class="search-input" placeholder="Buscar por título, descripción, prioridad, estado o proyecto..." autocomplete="off">
+    <i class="bi bi-search search-icon"></i>
+    <input type="text" id="searchInput" class="search-input" placeholder="Buscar por título, descripción, prioridad..." autocomplete="off">
 </div>
 
-<div class="table-responsive">
-    <table class="table table-volcanic">
-        <thead>
-            <tr>
-                <th>Título</th>
-                <th>Descripción</th>
-                <th class="text-center">Prioridad</th>
-                <th class="text-center">Estado</th>
-                <th>Proyecto Asignado</th>
-                @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
-                {
+<div class="card-table">
+    <div class="table-responsive">
+        <table class="table-volcanic">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Título</th>
+                    <th style="width: 20%;">Descripción</th>
+                    <th class="text-center">Prioridad</th>
+                    <th class="text-center">Estado</th>
+                    <th>Proyecto</th>
+                    @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
+                    {
                     <th>Asignado a</th>
-                }
-                <th class="text-center">Acciones</th>
-            </tr>
-        </thead>
-        <tbody id="tareasTableBody">
-            @foreach (var item in Model.Tareas)
-            {
+                    }
+                    <th class="text-center" style="width: 150px;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tareasTableBody">
+                @foreach (var item in Model.Tareas)
+                {
                 <tr class="tarea-row"
                     data-titulo="@item.Titulo.ToLower()"
                     data-descripcion="@(item.Descripcion?.ToLower() ?? "")"
@@ -270,79 +367,140 @@
                     data-status="@item.Status.ToLower()"
                     data-proyecto="@(item.ProyectoNombre?.ToLower() ?? "")"
                     data-usuario="@(item.UsuarioAsignadoNombre?.ToLower() ?? "")">
-                    <td>@item.Titulo</td>
-                    <td>@item.Descripcion</td>
-                    <td class="text-center">
-                        <span class="priority-badge priority-@(item.Prioridad.ToLower())">@item.Prioridad</span>
-                    </td>
-                    <td class="text-center">
-                        @if (item.Status == "SinIniciar")
-                        {
-                            <span class="status-badge status-sin-iniciar">Sin Iniciar</span>
-                        }
-                        else if (item.Status == "EnProgreso")
-                        {
-                            <span class="status-badge status-en-progreso">En Progreso</span>
-                        }
-                        else if (item.Status == "Completada")
-                        {
-                            <span class="status-badge status-completada">Completada</span>
-                        }
-                    </td>
-                    <td>
-                        @if (!string.IsNullOrEmpty(item.ProyectoNombre))
-                        {
-                            <a class="project-link" asp-page="/Proyectos/Mostrar" asp-route-id="@item.IdProyecto">@item.ProyectoNombre</a>
-                        }
-                        else
-                        {
-                            <span class="text-muted">No asignado</span>
-                        }
+
+                    <!-- Título -->
+                    <td style="font-weight: 600; color: #fff;">
+                        @item.Titulo
                     </td>
 
-                    @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
-                    {
-                        <td>
-                            @if (!string.IsNullOrEmpty(item.UsuarioAsignadoNombre))
+                    <!-- Descripción -->
+                    <td>
+                        <span class="desc-text" title="@item.Descripcion">
+                            @item.Descripcion
+                        </span>
+                    </td>
+
+                    <!-- Prioridad -->
+                    <td class="text-center">
+                        <span class="badge-priority prioridad-@(item.Prioridad.ToLower())">
+                            @item.Prioridad
+                        </span>
+                    </td>
+
+                    <!-- Estado -->
+                    <td class="text-center">
+                        @if (item.Status == "SinIniciar")
                             {
-                                <span class="text-info">@item.UsuarioAsignadoNombre</span>
+                        <div class="st-sin-iniciar">
+                            <span class="status-indicator"></span><span class="status-text">Sin Iniciar</span>
+                        </div>
+                            }
+                            else if (item.Status == "EnProgreso")
+                            {
+                        <div class="st-progreso">
+                            <span class="status-indicator"></span><span class="status-text">En Progreso</span>
+                        </div>
+                            }
+                            else if (item.Status == "Completada")
+                            {
+                        <div class="st-completada">
+                            <span class="status-indicator"></span><span class="status-text">Completada</span>
+                        </div>
+                            }
+                    </td>
+
+                    <!-- Proyecto -->
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.ProyectoNombre))
+                            {
+                        <a class="project-link" asp-page="/Proyectos/Mostrar" asp-route-id="@item.IdProyecto">
+                            <i class="bi bi-folder2-open me-1"></i> @item.ProyectoNombre
+                        </a>
                             }
                             else
                             {
-                                <span class="text-muted">Sin asignar</span>
+                        <span class="text-unassigned">-- Sin proyecto --</span>
                             }
-                        </td>
-                    }
+                    </td>
 
+                    <!-- Usuario Asignado (CORREGIDO) -->
+                    @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
+                        {
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.UsuarioAsignadoNombre))
+                                {
+                        <div class="d-flex align-items-center">
+                            <div style="width: 24px; height: 24px; background: #444; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 8px; font-size: 0.7rem; color: #fff;">
+                                @item.UsuarioAsignadoNombre.Substring(0,1).ToUpper()
+                            </div>
+                            <span>@item.UsuarioAsignadoNombre</span>
+                        </div>
+                                }
+                                else
+                                {
+ <!-- Aquí aplicamos la nueva clase visible -->
+                        <span class="text-unassigned">Sin asignar</span>
+                                }
+                    </td>
+                        }
+
+                    <!-- Acciones (CORREGIDO: Iconos visibles) -->
                     <td class="text-center">
-                        <div class="d-flex justify-content-center gap-1 flex-wrap">
+                        <div class="actions-cell">
                             @if (User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin"))
-                            {
-                                <a class="btn btn-sm btn-info" asp-page="Edit" asp-route-id="@item.Id">Editar</a>
-                                <a class="btn btn-sm btn-status" asp-page="CambiarEstado" asp-route-id="@item.Id">Estado</a>
-                                <button type="button"
-                                        class="btn btn-sm btn-secondary"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#confirmDeleteModal"
-                                        data-item-id="@item.Id">
-                                    Eliminar
-                                </button>
-                            }
-                            else if (User.IsInRole("Empleado"))
-                            {
-                                <a class="btn btn-sm btn-status" asp-page="CambiarEstado" asp-route-id="@item.Id">Cambiar Estado</a>
-                            }
+                                {
+                            <a class="btn-icon btn-edit" asp-page="Edit" asp-route-id="@item.Id" title="Editar Tarea">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                            <a class="btn-icon btn-status" asp-page="CambiarEstado" asp-route-id="@item.Id" title="Cambiar Estado">
+                                <i class="bi bi-arrow-repeat"></i>
+                            </a>
+                            <button type="button" class="btn-icon btn-delete"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#confirmDeleteModal"
+                                    data-item-id="@item.Id"
+                                    title="Eliminar Tarea">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+                                }
+                                else if (User.IsInRole("Empleado"))
+                                {
+                            <a class="btn-icon btn-status" asp-page="CambiarEstado" asp-route-id="@item.Id" title="Actualizar Estado">
+                                <i class="bi bi-arrow-repeat"></i>
+                            </a>
+                                }
                         </div>
                         <form method="post" style="display:none" id="deleteForm-@item.Id" asp-page-handler="Delete" asp-route-id="@item.Id"></form>
                     </td>
                 </tr>
-            }
-        </tbody>
-    </table>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <div id="noResults" class="no-results hidden-row">
-    No se encontraron tareas que coincidan con tu búsqueda.
+    <i class="bi bi-search" style="font-size: 2rem; display: block; margin-bottom: 1rem; color: #444;"></i>
+    No encontramos tareas que coincidan con tu búsqueda.
+</div>
+
+<!-- Modal de Confirmación de Eliminación -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel" style="color: #ff5252;">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar esta tarea? Esta acción no se puede deshacer.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteButton">Eliminar Tarea</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
@@ -375,21 +533,16 @@
                 let visibleCount = 0;
 
                 tareaRows.forEach(function (row) {
-                    const titulo = row.getAttribute('data-titulo');
-                    const descripcion = row.getAttribute('data-descripcion');
-                    const prioridad = row.getAttribute('data-prioridad');
-                    const status = row.getAttribute('data-status');
-                    const proyecto = row.getAttribute('data-proyecto');
-                    const usuario = row.getAttribute('data-usuario');
+                    const searchableText = [
+                        row.getAttribute('data-titulo'),
+                        row.getAttribute('data-descripcion'),
+                        row.getAttribute('data-prioridad'),
+                        row.getAttribute('data-status'),
+                        row.getAttribute('data-proyecto'),
+                        row.getAttribute('data-usuario')
+                    ].join(' ');
 
-                    const matches = titulo.includes(searchTerm) ||
-                        descripcion.includes(searchTerm) ||
-                        prioridad.includes(searchTerm) ||
-                        status.includes(searchTerm) ||
-                        proyecto.includes(searchTerm) ||
-                        usuario.includes(searchTerm);
-
-                    if (matches || searchTerm === '') {
+                    if (searchableText.includes(searchTerm) || searchTerm === '') {
                         row.classList.remove('hidden-row');
                         visibleCount++;
                     } else {

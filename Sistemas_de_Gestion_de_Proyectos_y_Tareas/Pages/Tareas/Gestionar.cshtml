@@ -10,44 +10,58 @@
 
 <style>
     :root {
+        --volcanic-bg: #1e1e2d;
+        --volcanic-card: #2d2d3b;
+        --volcanic-darker: #15151a;
         --accent-red: #D32F2F;
         --accent-orange: #FF5722;
         --accent-gold: #FFD700;
+        --accent-lava: linear-gradient(135deg, #FF512F 0%, #DD2476 100%);
         --text-primary: #f5f5f7;
-        --bg-dark: #2c2c31;
-        --bg-darker: #1e1e23;
+        --border-color: rgba(255,255,255,0.1);
+    }
+
+    body {
+        background-color: var(--volcanic-bg);
+        color: var(--text-primary);
     }
 
     .title-volcanic {
-        color: #f5f5f7;
-        font-weight: 700;
-        border-bottom: 2px solid rgba(255,255,255,0.1);
+        background: linear-gradient(to right, #FF512F, #F09819);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 800;
+        border-bottom: 2px solid rgba(255, 87, 34, 0.3);
         padding-bottom: 0.5rem;
         margin-bottom: 2rem;
     }
 
     .section-card {
-        background-color: var(--bg-dark);
+        background-color: var(--volcanic-card);
         border-radius: 12px;
         padding: 1.5rem;
         margin-bottom: 1.5rem;
-        border: 1px solid rgba(255,255,255,0.1);
+        border: 1px solid var(--border-color);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        animation: fadeIn 0.5s ease-out;
     }
 
     .section-title {
         color: var(--accent-orange);
-        font-size: 1.2rem;
-        font-weight: 600;
+        font-size: 1.1rem;
+        font-weight: 700;
         margin-bottom: 1rem;
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
     .search-input {
-        background-color: #3a3a40;
+        background-color: #1a1a20;
         color: var(--text-primary);
-        border: 1px solid #555;
+        border: 1px solid #444;
         border-radius: 8px;
         padding: 0.75rem 1rem;
         width: 100%;
@@ -55,19 +69,26 @@
         margin-bottom: 0.5rem;
     }
 
-    .search-input:focus {
-        background-color: #4a4a50;
-        border-color: var(--accent-orange);
-        box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
-        outline: none;
-    }
+        .search-input:focus {
+            background-color: #222;
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.2);
+            outline: none;
+        }
+
+        .search-input:disabled {
+            background-color: #121215;
+            border-color: #333;
+            color: #555;
+            cursor: not-allowed;
+        }
 
     .options-list {
         max-height: 250px;
         overflow-y: auto;
-        background-color: #3a3a40;
+        background-color: #1a1a20;
         border-radius: 8px;
-        border: 1px solid #555;
+        border: 1px solid #444;
         margin-bottom: 1rem;
     }
 
@@ -75,46 +96,53 @@
         padding: 0.75rem 1rem;
         cursor: pointer;
         transition: background-color 0.2s;
-        border-bottom: 1px solid #4a4a50;
+        border-bottom: 1px solid #2d2d3b;
+        color: #bbb;
+        animation: slideIn 0.3s ease-out;
     }
 
-    .option-item:hover {
-        background-color: #4a4a50;
-    }
+        .option-item:hover {
+            background-color: #363645;
+            color: white;
+        }
 
-    .option-item.hidden {
-        display: none;
-    }
+        .option-item.hidden {
+            display: none;
+        }
 
-    .option-item.selected {
-        background-color: #4a4a50;
-        border-left: 4px solid var(--accent-orange);
-    }
+        .option-item.selected {
+            background: linear-gradient(90deg, rgba(255, 87, 34, 0.15), transparent);
+            border-left: 4px solid var(--accent-orange);
+            color: white;
+            font-weight: bold;
+        }
 
     .empleado-checkbox {
         display: flex;
         align-items: center;
         gap: 0.75rem;
         padding: 0.75rem 1rem;
-        background-color: #3a3a40;
-        border-bottom: 1px solid #4a4a50;
+        background-color: #1a1a20;
+        border-bottom: 1px solid #2d2d3b;
         cursor: pointer;
         transition: background-color 0.2s;
+        animation: slideIn 0.3s ease-out;
     }
 
-    .empleado-checkbox:hover {
-        background-color: #4a4a50;
-    }
+        .empleado-checkbox:hover {
+            background-color: #363645;
+        }
 
-    .empleado-checkbox input[type="checkbox"] {
-        width: 20px;
-        height: 20px;
-        cursor: pointer;
-    }
+        .empleado-checkbox input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--accent-orange);
+        }
 
-    .empleado-checkbox.hidden {
-        display: none;
-    }
+        .empleado-checkbox.hidden {
+            display: none;
+        }
 
     .selected-info {
         color: var(--accent-gold);
@@ -129,155 +157,207 @@
     }
 
     .btn-volcanic-primary {
-        background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
+        background: var(--accent-lava);
         border: none;
         color: white;
         font-weight: bold;
         padding: 12px 25px;
         border-radius: 8px;
         transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 1rem;
     }
 
-    .btn-volcanic-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
-    }
+        .btn-volcanic-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(221, 36, 118, 0.4);
+        }
 
-    .btn-volcanic-secondary {
-        background-color: transparent;
-        border: 2px solid #6c757d;
-        color: #ced4da;
-        font-weight: bold;
-        padding: 10px 25px;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-    }
-
-    .btn-volcanic-secondary:hover {
-        background-color: #6c757d;
-        color: white;
-    }
+        .btn-volcanic-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            background: #444;
+        }
 
     .btn-create-tarea {
-        background: linear-gradient(45deg, #4CAF50, #45a049);
-        border: none;
-        color: white;
+        background: transparent;
+        border: 1px solid var(--accent-gold);
+        color: var(--accent-gold);
         font-weight: bold;
-        padding: 10px 20px;
-        border-radius: 8px;
+        padding: 5px 15px;
+        border-radius: 50px;
         transition: all 0.3s ease;
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
+        font-size: 0.9rem;
     }
 
-    .btn-create-tarea:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
-    }
+        .btn-create-tarea:hover {
+            background: var(--accent-gold);
+            color: #000;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
 
     .info-panel {
-        background-color: var(--bg-darker);
+        background-color: var(--volcanic-darker);
         border-radius: 12px;
         padding: 1.5rem;
-        margin-top: 2rem;
-        border: 2px solid var(--accent-orange);
+        border: 1px solid #333;
+        height: 100%;
     }
 
     .info-panel-title {
-        color: var(--accent-gold);
-        font-size: 1.1rem;
-        font-weight: 600;
+        color: var(--accent-orange);
+        font-size: 1rem;
+        font-weight: 700;
         margin-bottom: 1rem;
+        text-transform: uppercase;
+        border-bottom: 1px solid #333;
+        padding-bottom: 0.5rem;
     }
 
     .empleado-item {
-        background-color: #3a3a40;
+        background-color: #1a1a20;
         padding: 0.75rem 1rem;
         border-radius: 6px;
         margin-bottom: 0.5rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        border: 1px solid #333;
     }
 
     .empleado-activo {
-        border-left: 4px solid #4CAF50;
-    }
-
-    .empleado-historico {
-        border-left: 4px solid #888;
-        opacity: 0.7;
+        border-left: 3px solid #4CAF50;
     }
 
     .badge-activo {
-        background-color: #4CAF50;
-        color: white;
+        background-color: rgba(76, 175, 80, 0.2);
+        color: #4CAF50;
         padding: 0.25rem 0.75rem;
         border-radius: 12px;
-        font-size: 0.85rem;
-    }
-
-    .badge-historico {
-        background-color: #888;
-        color: white;
-        padding: 0.25rem 0.75rem;
-        border-radius: 12px;
-        font-size: 0.85rem;
+        font-size: 0.75rem;
+        font-weight: bold;
+        border: 1px solid #4CAF50;
+        animation: pulse 2s ease-in-out infinite;
     }
 
     .btn-report {
-        background: linear-gradient(45deg, #2196F3, #1976D2);
-        border: none;
-        color: white;
-        font-weight: bold;
-        padding: 12px 25px;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-        margin: 0.5rem;
-    }
-
-    .btn-report:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(33, 150, 243, 0.4);
-    }
-
-    .report-section {
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-        margin-top: 1rem;
-    }
-
-    .form-label {
+        background: #2d2d3b;
+        border: 1px solid #444;
         color: var(--text-primary);
         font-weight: 500;
+        padding: 12px 15px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        width: 100%;
         margin-bottom: 0.5rem;
+        text-align: left;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
+        .btn-report:hover {
+            border-color: var(--accent-orange);
+            color: white;
+            background: #363645;
+        }
+
+        .btn-report span.icon-rotate {
+            margin-right: 10px;
+        }
+
     .counter-badge {
-        background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
+        background: var(--accent-lava);
         color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 8px;
-        font-size: 1.2rem;
+        padding: 0.5rem 1.5rem;
+        border-radius: 50px;
+        font-size: 1rem;
         font-weight: bold;
         display: inline-block;
         margin-bottom: 1rem;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 6px rgba(255, 87, 34, 0.3);
+        box-shadow: 0 4px 10px rgba(221, 36, 118, 0.3);
     }
 
-    .counter-badge:hover {
-        transform: scale(1.05);
-        box-shadow: 0 6px 12px rgba(255, 87, 34, 0.5);
+    .btn-quitar-empleado {
+        background-color: rgba(211, 47, 47, 0.1);
+        border: 1px solid #D32F2F;
+        color: #D32F2F;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-weight: bold;
+        margin: 0 auto;
     }
 
+        .btn-quitar-empleado:hover {
+            background-color: #D32F2F;
+            color: white;
+            transform: scale(1.1);
+        }
+
+    #tablaEmpleadosSeleccionados table {
+        background-color: transparent;
+        margin-bottom: 0;
+    }
+
+    #tablaEmpleadosSeleccionados th {
+        color: var(--accent-orange);
+        font-weight: 600;
+        padding: 0.75rem;
+        border-bottom: 1px solid #444;
+    }
+
+    #tablaEmpleadosSeleccionados td {
+        color: #ccc;
+        padding: 0.75rem;
+        border-bottom: 1px solid #333;
+        vertical-align: middle;
+    }
+
+    #tablaEmpleadosSeleccionados tbody tr:hover {
+        background-color: rgba(255,255,255,0.03);
+    }
+
+    .alert {
+        border-radius: 12px;
+        border: none;
+        color: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .alert-success {
+        background: linear-gradient(135deg, #134E5E, #71B280);
+    }
+
+    .alert-danger {
+        background: linear-gradient(135deg, #cb2d3e, #ef473a);
+    }
+
+    .alert-warning {
+        background: linear-gradient(135deg, #ff9966, #ff5e62);
+    }
+
+    .alert-info {
+        background: linear-gradient(135deg, #2196F3, #1976D2);
+    }
+
+    /* Animations & Scrollbars */
     @@keyframes fadeIn {
         from {
             opacity: 0;
             transform: translateY(10px);
         }
+
         to {
             opacity: 1;
             transform: translateY(0);
@@ -287,8 +367,9 @@
     @@keyframes slideIn {
         from {
             opacity: 0;
-            transform: translateX(-20px);
+            transform: translateX(-10px);
         }
+
         to {
             opacity: 1;
             transform: translateX(0);
@@ -299,287 +380,114 @@
         0%, 100% {
             transform: scale(1);
         }
+
         50% {
-            transform: scale(1.02);
+            transform: scale(1.05);
         }
-    }
-
-    .section-card {
-        animation: fadeIn 0.5s ease-out;
-    }
-
-    .option-item {
-        animation: slideIn 0.3s ease-out;
-    }
-
-    .empleado-checkbox {
-        animation: slideIn 0.3s ease-out;
-    }
-
-    .loading-spinner {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        border: 3px solid rgba(255, 255, 255, 0.3);
-        border-radius: 50%;
-        border-top-color: white;
-        animation: spin 1s ease-in-out infinite;
     }
 
     @@keyframes spin {
-        to { transform: rotate(360deg); }
-    }
-
-    .badge-activo {
-        animation: pulse 2s ease-in-out infinite;
-    }
-
-    .tooltip-custom {
-        position: relative;
-        display: inline-block;
-    }
-
-    .tooltip-custom .tooltip-text {
-        visibility: hidden;
-        width: 200px;
-        background-color: #555;
-        color: #fff;
-        text-align: center;
-        border-radius: 6px;
-        padding: 5px;
-        position: absolute;
-        z-index: 1;
-        bottom: 125%;
-        left: 50%;
-        margin-left: -100px;
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
-
-    .tooltip-custom:hover .tooltip-text {
-        visibility: visible;
-        opacity: 1;
-    }
-
-    .alert {
-        border-radius: 12px;
-        border: none;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        animation: fadeIn 0.5s ease-out;
-    }
-
-    .alert-success {
-        background: linear-gradient(135deg, #4CAF50, #45a049);
-        color: white;
-        border-left: 4px solid #2e7d32;
-    }
-
-    .alert-danger {
-        background: linear-gradient(135deg, #f44336, #e53935);
-        color: white;
-        border-left: 4px solid #c62828;
-    }
-
-    .alert-warning {
-        background: linear-gradient(135deg, #ff9800, #fb8c00);
-        color: white;
-        border-left: 4px solid #ef6c00;
-    }
-
-    .alert-info {
-        background: linear-gradient(135deg, #2196F3, #1976D2);
-        color: white;
-        border-left: 4px solid #0d47a1;
-    }
-
-    .options-list::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    .options-list::-webkit-scrollbar-track {
-        background: #2c2c31;
-        border-radius: 4px;
-    }
-
-    .options-list::-webkit-scrollbar-thumb {
-        background: var(--accent-orange);
-        border-radius: 4px;
-    }
-
-    .options-list::-webkit-scrollbar-thumb:hover {
-        background: var(--accent-red);
-    }
-
-    .btn-volcanic-primary:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
+        to {
+            transform: rotate(360deg);
+        }
     }
 
     .btn-volcanic-primary.loading {
-        position: relative;
         color: transparent;
+        position: relative;
     }
 
-    .btn-volcanic-primary.loading::after {
-        content: "";
-        position: absolute;
-        width: 16px;
-        height: 16px;
-        top: 50%;
-        left: 50%;
-        margin-left: -8px;
-        margin-top: -8px;
-        border: 2px solid white;
-        border-radius: 50%;
-        border-top-color: transparent;
-        animation: spin 1s linear infinite;
-    }
-
-    .btn-quitar-empleado {
-        background-color: #dc3545;
-        border: none;
-        color: white;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        font-size: 1.2rem;
-        font-weight: bold;
-        margin: 0 auto;
-    }
-
-    .btn-quitar-empleado:hover {
-        background-color: #c82333;
-        transform: scale(1.1);
-        box-shadow: 0 2px 8px rgba(220, 53, 69, 0.5);
-    }
-
-    #tablaEmpleadosSeleccionados table {
-        background-color: #3a3a40;
-        margin-bottom: 0;
-    }
-
-    #tablaEmpleadosSeleccionados th {
-        color: white;
-        font-weight: 600;
-        padding: 0.75rem;
-        border: none;
-    }
-
-    #tablaEmpleadosSeleccionados td {
-        color: var(--text-primary);
-        padding: 0.75rem;
-        border-bottom: 1px solid #4a4a50;
-        vertical-align: middle;
-    }
-
-    #tablaEmpleadosSeleccionados tbody tr {
-        transition: background-color 0.2s;
-    }
-
-    #tablaEmpleadosSeleccionados tbody tr:hover {
-        background-color: #4a4a50;
-    }
-
-    .tabla-empty-row {
-        text-align: center;
-        color: #888;
-        font-style: italic;
-    }
-
-    @@media (max-width: 992px) {
-        .info-panel {
-            margin-top: 1rem;
+        .btn-volcanic-primary.loading::after {
+            content: "";
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 50%;
+            left: 50%;
+            margin-left: -8px;
+            margin-top: -8px;
+            border: 2px solid white;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
         }
 
-        .report-section {
-            flex-direction: column;
-        }
-
-        .btn-report {
-            width: 100%;
-            margin: 0.25rem 0;
-        }
+    .options-list::-webkit-scrollbar {
+        width: 6px;
     }
 
-    @@media (max-width: 768px) {
-        .section-card {
-            padding: 1rem;
-        }
-
-        .btn-create-tarea {
-            width: 100%;
-            margin-top: 0.5rem;
-        }
-
-        .counter-badge {
-            font-size: 1rem;
-            padding: 0.4rem 0.8rem;
-        }
+    .options-list::-webkit-scrollbar-track {
+        background: #1a1a20;
     }
+
+    .options-list::-webkit-scrollbar-thumb {
+        background: #444;
+        border-radius: 4px;
+    }
+
+        .options-list::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-orange);
+        }
 </style>
 
 <h1 class="title-volcanic">@ViewData["Title"]</h1>
 
 @if (!string.IsNullOrEmpty(TempData["SuccessMessage"] as string))
 {
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong> Éxito:</strong> @TempData["SuccessMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    
-    @if (!string.IsNullOrEmpty(TempData["DownloadPdf"] as string) && !string.IsNullOrEmpty(TempData["DownloadExcel"] as string))
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong><i class="bi bi-check-circle"></i> Éxito:</strong> @TempData["SuccessMessage"]
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+@if (!string.IsNullOrEmpty(TempData["DownloadPdf"] as string) && !string.IsNullOrEmpty(TempData["DownloadExcel"] as string))
     {
-        <script>
+<script>
             setTimeout(function() {
                 window.location.href = '/Tareas/Gestionar?handler=DescargarReporte&archivo=@TempData["DownloadPdf"]';
                 setTimeout(function() {
                     window.location.href = '/Tareas/Gestionar?handler=DescargarReporte&archivo=@TempData["DownloadExcel"]';
                 }, 500);
             }, 1000);
-        </script>
+</script>
     }
 }
 
 @if (!string.IsNullOrEmpty(TempData["ErrorMessage"] as string))
 {
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <strong> Error:</strong> @TempData["ErrorMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong><i class="bi bi-exclamation-triangle"></i> Error:</strong> @TempData["ErrorMessage"]
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
 }
 
 @if (!string.IsNullOrEmpty(TempData["WarningMessage"] as string))
 {
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <strong> Advertencia:</strong> @TempData["WarningMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong><i class="bi bi-exclamation-circle"></i> Advertencia:</strong> @TempData["WarningMessage"]
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
 }
 
 @if (!string.IsNullOrEmpty(TempData["InfoMessage"] as string))
 {
-    <div class="alert alert-info alert-dismissible fade show" role="alert">
-        <strong> Información:</strong> @TempData["InfoMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+<div class="alert alert-info alert-dismissible fade show" role="alert">
+    <strong><i class="bi bi-info-circle"></i> Información:</strong> @TempData["InfoMessage"]
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
 }
 
 <div class="row">
     <div class="col-lg-8">
+        <!-- SELECCIONAR PROYECTO -->
         <div class="section-card">
             <div class="section-title">
-                Seleccionar Proyecto
+                <i class="bi bi-folder-fill me-2"></i> Seleccionar Proyecto
             </div>
-            
-            <input type="text" 
-                   id="proyectoSearch" 
-                   class="search-input" 
-                   placeholder="Buscar proyecto..."
+
+            <input type="text"
+                   id="proyectoSearch"
+                   class="search-input"
+                   placeholder="🔍 Buscar proyecto..."
                    autocomplete="off">
 
             <div id="proyectosList" class="options-list">
@@ -587,16 +495,16 @@
                 {
                     foreach (var proyecto in Model.Proyectos)
                     {
-                        <div class="option-item proyecto-option"
-                             data-id="@proyecto.IdProyecto"
-                             data-nombre="@proyecto.Nombre.ToLower()">
-                            @proyecto.Nombre
-                        </div>
+                <div class="option-item proyecto-option"
+                     data-id="@proyecto.IdProyecto"
+                     data-nombre="@proyecto.Nombre.ToLower()">
+                    @proyecto.Nombre
+                </div>
                     }
                 }
                 else
                 {
-                    <div class="no-results">No hay proyectos disponibles</div>
+                <div class="no-results">No hay proyectos disponibles</div>
                 }
             </div>
 
@@ -605,23 +513,21 @@
             </small>
         </div>
 
+        <!-- SELECCIONAR TAREA -->
         <div class="section-card">
-            <div class="section-title">
-                Seleccionar o Crear Tarea
-            </div>
-
-            <div class="d-flex gap-2 mb-3">
-                <input type="text" 
-                       id="tareaSearch" 
-                       class="search-input flex-grow-1" 
-                       placeholder="Buscar tarea..."
-                       autocomplete="off"
-                       disabled>
-
+            <div class="section-title d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-list-check me-2"></i> Seleccionar Tarea</span>
                 <a asp-page="/Tareas/Create" class="btn btn-create-tarea">
-                    Crear Nueva Tarea
+                    <i class="bi bi-plus-lg"></i> Nueva Tarea
                 </a>
             </div>
+
+            <input type="text"
+                   id="tareaSearch"
+                   class="search-input"
+                   placeholder="🔍 Buscar tarea..."
+                   autocomplete="off"
+                   disabled>
 
             <div id="tareasList" class="options-list" style="display: none;">
             </div>
@@ -635,15 +541,16 @@
             </small>
         </div>
 
+        <!-- ASIGNAR EMPLEADOS -->
         <div class="section-card">
             <div class="section-title">
-                Asignar Empleados Disponibles
+                <i class="bi bi-people-fill me-2"></i> Asignar Empleados
             </div>
 
-            <input type="text" 
-                   id="empleadoSearch" 
-                   class="search-input" 
-                   placeholder="Buscar empleado..."
+            <input type="text"
+                   id="empleadoSearch"
+                   class="search-input"
+                   placeholder="🔍 Buscar empleado..."
                    autocomplete="off"
                    disabled>
 
@@ -654,30 +561,32 @@
                 Selecciona una tarea primero
             </div>
 
-            <div class="counter-badge mt-3" id="empleadosSeleccionadosCounter">
-                0 empleado(s) seleccionado(s)
+            <div class="text-center mt-3">
+                <div class="counter-badge" id="empleadosSeleccionadosCounter">
+                    0 seleccionados
+                </div>
             </div>
 
             <div id="tablaEmpleadosSeleccionados" class="mt-3" style="display: none;">
-                <div class="section-title" style="font-size: 1rem; margin-bottom: 0.5rem;">
-                    📋 Empleados a Asignar
+                <div class="section-title" style="font-size: 0.9rem; margin-bottom: 0.5rem; border:none;">
+                    Resumen de Asignación
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-dark table-sm" style="border-radius: 8px; overflow: hidden;">
-                        <thead style="background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));">
+                    <table class="table table-sm">
+                        <thead>
                             <tr>
-                                <th style="width: 50px; text-align: center;">#</th>
+                                <th style="width: 40px; text-align: center;">#</th>
                                 <th>Nombre Completo</th>
                                 <th>Email</th>
-                                <th style="width: 80px; text-align: center;">Quitar</th>
+                                <th style="width: 60px; text-align: center;">Acción</th>
                             </tr>
                         </thead>
                         <tbody id="tablaEmpleadosBody">
                         </tbody>
-                        <tfoot style="background-color: #3a3a40;">
+                        <tfoot style="border-top: 1px solid #444;">
                             <tr>
                                 <td colspan="3" style="text-align: right; font-weight: bold; color: var(--accent-gold);">
-                                    Total Empleados:
+                                    Total:
                                 </td>
                                 <td style="text-align: center; font-weight: bold; color: var(--accent-gold);" id="totalEmpleadosTabla">
                                     0
@@ -693,44 +602,46 @@
                 <input type="hidden" id="empleadosIdsInput" name="EmpleadosIds" />
 
                 <button type="submit" class="btn btn-volcanic-primary" id="btnAsignar" disabled>
-                    💾 Guardar Empleados Seleccionados
+                    <i class="bi bi-save me-2"></i> Guardar Asignaciones
                 </button>
             </form>
         </div>
     </div>
 
+    <!-- PANEL DERECHO -->
     <div class="col-lg-4">
         <div class="info-panel fade-in-up">
             <div class="info-panel-title">
-                <span class="icon-rotate"> </span> Información de la Tarea
+                <i class="bi bi-info-square me-2"></i> Información Tarea
             </div>
 
             <div id="infoTareaContent">
-                <div class="empty-state">
-                    <div class="empty-state-icon"> </div>
-                    <p class="text-muted">Selecciona una tarea para ver la información</p>
+                <div class="text-center py-4 text-muted">
+                    <i class="bi bi-arrow-left-circle" style="font-size: 2rem; display:block; margin-bottom:10px;"></i>
+                    Selecciona una tarea para ver los detalles
                 </div>
             </div>
 
-            <div class="divider"></div>
+            <div class="divider my-4" style="border-top: 1px solid #333;"></div>
 
             <div class="info-panel-title">
-                <span class="icon-rotate"> </span> Reporte Completo del Sistema
+                <i class="bi bi-file-earmark-text me-2"></i> Reportes del Sistema
             </div>
 
-            <div class="report-section">
+            <div class="report-section d-flex flex-column gap-2">
                 <button type="button" class="btn btn-report custom-tooltip" onclick="generarReporteCompletoPDF()" data-tooltip="Incluye todos los proyectos y tareas">
-                    <span class="icon-rotate"> </span> Sistema Completo (PDF)
+                    <span><i class="bi bi-file-pdf-fill text-danger me-2"></i> Sistema Completo (PDF)</span>
+                    <i class="bi bi-download"></i>
                 </button>
                 <button type="button" class="btn btn-report custom-tooltip" onclick="generarReporteCompletoExcel()" data-tooltip="Exportar todo el sistema a Excel">
-                    <span class="icon-rotate"> </span> Sistema Completo (Excel)
+                    <span><i class="bi bi-file-excel-fill text-success me-2"></i> Sistema Completo (Excel)</span>
+                    <i class="bi bi-download"></i>
                 </button>
             </div>
 
-
-            <div style="margin-top: 2rem; padding: 1rem; background-color: rgba(33, 150, 243, 0.1); border-radius: 8px; border-left: 4px solid #2196F3;">
-                <small style="color: var(--text-primary);">
-                    <strong>Tip:</strong> Los reportes incluyen información actualizada y datos históricos de asignaciones.
+            <div class="mt-4 p-3" style="background-color: rgba(33, 150, 243, 0.1); border-radius: 8px; border-left: 3px solid #2196F3;">
+                <small style="color: #ccc;">
+                    <strong><i class="bi bi-lightbulb"></i> Tip:</strong> Los reportes incluyen información actualizada y datos históricos de asignaciones.
                 </small>
             </div>
         </div>
@@ -738,7 +649,7 @@
 </div>
 
 @section Scripts {
-<script>
+    <script>
     let proyectoSeleccionado = null;
     let tareaSeleccionada = null;
     let empleadosSeleccionados = [];
@@ -771,10 +682,10 @@
 
     function selectProyecto(id, nombre) {
         console.log('Seleccionando proyecto:', id, nombre);
-        
+
         proyectoSeleccionado = id;
         document.getElementById('selectedProyectoName').textContent = nombre;
-        
+
         proyectoOptions.forEach(opt => opt.classList.remove('selected'));
         const selectedElement = document.querySelector(`[data-id="${id}"]`);
         if (selectedElement) {
@@ -788,25 +699,20 @@
         actualizarContador();
 
         document.getElementById('tareaSearch').disabled = false;
-        
+
         cargarTareasDelProyecto(id);
-        
+
         mostrarNotificacion(`Proyecto "${nombre}" seleccionado`, 'info');
     }
 
     function cargarTareasDelProyecto(idProyecto) {
         const tareasList = document.getElementById('tareasList');
         const noTareasMessage = document.getElementById('noTareasMessage');
-        
-        console.log('Filtrando tareas para proyecto:', idProyecto);
-        console.log('Todas las tareas:', todasLasTareas);
-        
+
         const tareasDelProyecto = todasLasTareas.filter(t => t.idProyecto === idProyecto);
-        
-        console.log('Tareas filtradas:', tareasDelProyecto);
-        
+
         tareasList.innerHTML = '';
-        
+
         if (tareasDelProyecto.length === 0) {
             tareasList.style.display = 'none';
             noTareasMessage.textContent = 'No hay tareas en este proyecto';
@@ -817,21 +723,18 @@
         tareasDelProyecto.forEach((tarea, index) => {
             const tareaId = tarea.idTarea;
             const tareaTitulo = tarea.titulo;
-            
-            console.log(`Tarea ${index}: ID=${tareaId}, Título="${tareaTitulo}"`);
-            
+
             const div = document.createElement('div');
             div.className = 'option-item tarea-option';
             div.setAttribute('data-id', tareaId);
             div.setAttribute('data-titulo', tareaTitulo.toLowerCase());
-            
+
             div.addEventListener('click', function() {
                 const id = this.getAttribute('data-id');
                 const titulo = this.textContent.trim();
-                console.log('Click en tarea - ID desde data-id:', id, 'Título:', titulo);
                 selectTarea(id, titulo);
             });
-            
+
             div.textContent = tareaTitulo;
             tareasList.appendChild(div);
         });
@@ -841,11 +744,11 @@
     }
 
     const tareaSearch = document.getElementById('tareaSearch');
-    
+
     tareaSearch.addEventListener('input', function() {
         const searchTerm = this.value.toLowerCase().trim();
         const tareaOptions = document.querySelectorAll('.tarea-option');
-        
+
         tareaOptions.forEach(option => {
             const titulo = option.getAttribute('data-titulo');
             if (titulo.includes(searchTerm) || searchTerm === '') {
@@ -857,73 +760,51 @@
     });
 
     function selectTarea(id, titulo) {
-        console.log('==== INICIANDO SELECCIÓN DE TAREA ====');
-        console.log('ID recibido:', id, 'Tipo:', typeof id);
-        console.log('Título:', titulo);
-        
         let tareaId = id;
         if (typeof id === 'string') {
             tareaId = parseInt(id, 10);
         }
-        
-        console.log('ID convertido:', tareaId, 'Tipo:', typeof tareaId);
-        
+
         if (isNaN(tareaId)) {
-            console.error('❌ ERROR: ID no es un número válido:', id);
             mostrarNotificacion('Error: ID de tarea inválido', 'error');
             return;
         }
-        
+
         tareaSeleccionada = tareaId;
-        console.log('✅ Tarea asignada a variable global:', tareaSeleccionada);
-        
+
         document.getElementById('selectedTareaName').textContent = titulo;
         document.getElementById('tareaIdInput').value = tareaSeleccionada;
-        
+
         sessionStorage.setItem('tareaSeleccionada', tareaSeleccionada.toString());
         sessionStorage.setItem('tareaTitulo', titulo);
-        console.log('💾 Guardado en sessionStorage');
-        
+
         const tareaOptions = document.querySelectorAll('.tarea-option');
         tareaOptions.forEach(opt => opt.classList.remove('selected'));
         const selected = document.querySelector(`.tarea-option[data-id="${tareaSeleccionada}"]`);
         if (selected) {
             selected.classList.add('selected');
             agregarEfectoSeleccion(selected);
-            console.log('🎨 Elemento marcado visualmente');
         }
 
         document.getElementById('empleadoSearch').disabled = false;
-        
+
         cargarEmpleadosDisponibles();
-        
         cargarInformacionTarea(tareaSeleccionada);
-        
-        console.log('==== TAREA SELECCIONADA EXITOSAMENTE ====');
-        console.log('Estado final - tareaSeleccionada:', tareaSeleccionada);
-        console.log('Tipo:', typeof tareaSeleccionada);
-        console.log('Es número válido:', !isNaN(tareaSeleccionada));
-        
-        mostrarNotificacion(`✅ Tarea "${titulo}" seleccionada`, 'success');
+
+        mostrarNotificacion(`Tarea "${titulo}" seleccionada`, 'success');
     }
 
     function cargarEmpleadosDisponibles() {
         const empleadosList = document.getElementById('empleadosList');
         const noEmpleadosMessage = document.getElementById('noEmpleadosMessage');
-        
+
         empleadosList.innerHTML = '';
         empleadosSeleccionados = [];
-        
-        console.log('🔍 Cargando empleados para tarea:', tareaSeleccionada);
-        console.log('📋 Empleados disponibles globales:', todosLosEmpleados);
-        console.log('👥 Empleados asignados por tarea:', empleadosAsignados);
 
         const empleadosYaAsignados = empleadosAsignados[tareaSeleccionada] || [];
-        const idsYaAsignados = empleadosYaAsignados.map(emp => 
+        const idsYaAsignados = empleadosYaAsignados.map(emp =>
             parseInt(emp.id_Usuario || emp.Id || emp.id)
         );
-        
-        console.log('✅ IDs ya asignados a esta tarea:', idsYaAsignados);
 
         if (!todosLosEmpleados || todosLosEmpleados.length === 0) {
             empleadosList.style.display = 'none';
@@ -934,54 +815,45 @@
 
         let empleadosMostrados = 0;
 
+        // Mostrar YA asignados
         empleadosYaAsignados.forEach(empleado => {
             const empId = parseInt(empleado.id_Usuario || empleado.Id || empleado.id);
             const empNombres = empleado.Nombres || '';
             const empApellido = empleado.PrimerApellido || '';
-            
-            console.log('✅ Empleado YA ASIGNADO:', empId, empNombres, empApellido);
-            
+
             const div = crearElementoEmpleado(empId, empNombres, empApellido, true, true);
             empleadosList.appendChild(div);
             empleadosMostrados++;
-            
+
             empleadosSeleccionados.push(empId);
         });
 
+        // Mostrar Disponibles
         todosLosEmpleados.forEach(empleado => {
             const empId = parseInt(empleado.id_Usuario || empleado.Id || empleado.id);
-            
-            if (idsYaAsignados.includes(empId)) {
-                return;
-            }
-            
+
+            if (idsYaAsignados.includes(empId)) return;
+
             let tieneOtraTareaActiva = false;
             for (const [tareaId, empleadosAsignadosEnTarea] of Object.entries(empleadosAsignados)) {
-                if (parseInt(tareaId) === tareaSeleccionada) {
-                    continue;
-                }
-                
+                if (parseInt(tareaId) === tareaSeleccionada) continue;
+
                 const estaEnOtraTarea = empleadosAsignadosEnTarea.some(emp => {
                     const idEmp = parseInt(emp.id_Usuario || emp.Id || emp.id);
                     return idEmp === empId;
                 });
-                
+
                 if (estaEnOtraTarea) {
                     tieneOtraTareaActiva = true;
-                    console.log('❌ Empleado', empId, 'ya tiene tarea activa en tarea ID:', tareaId);
                     break;
                 }
             }
-            
-            if (tieneOtraTareaActiva) {
-                return;
-            }
-            
+
+            if (tieneOtraTareaActiva) return;
+
             const empNombres = empleado.Nombres || '';
             const empApellido = empleado.PrimerApellido || '';
-            
-            console.log('🆓 Empleado DISPONIBLE:', empId, empNombres, empApellido);
-            
+
             const div = crearElementoEmpleado(empId, empNombres, empApellido, false, false);
             empleadosList.appendChild(div);
             empleadosMostrados++;
@@ -995,21 +867,16 @@
             empleadosList.style.display = 'block';
             noEmpleadosMessage.style.display = 'none';
         }
-        
+
         actualizarContador();
         document.getElementById('empleadosIdsInput').value = JSON.stringify(empleadosSeleccionados);
-        
+
         const btnAsignar = document.getElementById('btnAsignar');
         if (tareaSeleccionada) {
             btnAsignar.disabled = false;
-            console.log('🟢 Botón Guardar habilitado (tarea seleccionada)');
         } else {
             btnAsignar.disabled = true;
-            console.log('🔴 Botón Guardar deshabilitado (sin tarea)');
         }
-        
-        console.log('📊 Total empleados mostrados:', empleadosMostrados);
-        console.log('🎯 Empleados seleccionados inicialmente:', empleadosSeleccionados);
     }
 
     function crearElementoEmpleado(empId, nombres, apellido, yaAsignado, checked) {
@@ -1017,56 +884,56 @@
         div.className = 'empleado-checkbox';
         div.setAttribute('data-id', empId);
         div.setAttribute('data-nombre', `${nombres} ${apellido}`.toLowerCase());
-        
+
         if (yaAsignado) {
-            div.style.backgroundColor = '#4a4a50';
+            div.style.backgroundColor = '#1a2e20'; // Dark green tint for assigned
             div.style.borderLeft = '4px solid #4CAF50';
         }
-        
+
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.id = `emp_${empId}`;
         checkbox.value = empId;
         checkbox.checked = checked;
-        
+
         checkbox.addEventListener('change', function() {
             toggleEmpleado(empId);
         });
-        
+
         const label = document.createElement('label');
         label.htmlFor = `emp_${empId}`;
         label.style.cursor = 'pointer';
         label.style.flex = '1';
         label.style.margin = '0';
-        
+        label.style.color = '#e0e0e0';
+
         if (yaAsignado) {
             const badge = document.createElement('span');
             badge.className = 'badge-activo';
             badge.textContent = 'Ya asignado';
             badge.style.marginLeft = '10px';
-            badge.style.fontSize = '0.75rem';
-            
+
             const nameSpan = document.createElement('span');
             nameSpan.textContent = `${nombres} ${apellido}`;
-            
+
             label.appendChild(nameSpan);
             label.appendChild(badge);
         } else {
             label.textContent = `${nombres} ${apellido}`;
         }
-        
+
         div.appendChild(checkbox);
         div.appendChild(label);
-        
+
         return div;
     }
 
     const empleadoSearch = document.getElementById('empleadoSearch');
-    
+
     empleadoSearch.addEventListener('input', function() {
         const searchTerm = this.value.toLowerCase().trim();
         const empleadoCheckboxes = document.querySelectorAll('.empleado-checkbox');
-        
+
         empleadoCheckboxes.forEach(checkbox => {
             const nombre = checkbox.getAttribute('data-nombre');
             if (nombre.includes(searchTerm) || searchTerm === '') {
@@ -1079,48 +946,43 @@
 
     function toggleEmpleado(idEmpleado) {
         idEmpleado = parseInt(idEmpleado);
-        console.log('Toggle empleado:', idEmpleado, typeof idEmpleado);
-        
+
         const checkbox = document.getElementById(`emp_${idEmpleado}`);
-        if (!checkbox) {
-            console.error('Checkbox no encontrado para empleado:', idEmpleado);
-            return;
-        }
-        
+        if (!checkbox) return;
+
         const index = empleadosSeleccionados.findIndex(id => parseInt(id) === idEmpleado);
-        
+
         if (checkbox.checked && index === -1) {
             empleadosSeleccionados.push(idEmpleado);
-            console.log('Empleado agregado. Array actual:', empleadosSeleccionados);
         } else if (!checkbox.checked && index > -1) {
             empleadosSeleccionados.splice(index, 1);
-            console.log('Empleado removido. Array actual:', empleadosSeleccionados);
         }
-        
+
         const parent = checkbox.closest('.empleado-checkbox');
         if (parent) {
+            // Estilos dinámicos ajustados al tema volcánico
             if (checkbox.checked) {
-                parent.style.backgroundColor = '#4a4a50';
+                parent.style.backgroundColor = '#363645';
                 parent.style.borderLeft = '4px solid var(--accent-orange)';
             } else {
-                parent.style.backgroundColor = '#3a3a40';
+                parent.style.backgroundColor = '#1a1a20';
                 parent.style.borderLeft = 'none';
             }
             agregarEfectoSeleccion(parent);
         }
-        
+
         actualizarContador();
         document.getElementById('empleadosIdsInput').value = JSON.stringify(empleadosSeleccionados);
-        
+
         if (tareaSeleccionada) {
             document.getElementById('btnAsignar').disabled = false;
         }
     }
 
     function actualizarContador() {
-        document.getElementById('empleadosSeleccionadosCounter').textContent = 
+        document.getElementById('empleadosSeleccionadosCounter').textContent =
             `${empleadosSeleccionados.length} empleado(s) seleccionado(s)`;
-        
+
         actualizarTablaEmpleados();
     }
 
@@ -1128,73 +990,71 @@
         const tabla = document.getElementById('tablaEmpleadosSeleccionados');
         const tbody = document.getElementById('tablaEmpleadosBody');
         const totalCell = document.getElementById('totalEmpleadosTabla');
-        
+
         tbody.innerHTML = '';
-        
+
         if (empleadosSeleccionados.length === 0) {
             tabla.style.display = 'none';
             return;
         }
-        
+
         tabla.style.display = 'block';
-        
+
         empleadosSeleccionados.forEach((empId, index) => {
-            // Buscar info del empleado
-            let empleado = todosLosEmpleados.find(e => 
+            let empleado = todosLosEmpleados.find(e =>
                 parseInt(e.id_Usuario || e.Id || e.id) === parseInt(empId)
             );
-            
-            // Si no está en disponibles, buscar en asignados
+
             if (!empleado && empleadosAsignados[tareaSeleccionada]) {
-                empleado = empleadosAsignados[tareaSeleccionada].find(e => 
+                empleado = empleadosAsignados[tareaSeleccionada].find(e =>
                     parseInt(e.id_Usuario || e.Id || e.id) === parseInt(empId)
                 );
             }
-            
+
             const nombres = empleado?.Nombres || empleado?.nombres || 'N/A';
             const apellido = empleado?.PrimerApellido || empleado?.primerApellido || '';
             const email = empleado?.Email || empleado?.email || 'Sin email';
-            
+
             const tr = document.createElement('tr');
             tr.id = `fila_emp_${empId}`;
             tr.innerHTML = `
                 <td style="text-align: center; font-weight: bold;">${index + 1}</td>
                 <td>${nombres} ${apellido}</td>
                 <td style="color: #888;">${email}</td>
-                <td>
+                <td class="text-center">
                     <button type="button" class="btn-quitar-empleado" onclick="quitarEmpleadoDeTabla(${empId})" title="Quitar empleado">
-                        −
+                        &times;
                     </button>
                 </td>
             `;
             tbody.appendChild(tr);
         });
-        
+
         totalCell.textContent = empleadosSeleccionados.length;
     }
 
     function quitarEmpleadoDeTabla(empId) {
         empId = parseInt(empId);
-        
+
         const checkbox = document.getElementById(`emp_${empId}`);
         if (checkbox) {
             checkbox.checked = false;
-            
+
             const parent = checkbox.closest('.empleado-checkbox');
             if (parent) {
-                parent.style.backgroundColor = '#3a3a40';
+                parent.style.backgroundColor = '#1a1a20';
                 parent.style.borderLeft = 'none';
             }
         }
-        
+
         const index = empleadosSeleccionados.findIndex(id => parseInt(id) === empId);
         if (index > -1) {
             empleadosSeleccionados.splice(index, 1);
         }
-        
+
         actualizarContador();
         document.getElementById('empleadosIdsInput').value = JSON.stringify(empleadosSeleccionados);
-        
+
         const fila = document.getElementById(`fila_emp_${empId}`);
         if (fila) {
             fila.style.transition = 'all 0.3s ease';
@@ -1204,42 +1064,46 @@
                 actualizarTablaEmpleados();
             }, 300);
         }
-        
+
         mostrarNotificacion('Empleado removido de la lista', 'warning');
     }
 
     function cargarInformacionTarea(idTarea) {
         const infoContent = document.getElementById('infoTareaContent');
-        
+
         const tarea = todasLasTareas.find(t => t.idTarea === idTarea);
-        
+
         if (!tarea) {
-            infoContent.innerHTML = '<p class="text-muted">No se pudo cargar la informaci�n</p>';
+            infoContent.innerHTML = '<p class="text-muted">No se pudo cargar la información</p>';
             return;
         }
 
         const asignados = empleadosAsignados[idTarea] || [];
         const tareaStatus = tarea.status;
         const tareaPrioridad = tarea.prioridad;
-        
+
         let html = `
-            <div class="counter-badge mb-3">
-                Total asignados: ${asignados.length}
+            <div class="mb-3 d-flex justify-content-between align-items-center">
+                 <span class="text-muted">Estado:</span>
+                 <span class="badge-activo" style="background:#444; color:white;">${tareaStatus}</span>
             </div>
-            <div class="mb-3">
-                <strong>Estado:</strong> <span class="badge-activo">${tareaStatus}</span>
+            <div class="mb-3 d-flex justify-content-between align-items-center">
+                 <span class="text-muted">Prioridad:</span>
+                 <span style="color:var(--accent-gold); font-weight:bold;">${tareaPrioridad}</span>
             </div>
-            <div class="mb-3">
-                <strong>Prioridad:</strong> ${tareaPrioridad}</span>
+            <div class="mb-3 d-flex justify-content-between align-items-center">
+                 <span class="text-muted">Total asignados:</span>
+                 <span style="font-weight:bold; color:white;">${asignados.length}</span>
             </div>
+            <div style="border-top:1px solid #333; margin:10px 0;"></div>
         `;
 
         if (asignados.length > 0) {
-            html += '<div class="mb-2"><strong>Empleados asignados:</strong></div>';
+            html += '<div class="mb-2 text-muted small">Empleados asignados actualmente:</div>';
             asignados.forEach(emp => {
                 const empNombres = emp.Nombres || emp.nombres || '';
                 const empApellido = emp.PrimerApellido || emp.primerApellido || '';
-                
+
                 html += `
                     <div class="empleado-item empleado-activo">
                         <span>${empNombres} ${empApellido}</span>
@@ -1247,6 +1111,8 @@
                     </div>
                 `;
             });
+        } else {
+             html += `<div class="text-center text-muted fst-italic py-2">Sin empleados asignados.</div>`;
         }
 
         infoContent.innerHTML = html;
@@ -1254,37 +1120,27 @@
 
     function generarReporteCompletoPDF() {
         mostrarNotificacion('Generando reporte completo PDF...', 'info');
-        
         window.location.href = '/Tareas/Gestionar?handler=GenerarReporteCompleto&formato=pdf';
-        
-        setTimeout(() => {
-            mostrarNotificacion('Reporte completo PDF descargado', 'success');
-        }, 1500);
+        setTimeout(() => { mostrarNotificacion('Reporte completo PDF descargado', 'success'); }, 1500);
     }
 
     function generarReporteCompletoExcel() {
         mostrarNotificacion('Generando reporte completo Excel...', 'info');
-        
         window.location.href = '/Tareas/Gestionar?handler=GenerarReporteCompleto&formato=excel';
-        
-        setTimeout(() => {
-            mostrarNotificacion('Reporte completo Excel descargado', 'success');
-        }, 1500);
+        setTimeout(() => { mostrarNotificacion('Reporte completo Excel descargado', 'success'); }, 1500);
     }
 
     document.getElementById('asignarForm').onsubmit = function(e) {
         if (!tareaSeleccionada) {
             e.preventDefault();
-            mostrarNotificacion('\u26a0\ufe0f Debes seleccionar una tarea', 'warning');
+            mostrarNotificacion('⚠ Debes seleccionar una tarea', 'warning');
             return false;
         }
-        
+
         if (empleadosSeleccionados.length === 0) {
-            console.log('\ud83d\udee1\ufe0f Guardando sin empleados (desasignar todos)');
-            mostrarNotificacion('\ud83d\udce4 Desasignando todos los empleados de la tarea...', 'info');
+            mostrarNotificacion('📤 Desasignando todos los empleados de la tarea...', 'info');
         } else {
-            console.log(`\ud83d\udc65 Guardando ${empleadosSeleccionados.length} empleado(s)`);
-            mostrarNotificacion(`\ud83d\udcbe Guardando ${empleadosSeleccionados.length} empleado(s)...`, 'info');
+            mostrarNotificacion(`💾 Guardando ${empleadosSeleccionados.length} empleado(s)...`, 'info');
         }
 
         const btnAsignar = document.getElementById('btnAsignar');
@@ -1296,10 +1152,10 @@
 
     function mostrarNotificacion(mensaje, tipo = 'info') {
         const colores = {
-            'success': { bg: 'linear-gradient(135deg, #4CAF50, #45a049)', icon: '?' },
-            'error': { bg: 'linear-gradient(135deg, #f44336, #e53935)', icon: '?' },
-            'warning': { bg: 'linear-gradient(135deg, #ff9800, #fb8c00)', icon: '??' },
-            'info': { bg: 'linear-gradient(135deg, #2196F3, #1976D2)', icon: '??' }
+            'success': { bg: 'linear-gradient(135deg, #134E5E, #71B280)', icon: '✔' },
+            'error': { bg: 'linear-gradient(135deg, #cb2d3e, #ef473a)', icon: '✖' },
+            'warning': { bg: 'linear-gradient(135deg, #ff9966, #ff5e62)', icon: '⚠' },
+            'info': { bg: 'linear-gradient(135deg, #2196F3, #1976D2)', icon: 'ℹ' }
         };
 
         const config = colores[tipo] || colores.info;
@@ -1329,29 +1185,11 @@
         }, 3000);
     }
 
+    // Estilos de animacion de notificacion
     const style = document.createElement('style');
     style.textContent = `
-        @@keyframes slideInRight {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        @@keyframes slideOutRight {
-            from {
-                transform: translateX(0);
-                opacity: 1;
-            }
-            to {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-        }
+        @@keyframes slideInRight { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @@keyframes slideOutRight { from { transform: translateX(0); opacity: 1; } to { transform: translateX(400px); opacity: 0; } }
     `;
     document.head.appendChild(style);
 
@@ -1371,12 +1209,11 @@
                 bsAlert.close();
             }, 5000);
         });
-        
+
         const storedTarea = sessionStorage.getItem('tareaSeleccionada');
         const storedTitulo = sessionStorage.getItem('tareaTitulo');
         if (storedTarea && storedTitulo) {
             tareaSeleccionada = parseInt(storedTarea);
-            console.log('Tarea restaurada desde sessionStorage al cargar:', tareaSeleccionada);
         }
     });
 
@@ -1388,5 +1225,5 @@
         });
     });
 
-</script>
+    </script>
 }

@@ -6,83 +6,78 @@
 
 <style>
     :root {
-        --accent-red: #D32F2F;
+        --volcanic-bg: #1e1e2d;
+        --volcanic-card: #2d2d3b;
         --accent-orange: #FF5722;
-        --accent-gold: #FFD700;
         --text-primary: #f5f5f7;
     }
 
+    body {
+        background-color: var(--volcanic-bg);
+        color: var(--text-primary);
+    }
+
     .title-volcanic {
-        background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
+        background: linear-gradient(to right, #FF512F, #F09819);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        font-weight: 700;
-        border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-        padding-bottom: 0.5rem;
+        font-weight: 800;
         margin-bottom: 2rem;
     }
 
-    .form-control,
-    .form-select {
-        background-color: #3a3a40;
+    .form-container {
+        background-color: var(--volcanic-card);
+        padding: 2.5rem;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    .form-control, .form-select {
+        background-color: #1a1a20;
         color: var(--text-primary);
-        border: 1px solid #555;
+        border: 1px solid #444;
         border-radius: 8px;
         padding: 0.75rem 1rem;
     }
 
-        .form-control:focus,
-        .form-select:focus {
-            background-color: #4a4a50;
-            color: var(--text-primary);
+        .form-control:focus, .form-select:focus {
+            background-color: #222;
+            color: #fff;
             border-color: var(--accent-orange);
-            box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
+            box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.2);
         }
 
     .form-label {
-        color: var(--text-primary);
+        color: #cfcfcf;
         font-weight: 500;
-    }
-
-    .text-danger {
-        color: #ff5252 !important;
-        font-weight: 500;
-    }
-
-    .form-container {
-        max-width: 700px;
-        width: 100%;
     }
 
     .btn-volcanic-primary {
-        background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
+        background: linear-gradient(135deg, #FF512F 0%, #DD2476 100%);
         border: none;
         color: white;
         font-weight: bold;
-        padding: 12px 25px;
-        border-radius: 8px;
+        padding: 12px 30px;
+        border-radius: 50px;
         transition: all 0.3s ease;
     }
 
         .btn-volcanic-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
+            box-shadow: 0 5px 15px rgba(221, 36, 118, 0.4);
         }
 
     .btn-volcanic-secondary {
-        background-color: transparent;
-        border: 2px solid #6c757d;
-        color: #ced4da;
-        font-weight: bold;
+        background: transparent;
+        border: 2px solid #555;
+        color: #aaa;
         padding: 10px 25px;
-        border-radius: 8px;
-        transition: all 0.3s ease;
+        border-radius: 50px;
     }
 
         .btn-volcanic-secondary:hover {
-            background-color: #6c757d;
-            color: white;
-            border-color: #6c757d;
+            border-color: #fff;
+            color: #fff;
         }
 </style>
 
@@ -91,8 +86,7 @@
 <div class="row justify-content-center justify-content-md-start">
     <div class="col-md-8 form-container">
         <form method="post" id="editTareaForm" asp-route-id="@Model.Tarea.Id">
-
-            <div asp-validation-summary="All" class="text-danger"></div>
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
             <input type="hidden" asp-for="Tarea.Id" />
             <input type="hidden" asp-for="Tarea.UsuarioAsignadoNombre" />
@@ -107,26 +101,27 @@
 
             <div class="mb-3">
                 <label asp-for="Tarea.Descripcion" class="form-label"></label>
-                <textarea asp-for="Tarea.Descripcion" class="form-control" rows="3"></textarea>
+                <textarea asp-for="Tarea.Descripcion" class="form-control" rows="4"></textarea>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="Tarea.Prioridad" class="form-label"></label>
-                <select asp-for="Tarea.Prioridad" class="form-select">
-                    <option value="Alta">Alta</option>
-                    <option value="Media">Media</option>
-                    <option value="Baja">Baja</option>
-                </select>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Tarea.Prioridad" class="form-label"></label>
+                    <select asp-for="Tarea.Prioridad" class="form-select">
+                        <option value="Alta">Alta</option>
+                        <option value="Media">Media</option>
+                        <option value="Baja">Baja</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Tarea.IdProyecto" class="form-label">Proyecto</label>
+                    <select asp-for="Tarea.IdProyecto"
+                            class="form-select"
+                            asp-items="Model.ProyectosDisponibles"></select>
+                </div>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="Tarea.IdProyecto" class="form-label">Proyecto</label>
-                <select asp-for="Tarea.IdProyecto"
-                        class="form-select"
-                        asp-items="Model.ProyectosDisponibles"></select>
-            </div>
-
-            <div class="mt-4">
+            <div class="mt-4 pt-3 border-top border-secondary">
                 <button type="submit" class="btn btn-volcanic-primary">Actualizar Tarea</button>
                 <a asp-page="Index" class="btn btn-volcanic-secondary ms-2">Cancelar</a>
             </div>
@@ -135,10 +130,6 @@
 </div>
 
 @section Scripts {
-    <script>
-        setupFormConfirmation('editTareaForm', 'confirmEdit');
-    </script>
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <script>setupFormConfirmation('editTareaForm', 'confirmEdit');</script>
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
