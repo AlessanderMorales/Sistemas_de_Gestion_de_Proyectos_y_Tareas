@@ -6,83 +6,95 @@
 
 <style>
     :root {
-        --accent-red: #D32F2F;
+        --volcanic-bg: #1e1e2d;
         --accent-orange: #FF5722;
-        --accent-gold: #FFD700;
-        --accent-edit: #ffc107;
+        --text-primary: #e0e0e0;
+    }
+
+    body {
+        background-color: var(--volcanic-bg);
+        color: var(--text-primary);
     }
 
     .title-volcanic {
-        background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
+        background: linear-gradient(to right, #FF512F, #F09819);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        font-weight: 700;
-        border-bottom: 2px solid rgba(255,255,255,0.1);
-        padding-bottom: 1rem;
+        font-weight: 800;
         margin-bottom: 2rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 1rem;
     }
 
-    .details-list dt {
-        color: var(--accent-gold);
-        font-weight: 600;
-        margin-bottom: 0.5rem;
+    .detail-container {
+        background-color: #2d2d3b;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
 
-    .details-list dd {
-        color: #e0e0e0;
-        margin-left: 0;
-        margin-bottom: 1.5rem;
+    dt {
+        color: var(--accent-orange);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        margin-top: 1rem;
+    }
+
+    dd {
+        color: #fff;
+        font-size: 1.1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        padding-bottom: 0.5rem;
     }
 
     .priority-badge {
-        padding: 6px 12px;
-        border-radius: 15px;
+        padding: 4px 12px;
+        border-radius: 4px;
         font-weight: bold;
-        color: #212529;
-        font-size: 0.85rem;
+        font-size: 0.9rem;
     }
 
     .priority-alta {
-        background-color: #dc3545;
-        color: white;
+        color: #ff5252;
+        border: 1px solid #ff5252;
     }
 
     .priority-media {
-        background-color: #ffc107;
+        color: #ffca28;
+        border: 1px solid #ffca28;
     }
 
     .priority-baja {
-        background-color: #28a745;
-        color: white;
+        color: #66bb6a;
+        border: 1px solid #66bb6a;
     }
 
     .btn-edit {
-        background-color: var(--accent-edit);
-        border-color: var(--accent-edit);
-        color: #212529;
+        background: #FF9800;
+        color: #000;
         font-weight: bold;
+        border: none;
         padding: 10px 25px;
-        border-radius: 8px;
-        transition: all 0.3s ease;
+        border-radius: 50px;
     }
 
         .btn-edit:hover {
+            background: #F57C00;
+            color: #000;
             transform: translateY(-2px);
         }
 
-    .btn-volcanic-secondary {
-        background-color: transparent;
-        border: 2px solid #6c757d;
-        color: #ced4da;
-        font-weight: bold;
+    .btn-back {
+        border: 1px solid #666;
+        color: #aaa;
         padding: 8px 25px;
-        border-radius: 8px;
-        transition: all 0.3s ease;
+        border-radius: 50px;
+        background: transparent;
     }
 
-        .btn-volcanic-secondary:hover {
-            background-color: #6c757d;
-            color: white;
+        .btn-back:hover {
+            border-color: #fff;
+            color: #fff;
         }
 </style>
 
@@ -90,29 +102,30 @@
 
 @if (Model.Tarea != null)
 {
-    <div class="container-fluid px-0">
-        <dl class="row details-list">
-            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Tarea.Titulo)</dt>
-            <dd class="col-sm-9">@Html.DisplayFor(model => model.Tarea.Titulo)</dd>
+<div class="detail-container">
+    <dl class="row">
+        <dt class="col-sm-3">Título</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Tarea.Titulo)</dd>
 
-            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Tarea.Descripcion)</dt>
-            <dd class="col-sm-9">@Html.DisplayFor(model => model.Tarea.Descripcion)</dd>
+        <dt class="col-sm-3">Descripción</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Tarea.Descripcion)</dd>
 
-            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Tarea.Prioridad)</dt>
-            <dd class="col-sm-9">
-                <span class="priority-badge priority-@(Model.Tarea.Prioridad.ToLower())">@Model.Tarea.Prioridad</span>
-            </dd>
-        </dl>
+        <dt class="col-sm-3">Prioridad</dt>
+        <dd class="col-sm-9">
+            <span class="priority-badge priority-@(Model.Tarea.Prioridad.ToLower())">@Model.Tarea.Prioridad</span>
+        </dd>
+    </dl>
+
+    <div class="mt-4 pt-3">
+        <a asp-page="./Edit" asp-route-id="@Model.Tarea.Id" class="btn btn-edit"><i class="bi bi-pencil-fill"></i> Editar</a>
+        <a asp-page="./Index" class="btn btn-back ms-2">Volver</a>
     </div>
-    <div class="mt-4">
-        <a asp-page="./Edit" asp-route-id="@Model.Tarea.Id" class="btn btn-edit">Editar Tarea</a>
-        <a asp-page="./Index" class="btn btn-volcanic-secondary ms-2">Volver a la Lista</a>
-    </div>
+</div>
 }
 else
 {
-    <div class="alert alert-danger" role="alert">
-        <h4 class="alert-heading">Tarea no encontrada</h4>
-        <p>La tarea que buscas no existe o fue eliminada.</p>
-    </div>
+<div class="alert alert-danger">
+    <h4 class="alert-heading">Tarea no encontrada</h4>
+    <p>La tarea que buscas no existe o fue eliminada.</p>
+</div>
 }
