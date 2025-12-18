@@ -6,95 +6,144 @@
 
 <style>
     :root {
-        --accent-red: #D32F2F;
+        --volcanic-bg: #1e1e2d;
+        --volcanic-card: #2d2d3b;
         --accent-orange: #FF5722;
-        --accent-gold: #FFD700;
+        --text-primary: #f5f5f7;
+    }
+
+    body {
+        background-color: var(--volcanic-bg);
+        color: var(--text-primary);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     .title-volcanic {
-        background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
+        background: linear-gradient(to right, #FF512F, #F09819);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        font-weight: 700;
-        border-bottom: 2px solid rgba(255,255,255,0.1);
-        padding-bottom: 1rem;
+        font-weight: 800;
         margin-bottom: 2rem;
     }
 
-    .details-list dt {
-        color: var(--accent-gold);
-        font-weight: 600;
+    .message-card {
+        background-color: var(--volcanic-card);
+        padding: 2.5rem;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        border: 1px solid rgba(255,255,255,0.05);
+        position: relative;
     }
 
-    .details-list dd {
-        color: #e0e0e0;
-        margin-left: 0;
-        margin-bottom: 1rem;
+    .message-meta {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 1rem;
+        color: #aaa;
+        font-size: 0.9rem;
+    }
+
+    .message-content {
+        font-size: 1.2rem;
+        line-height: 1.6;
+        color: #fff;
+        margin-bottom: 2rem;
+        background: rgba(0,0,0,0.2);
+        padding: 20px;
+        border-radius: 12px;
+        border-left: 4px solid var(--accent-orange);
+    }
+
+    .context-box {
+        background-color: rgba(255,255,255,0.03);
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 1rem;
+    }
+
+    .context-label {
+        font-weight: 700;
+        color: var(--accent-orange);
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+        margin-bottom: 5px;
+        display: block;
     }
 
     .btn-volcanic-secondary {
-        background-color: transparent;
-        border: 2px solid #6c757d;
-        color: #ced4da;
-        font-weight: bold;
-        padding: 8px 25px;
-        border-radius: 8px;
-        transition: all 0.3s ease;
+        border: 1px solid #666;
+        color: #ccc;
+        padding: 10px 25px;
+        border-radius: 50px;
+        text-decoration: none;
+        display: inline-block;
     }
 
         .btn-volcanic-secondary:hover {
-            background-color: #6c757d;
-            color: white;
+            border-color: #fff;
+            color: #fff;
+            background: rgba(255,255,255,0.05);
         }
 </style>
 
-<h2 class="title-volcanic">@ViewData["Title"]</h2>
+<div class="container mt-4">
+    <h1 class="title-volcanic">Vista de Mensaje</h1>
 
-@if (Model.Comentario != null)
-{
-    <div class="container-fluid px-0">
-        <dl class="row details-list">
-            <dt class="col-sm-3 col-md-2">Contenido</dt>
-            <dd class="col-sm-9 col-md-10">@Model.Comentario.Contenido</dd>
+    @if (Model.Comentario != null)
+    {
+    <div class="message-card">
+        <div class="message-meta">
+            <div>
+                <span style="color: #fff; font-weight:bold; font-size:1.1rem;">
+                    @(Model.Comentario.Usuario != null ? $"{Model.Comentario.Usuario.Nombres} {Model.Comentario.Usuario.PrimerApellido}" : "Desconocido")
+                </span>
+                <br>
+                <span>Autor</span>
+            </div>
+            <div class="text-end">
+                <span>@Model.Comentario.Fecha.ToString("dd MMMM yyyy")</span><br>
+                <span>@Model.Comentario.Fecha.ToString("HH:mm")</span>
+            </div>
+        </div>
 
-            <dt class="col-sm-3 col-md-2">Fecha de Creación</dt>
-            <dd class="col-sm-9 col-md-10">@Model.Comentario.Fecha.ToString("F")</dd>
+        <div class="message-content">
+            @Model.Comentario.Contenido
+        </div>
 
-            @if (Model.Comentario.Tarea != null)
-            {
-                <dt class="col-sm-3 col-md-2">Tarea</dt>
-                <dd class="col-sm-9 col-md-10">@Model.Comentario.Tarea.Titulo</dd>
-
-                @if (!string.IsNullOrEmpty(Model.Comentario.Tarea.ProyectoNombre))
+        <div class="row">
+            <div class="col-md-6">
+                <div class="context-box">
+                    <span class="context-label">Tarea Asociada</span>
+                    @(Model.Comentario.Tarea?.Titulo ?? "Sin Tarea")
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="context-box">
+                    <span class="context-label">Proyecto</span>
+                    @(Model.Comentario.Tarea?.ProyectoNombre ?? "Sin Proyecto")
+                </div>
+            </div>
+            @if (Model.Comentario.Tarea != null && !string.IsNullOrEmpty(Model.Comentario.Tarea.UsuarioAsignadoNombre))
                 {
-                    <dt class="col-sm-3 col-md-2">Proyecto</dt>
-                    <dd class="col-sm-9 col-md-10">@Model.Comentario.Tarea.ProyectoNombre</dd>
+            <div class="col-12">
+                <div class="context-box">
+                    <span class="context-label">Dirigido A (Asignado a Tarea)</span>
+                    @Model.Comentario.Tarea.UsuarioAsignadoNombre
+                </div>
+            </div>
                 }
-            }
-
-            @if (Model.Comentario.Usuario != null)
-            {
-                <dt class="col-sm-3 col-md-2">Autor</dt>
-                <dd class="col-sm-9 col-md-10">@($"{Model.Comentario.Usuario.Nombres} {Model.Comentario.Usuario.PrimerApellido}")</dd>
-            }
-
-            @if ((User.IsInRole("JefeDeProyecto") || User.IsInRole("SuperAdmin")) &&
-                    Model.Comentario.Tarea != null && !string.IsNullOrEmpty(Model.Comentario.Tarea.UsuarioAsignadoNombre))
-            {
-                <dt class="col-sm-3 col-md-2">Dirigido a</dt>
-                <dd class="col-sm-9 col-md-10"><span class="text-warning">@Model.Comentario.Tarea.UsuarioAsignadoNombre</span></dd>
-            }
-        </dl>
+        </div>
     </div>
 
     <div class="mt-4">
-        <a asp-page="Index" class="btn btn-volcanic-secondary">Volver a la Lista</a>
+        <a asp-page="Index" class="btn btn-volcanic-secondary">Volver al Muro</a>
     </div>
-}
-else
-{
-    <div class="alert alert-danger" role="alert">
-        <h4 class="alert-heading">Comentario no encontrado</h4>
-        <p>El comentario que buscas no existe o fue eliminado.</p>
-    </div>
-}
+    }
+    else
+    {
+    <div class="alert alert-danger">El comentario no existe.</div>
+    }
+</div>
