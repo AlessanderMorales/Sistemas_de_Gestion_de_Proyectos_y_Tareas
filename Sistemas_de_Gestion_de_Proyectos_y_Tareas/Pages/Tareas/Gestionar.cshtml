@@ -351,7 +351,6 @@
         background: linear-gradient(135deg, #2196F3, #1976D2);
     }
 
-    /* Animations & Scrollbars */
     @@keyframes fadeIn {
         from {
             opacity: 0;
@@ -478,7 +477,6 @@
 
 <div class="row">
     <div class="col-lg-8">
-        <!-- SELECCIONAR PROYECTO -->
         <div class="section-card">
             <div class="section-title">
                 <i class="bi bi-folder-fill me-2"></i> Seleccionar Proyecto
@@ -513,7 +511,6 @@
             </small>
         </div>
 
-        <!-- SELECCIONAR TAREA -->
         <div class="section-card">
             <div class="section-title d-flex justify-content-between align-items-center">
                 <span><i class="bi bi-list-check me-2"></i> Seleccionar Tarea</span>
@@ -541,7 +538,6 @@
             </small>
         </div>
 
-        <!-- ASIGNAR EMPLEADOS -->
         <div class="section-card">
             <div class="section-title">
                 <i class="bi bi-people-fill me-2"></i> Asignar Empleados
@@ -608,7 +604,6 @@
         </div>
     </div>
 
-    <!-- PANEL DERECHO -->
     <div class="col-lg-4">
         <div class="info-panel fade-in-up">
             <div class="info-panel-title">
@@ -815,7 +810,6 @@
 
         let empleadosMostrados = 0;
 
-        // Mostrar YA asignados
         empleadosYaAsignados.forEach(empleado => {
             const empId = parseInt(empleado.id_Usuario || empleado.Id || empleado.id);
             const empNombres = empleado.Nombres || '';
@@ -828,7 +822,6 @@
             empleadosSeleccionados.push(empId);
         });
 
-        // Mostrar Disponibles
         todosLosEmpleados.forEach(empleado => {
             const empId = parseInt(empleado.id_Usuario || empleado.Id || empleado.id);
 
@@ -886,7 +879,7 @@
         div.setAttribute('data-nombre', `${nombres} ${apellido}`.toLowerCase());
 
         if (yaAsignado) {
-            div.style.backgroundColor = '#1a2e20'; // Dark green tint for assigned
+            div.style.backgroundColor = '#1a2e20'; 
             div.style.borderLeft = '4px solid #4CAF50';
         }
 
@@ -960,7 +953,6 @@
 
         const parent = checkbox.closest('.empleado-checkbox');
         if (parent) {
-            // Estilos dinámicos ajustados al tema volcánico
             if (checkbox.checked) {
                 parent.style.backgroundColor = '#363645';
                 parent.style.borderLeft = '4px solid var(--accent-orange)';
@@ -1185,7 +1177,6 @@
         }, 3000);
     }
 
-    // Estilos de animacion de notificacion
     const style = document.createElement('style');
     style.textContent = `
         @@keyframes slideInRight { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
