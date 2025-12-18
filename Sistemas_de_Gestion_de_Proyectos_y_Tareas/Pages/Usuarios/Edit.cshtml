@@ -1,4 +1,4 @@
-@page
+@page "{id:int}"
 @model Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Usuarios.EditModel
 @{
     ViewData["Title"] = "Editar Usuario";
@@ -6,151 +6,191 @@
 
 <style>
     :root {
-        --accent-red: #D32F2F;
-     --accent-orange: #FF5722;
- --accent-gold: #FFD700;
-  --text-primary: #f5f5f7;
+        --volcanic-bg: #15151a;
+        --volcanic-card: #1e1e2d;
+        --accent-primary: #FF5722;
+        --border-color: rgba(255,255,255,0.08);
     }
 
- .title-volcanic {
- background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
-     -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-weight: 700;
-        border-bottom: 2px solid rgba(255,255,255,0.1);
-     padding-bottom: 0.5rem;
-        margin-bottom: 2rem;
-}
+    body {
+        background-color: var(--volcanic-bg);
+        color: #f5f5f7;
+    }
 
- .form-control, .form-select {
-        background-color: #3a3a40;
-        color: var(--text-primary);
-    border: 1px solid #555;
+    .title-volcanic {
+        background: linear-gradient(to right, #FF512F, #F09819);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 800;
+        margin-bottom: 2rem;
+    }
+
+    .card-dark {
+        background-color: var(--volcanic-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .form-control, .form-select {
+        background-color: #121215;
+        border: 1px solid #333;
+        color: white;
+        padding: 0.8rem 1rem;
         border-radius: 8px;
-        padding: 0.75rem 1rem;
     }
 
         .form-control:focus, .form-select:focus {
-     background-color: #4a4a50;
-     color: var(--text-primary);
-      border-color: var(--accent-orange);
-      box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
+            background-color: #1a1a20;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.15);
+            color: white;
         }
 
-    .form-label {
-        color: var(--text-primary);
-        font-weight: 500;
+        .form-control:disabled, .form-control[readonly] {
+            background-color: #0f0f12;
+            border-color: #222;
+            color: #666;
+            cursor: not-allowed;
+        }
+
+    .user-badge-panel {
+        background: linear-gradient(135deg, rgba(255, 87, 34, 0.1), rgba(255, 215, 0, 0.05));
+        border: 1px solid rgba(255, 87, 34, 0.3);
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
     }
 
-  .text-danger {
-    color: #ff5252 !important;
-  font-weight: 500;
-    }
-
-    .form-container {
-      max-width: 700px;
-        width: 100%;
+    .user-avatar-large {
+        width: 80px;
+        height: 80px;
+        background: #333;
+        border-radius: 50%;
+        margin: 0 auto 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: var(--accent-primary);
+        border: 2px solid var(--accent-primary);
     }
 
     .btn-volcanic-primary {
-        background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
+        background: linear-gradient(135deg, #FF512F 0%, #DD2476 100%);
         border: none;
         color: white;
         font-weight: bold;
-   padding: 12px 25px;
-border-radius: 8px;
-        transition: all 0.3s ease;
+        padding: 12px 25px;
+        border-radius: 8px;
+        width: 100%;
+        transition: 0.3s;
     }
 
         .btn-volcanic-primary:hover {
- transform: translateY(-2px);
-   box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(221, 36, 118, 0.4);
         }
 
-    .btn-volcanic-secondary {
-     background-color: transparent;
-        border: 2px solid #6c757d;
-        color: #ced4da;
-        font-weight: bold;
-        padding: 10px 25px;
-   border-radius: 8px;
-    transition: all 0.3s ease;
-}
+    .btn-cancel {
+        background: transparent;
+        border: 1px solid #444;
+        color: #888;
+        padding: 12px 25px;
+        border-radius: 8px;
+        width: 100%;
+        display: block;
+        text-align: center;
+        text-decoration: none;
+        transition: 0.3s;
+    }
 
-  .btn-volcanic-secondary:hover {
-   background-color: #6c757d;
+        .btn-cancel:hover {
+            background: #222;
             color: white;
-            border-color: #6c757d;
-        }
-
-    .info-box {
-        background-color: #2a2a30;
-        border-left: 4px solid var(--accent-orange);
-        padding: 15px;
- margin-bottom: 20px;
-  border-radius: 5px;
-      color: var(--text-primary);
-  }
-
-        .info-box strong {
- display: block;
-            margin-bottom: 5px;
-            color: var(--accent-gold);
+            border-color: #666;
         }
 </style>
 
-<h1 class="title-volcanic">@ViewData["Title"]</h1>
+<div class="container-fluid px-0">
+    <h1 class="title-volcanic">@ViewData["Title"]</h1>
 
-<div class="row justify-content-center justify-content-md-start">
-    <div class="col-md-8 form-container">
-     <div class="info-box">
-            <strong>Usuario: @Model.NombreUsuario</strong>
-  Editando información del usuario. El nombre de usuario no puede ser modificado.
-      </div>
-
-        <form method="post" id="editUserForm">
-            @Html.AntiForgeryToken()
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-    <div class="mb-3">
-                <label asp-for="UsuarioActualizar.Nombres" class="form-label"></label>
-      <input asp-for="UsuarioActualizar.Nombres" class="form-control" placeholder="Ej: Juan Carlos" />
-      <small class="text-muted">Puede incluir varios nombres separados por espacio</small>
-  <span asp-validation-for="UsuarioActualizar.Nombres" class="text-danger"></span>
-   </div>
-
- <div class="mb-3">
-   <label asp-for="UsuarioActualizar.PrimerApellido" class="form-label"></label>
-       <input asp-for="UsuarioActualizar.PrimerApellido" class="form-control" />
-           <span asp-validation-for="UsuarioActualizar.PrimerApellido" class="text-danger"></span>
-      </div>
-
-            <div class="mb-3">
-      <label asp-for="UsuarioActualizar.SegundoApellido" class="form-label"></label>
-                <input asp-for="UsuarioActualizar.SegundoApellido" class="form-control" />
-           <small class="text-muted">Opcional</small>
- <span asp-validation-for="UsuarioActualizar.SegundoApellido" class="text-danger"></span>
+    <div class="row">
+        <!-- Panel Izquierdo: Info de cuenta -->
+        <div class="col-lg-4 mb-4">
+            <div class="user-badge-panel">
+                <div class="user-avatar-large">
+                    <i class="bi bi-person-fill"></i>
+                </div>
+                <!-- Nombre de Usuario (Solo lectura) -->
+                <h4 class="text-white mb-1">@Model.NombreUsuario</h4>
+                <p class="text-muted small">Nombre de Usuario (Inmutable)</p>
+                <hr style="border-color: rgba(255,255,255,0.1);">
+                <div class="text-start">
+                    <small class="d-block text-muted mb-2"><i class="bi bi-info-circle me-1"></i> Información:</small>
+                    <p class="small text-white-50">Estás editando la información personal y permisos. El nombre de usuario no puede cambiarse para mantener la consistencia histórica de las tareas.</p>
+                </div>
             </div>
+        </div>
 
-         <div class="mb-3">
- <label asp-for="UsuarioActualizar.Email" class="form-label"></label>
-  <input asp-for="UsuarioActualizar.Email" class="form-control" type="email" placeholder="usuario@ejemplo.com" />
-        <span asp-validation-for="UsuarioActualizar.Email" class="text-danger"></span>
+        <!-- Panel Derecho: Formulario -->
+        <div class="col-lg-8">
+            <div class="card-dark">
+                <form method="post" id="editUserForm">
+                    @Html.AntiForgeryToken()
+
+                    <!-- !!! IMPORTANTE: ESTO ES LO QUE FALTABA !!! -->
+                    <!-- Enviamos el ID oculto para que el servidor sepa a quién actualizar -->
+                    <input type="hidden" name="id" value="@ViewContext.RouteData.Values["id"]" />
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label asp-for="UsuarioActualizar.Nombres" class="form-label text-muted">Nombres</label>
+                            <input asp-for="UsuarioActualizar.Nombres" class="form-control" />
+                            <span asp-validation-for="UsuarioActualizar.Nombres" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="UsuarioActualizar.PrimerApellido" class="form-label text-muted">Primer Apellido</label>
+                            <input asp-for="UsuarioActualizar.PrimerApellido" class="form-control" />
+                            <span asp-validation-for="UsuarioActualizar.PrimerApellido" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="UsuarioActualizar.SegundoApellido" class="form-label text-muted">Segundo Apellido</label>
+                            <input asp-for="UsuarioActualizar.SegundoApellido" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="UsuarioActualizar.Email" class="form-label text-muted">Email Corporativo</label>
+                        <input asp-for="UsuarioActualizar.Email" class="form-control" type="email" />
+                        <span asp-validation-for="UsuarioActualizar.Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="UsuarioActualizar.Rol" class="form-label text-muted">Rol en Sistema</label>
+                        <select asp-for="UsuarioActualizar.Rol" class="form-select">
+                            <option value="Empleado">Empleado</option>
+                            <option value="JefeDeProyecto">Jefe de Proyecto</option>
+                            <option value="SuperAdmin">Super Administrador</option>
+                        </select>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-md-6 mb-2">
+                            <a asp-page="Index" class="btn-cancel">Cancelar</a>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="submit" class="btn-volcanic-primary">
+                                <i class="bi bi-save me-2"></i> Guardar Cambios
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
-
-            <div class="mb-3">
-                <label asp-for="UsuarioActualizar.Rol" class="form-label"></label>
-    <select asp-for="UsuarioActualizar.Rol" class="form-control">
-              <option value="Empleado">Empleado</option>
-        <option value="JefeDeProyecto">Jefe de Proyecto</option>
-   <option value="SuperAdmin">Super Administrador</option>
-    </select>
-       <span asp-validation-for="UsuarioActualizar.Rol" class="text-danger"></span>
-            </div>
-
-   <button type="submit" class="btn btn-volcanic-primary">Guardar Cambios</button>
-         <a asp-page="Index" class="btn btn-volcanic-secondary">Cancelar</a>
-    </form>
+        </div>
     </div>
 </div>
 

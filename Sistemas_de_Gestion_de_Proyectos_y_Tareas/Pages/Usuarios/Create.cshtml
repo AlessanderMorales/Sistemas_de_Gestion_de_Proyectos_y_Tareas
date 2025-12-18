@@ -1,215 +1,215 @@
 ﻿@page
 @model Sistema_de_Gestion_de_Proyectos_y_Tareas.Pages.Usuarios.CreateModel
 @{
-    ViewData["Title"] = "Crear Nuevo Usuario";
+    ViewData["Title"] = "Crear Usuario";
 }
 
 <style>
     :root {
-        --accent-red: #D32F2F;
-   --accent-orange: #FF5722;
-     --accent-gold: #FFD700;
-        --text-primary: #f5f5f7;
+        --volcanic-bg: #15151a;
+        --volcanic-card: #1e1e2d;
+        --accent-primary: #FF5722;
+        --border-color: rgba(255,255,255,0.08);
+    }
+
+    body {
+        background-color: var(--volcanic-bg);
+        color: #f5f5f7;
     }
 
     .title-volcanic {
-        background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
+        background: linear-gradient(to right, #FF512F, #F09819);
         -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-   font-weight: 700;
- border-bottom: 2px solid rgba(255,255,255,0.1);
-        padding-bottom: 0.5rem;
- margin-bottom: 2rem;
+        -webkit-text-fill-color: transparent;
+        font-weight: 800;
+        margin-bottom: 2rem;
+    }
+
+    .card-dark {
+        background-color: var(--volcanic-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .form-label {
+        color: #a0a0b0;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
     }
 
     .form-control, .form-select {
-      background-color: #3a3a40;
-        color: var(--text-primary);
-        border: 1px solid #555;
-     border-radius: 8px;
- padding: 0.75rem 1rem;
-  }
+        background-color: #121215;
+        border: 1px solid #333;
+        color: white;
+        padding: 0.8rem 1rem;
+        border-radius: 8px;
+    }
 
         .form-control:focus, .form-select:focus {
-  background-color: #4a4a50;
-   color: var(--text-primary);
-       border-color: var(--accent-orange);
- box-shadow: 0 0 0 0.25rem rgba(255, 87, 34, 0.3);
-   }
+            background-color: #1a1a20;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.15);
+            color: white;
+        }
 
-    .form-label {
-    color: var(--text-primary);
-        font-weight: 500;
+    .info-panel {
+        background: rgba(33, 150, 243, 0.05);
+        border: 1px solid rgba(33, 150, 243, 0.2);
+        border-radius: 12px;
+        padding: 1.5rem;
     }
 
-    .text-danger {
-        color: #ff5252 !important;
-      font-weight: 500;
-    }
+        .info-panel h5 {
+            color: #2196F3;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
 
-  .form-container {
- max-width: 700px;
-    width: 100%;
+    .info-list li {
+        margin-bottom: 0.8rem;
+        color: #ccc;
+        font-size: 0.9rem;
     }
 
     .btn-volcanic-primary {
-        background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
-    border: none;
-      color: white;
+        background: linear-gradient(135deg, #FF512F 0%, #DD2476 100%);
+        border: none;
+        color: white;
         font-weight: bold;
         padding: 12px 25px;
-   border-radius: 8px;
-      transition: all 0.3s ease;
+        border-radius: 8px;
+        width: 100%;
+        transition: all 0.3s;
     }
 
         .btn-volcanic-primary:hover {
-transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(221, 36, 118, 0.4);
         }
 
-    .btn-volcanic-secondary {
-    background-color: transparent;
-     border: 2px solid #6c757d;
-        color: #ced4da;
-    font-weight: bold;
-        padding: 10px 25px;
-    border-radius: 8px;
-        transition: all 0.3s ease;
+    .btn-cancel {
+        background: transparent;
+        border: 1px solid #444;
+        color: #888;
+        padding: 12px 25px;
+        border-radius: 8px;
+        width: 100%;
+        display: block;
+        text-align: center;
+        text-decoration: none;
+        transition: 0.3s;
     }
 
-     .btn-volcanic-secondary:hover {
-    background-color: #6c757d;
-     color: white;
-   border-color: #6c757d;
-        }
-
-    .info-box {
-        background-color: #e3f2fd;
-  border-left: 4px solid #2196f3;
-        padding: 15px;
-        margin-bottom: 20px;
- border-radius: 5px;
-   color: #0d47a1;
-}
-
-   .info-box strong {
- display: block;
-margin-bottom: 5px;
-        }
-        
-        .info-box ul {
-       margin: 10px 0 0 0;
-     padding-left: 20px;
-        }
-   
-        .info-box li {
-     margin-bottom: 5px;
-        }
-
-    .alert-danger {
-background-color: #f8d7da;
-        border-left: 4px solid #dc3545;
-        color: #721c24;
-     padding: 15px;
-        margin-bottom: 20px;
- border-radius: 5px;
-    }
-
-        .alert-danger strong {
-     display: block;
-          margin-bottom: 5px;
- font-weight: 700;
-        }
-
-  .alert-danger ul {
-    margin: 5px 0 0 0;
-   padding-left: 20px;
-        }
-
-        .alert-danger li {
-      margin-bottom: 3px;
+        .btn-cancel:hover {
+            border-color: #666;
+            color: white;
+            background: #222;
         }
 </style>
 
-<h1 class="title-volcanic">@ViewData["Title"]</h1>
+<div class="container-fluid px-0">
+    <h1 class="title-volcanic">@ViewData["Title"]</h1>
 
-<div class="row justify-content-center justify-content-md-start">
-<div class="col-md-8 form-container">
-        
-@* Mostrar errores de validación de la API *@
-  @if (!ViewData.ModelState.IsValid && ViewData.ModelState[""]?.Errors.Count > 0)
-        {
-    <div class="alert alert-danger" role="alert">
-   <strong>❌ Error de validación:</strong>
-       <ul class="mb-0">
-      @foreach (var error in ViewData.ModelState[""].Errors)
-     {
-      <li>@error.ErrorMessage</li>
-   }
-          </ul>
-       </div>
-        }
+    <div class="row">
+        <!-- Columna Formulario -->
+        <div class="col-lg-8 mb-4">
+            <div class="card-dark">
+                @if (!ViewData.ModelState.IsValid && ViewData.ModelState[""]?.Errors.Count > 0)
+                {
+                    <div class="alert alert-danger border-0 mb-4" style="background: rgba(220, 53, 69, 0.1); color: #ff6b6b;">
+                        <i class="bi bi-exclamation-circle-fill me-2"></i> <strong>Error:</strong>
+                        <ul class="mb-0 mt-1 ps-3">
+                            @foreach (var error in ViewData.ModelState[""].Errors)
+                            {
+                                <li>@error.ErrorMessage</li>
+                            }
+                        </ul>
+                    </div>
+                }
 
-  <div class="info-box">
-        <strong>Generación Automática</strong>
-     El nombre de usuario y la contraseña se generarán automáticamente:
-   <ul>
-           <li><strong>Nombre de usuario:</strong> Se creará combinando el primer nombre y apellido (ej: "Juan García" → <code>JuanGarcia</code>)</li>
-    <li><strong>Si existe duplicado:</strong> Se agregará un número incremental (ej: <code>JuanGarcia2</code>, <code>JuanGarcia3</code>)</li>
-     <li><strong>Contraseña:</strong> Se generará una contraseña segura aleatoria</li>
-   </ul>
-   El usuario recibirá sus credenciales por correo electrónico.
+                <form method="post" id="createUserForm">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Usuario.NombreUsuario" />
+                    <input type="hidden" asp-for="Usuario.Contraseña" />
+
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label asp-for="Usuario.Nombres" class="form-label">Nombres</label>
+                            <input asp-for="Usuario.Nombres" class="form-control" placeholder="Ej: Ana María" />
+                            <span asp-validation-for="Usuario.Nombres" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Usuario.PrimerApellido" class="form-label">Primer Apellido</label>
+                            <input asp-for="Usuario.PrimerApellido" class="form-control" placeholder="Ej: Gómez" />
+                            <span asp-validation-for="Usuario.PrimerApellido" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Usuario.SegundoApellido" class="form-label">Segundo Apellido <span class="text-muted small">(Opcional)</span></label>
+                            <input asp-for="Usuario.SegundoApellido" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Usuario.Email" class="form-label">Correo Electrónico</label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="background:#222; border-color:#333; color:#666;"><i class="bi bi-envelope"></i></span>
+                            <input asp-for="Usuario.Email" class="form-control" type="email" placeholder="usuario@sgpt.com" />
+                        </div>
+                        <span asp-validation-for="Usuario.Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Usuario.Rol" class="form-label">Rol Asignado</label>
+                        <select asp-for="Usuario.Rol" class="form-select">
+                            <option value="Empleado">Empleado</option>
+                            <option value="JefeDeProyecto">Jefe de Proyecto</option>
+                            <option value="SuperAdmin">Super Administrador</option>
+                        </select>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-md-6 mb-2">
+                            <a asp-page="Index" class="btn-cancel">Cancelar</a>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="submit" class="btn-volcanic-primary">
+                                <i class="bi bi-check-lg me-2"></i> Crear Usuario
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
 
-        <form method="post" id="createUserForm">
-            @Html.AntiForgeryToken()
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <!-- Columna Información -->
+        <div class="col-lg-4">
+            <div class="info-panel">
+                <h5><i class="bi bi-robot me-2"></i>Generación Automática</h5>
+                <p class="small text-muted mb-3">El sistema asignará credenciales seguras automáticamente para mantener la integridad.</p>
 
-      <input type="hidden" asp-for="Usuario.NombreUsuario" />
-  <input type="hidden" asp-for="Usuario.Contraseña" />
-
-       <div class="mb-3">
-  <label asp-for="Usuario.Nombres" class="form-label"></label>
-     <input asp-for="Usuario.Nombres" class="form-control" placeholder="Ej: Juan Carlos" />
-        <small class="text-muted">Puede incluir varios nombres separados por espacio</small>
-   <span asp-validation-for="Usuario.Nombres" class="text-danger"></span>
- </div>
-
-     <div class="mb-3">
-      <label asp-for="Usuario.PrimerApellido" class="form-label"></label>
-     <input asp-for="Usuario.PrimerApellido" class="form-control" />
-     <span asp-validation-for="Usuario.PrimerApellido" class="text-danger"></span>
-     </div>
-
-        <div class="mb-3">
- <label asp-for="Usuario.SegundoApellido" class="form-label"></label>
-   <input asp-for="Usuario.SegundoApellido" class="form-control" />
-  <small class="text-muted">Opcional</small>
-      <span asp-validation-for="Usuario.SegundoApellido" class="text-danger"></span>
-     </div>
-
-    <div class="mb-3">
-         <label asp-for="Usuario.Email" class="form-label"></label>
-    <input asp-for="Usuario.Email" class="form-control" type="email" placeholder="usuario@ejemplo.com" />
-        <small class="text-muted">Se enviará un correo con las credenciales de acceso</small>
-    <span asp-validation-for="Usuario.Email" class="text-danger"></span>
-</div>
-
- <div class="mb-3">
-       <label asp-for="Usuario.Rol" class="form-label"></label>
-       <select asp-for="Usuario.Rol" class="form-control">
-      <option value="Empleado" selected>Empleado</option>
- <option value="JefeDeProyecto">Jefe de Proyecto</option>
-    <option value="SuperAdmin">Super Administrador</option>
-  </select>
-     <span asp-validation-for="Usuario.Rol" class="text-danger"></span>
- </div>
-
-    <button type="submit" class="btn btn-volcanic-primary">Crear Usuario</button>
-       <a asp-page="Index" class="btn btn-volcanic-secondary">Cancelar</a>
-      </form>
+                <ul class="list-unstyled info-list">
+                    <li>
+                        <i class="bi bi-person-badge text-warning me-2"></i>
+                        <strong>Usuario:</strong> Se genera combinando Nombres + Apellido (ej: <code>JuanGomez</code>).
+                    </li>
+                    <li>
+                        <i class="bi bi-key-fill text-warning me-2"></i>
+                        <strong>Contraseña:</strong> Aleatoria y segura.
+                    </li>
+                    <li>
+                        <i class="bi bi-send-fill text-warning me-2"></i>
+                        <strong>Notificación:</strong> Se enviará un email al usuario con sus accesos.
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 </div>
+
+
 
 @section Scripts {
     {
